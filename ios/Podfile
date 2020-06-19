@@ -35,7 +35,7 @@ target 'claudio' do
   pod 'DoubleConversion', :podspec => "#{rnPrefix}/third-party-podspecs/DoubleConversion.podspec"
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
-
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
   # Other native modules
 
   # Automatically detect installed unimodules
