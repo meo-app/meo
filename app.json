@@ -1,0 +1,17 @@
+{
+  "name": "claudio",
+  "displayName": "claudio",
+  "expo": {
+    "name": "claudio",
+    "slug": "claudio",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
