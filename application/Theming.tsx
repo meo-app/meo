@@ -8,6 +8,7 @@ import {
   Inter_400Regular,
 } from "@expo-google-fonts/inter";
 import { Typography } from "../foundations/Typography";
+import { Units } from "../foundations/Spacing";
 
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
@@ -133,4 +134,18 @@ function useTheme(): Theme {
   return theme;
 }
 
-export { ThemeProvider, useTheme };
+/**
+ * Note: Edges can have variants based on device/screen size etc
+ */
+function useEdgeSpacing(): {
+  vertical: keyof Units;
+  horizontal: keyof Units;
+} {
+  const theme = useTheme();
+  return {
+    vertical: "medium",
+    horizontal: "medium",
+  };
+}
+
+export { ThemeProvider, useTheme, useEdgeSpacing };
