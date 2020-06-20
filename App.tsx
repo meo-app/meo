@@ -1,17 +1,10 @@
-import "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { useFormik } from "formik";
 import * as SQLite from "expo-sqlite";
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  useSafeArea,
-  initialWindowSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
+  Animated,
   Button,
   KeyboardAvoidingView,
   StyleSheet,
@@ -19,6 +12,10 @@ import {
   TextInput,
   View,
 } from "react-native";
+import "react-native-gesture-handler";
+import { Providers } from "./application/Providers";
+import { useTheme } from "./application/Theming";
+import { Font } from "./components/Font";
 
 interface Values {
   text: string;
@@ -48,6 +45,7 @@ function App() {
   const { navigate } = useNavigation();
   const [items, setItems] = useState<any[]>([]);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
+  const theme = useTheme();
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -65,28 +63,26 @@ function App() {
   }, [setItems, forceUpdateId]);
 
   return (
-    <SafeAreaView>
+    <>
       <View key={`items-${forceUpdateId}`}>
         {items.map((item) => (
-          <Text key={item.id}>{item.value}</Text>
+          <Font key={item.id}>{item.value}</Font>
         ))}
       </View>
       <Button onPress={() => navigate("Create")} title="Create" />
       <Button
+        title="Force reload"
         onPress={async () => {
           const items = await read();
           setItems(items);
         }}
-        title="Reload"
       />
-    </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -123,24 +119,57 @@ function Create() {
 
   return (
     <View>
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{
+          alignContent: "center",
+          alignItems: "center",
+        }}
+      >
         <TextInput
           placeholder="Write something"
           value={formik.values.text}
           onChangeText={(value) => formik.setFieldValue("text", value)}
+          style={{
+            padding: 24,
+          }}
         />
         <Button
           title="Create"
           onPress={() => formik.handleSubmit()}
           disabled={!formik.isValid}
         />
-        <Text>{JSON.stringify({ forceUpdateId })}</Text>
       </KeyboardAvoidingView>
     </View>
   );
 }
 
 const Stack = createStackNavigator();
+
+function Root() {
+  const theme = useTheme();
+  return (
+    <Stack.Navigator
+      mode="modal"
+      screenOptions={{
+        headerTitleStyle: {
+          ...(theme.typography.display as React.ComponentProps<
+            typeof Animated.Text
+          >["style"]),
+        },
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        cardStyle: {
+          backgroundColor: theme.colors.background,
+          // TODO: spacing padding
+        },
+      }}
+    >
+      <Stack.Screen name="Home" component={App} />
+      <Stack.Screen name="Create" component={Create} />
+    </Stack.Navigator>
+  );
+}
 
 const Screen: React.FunctionComponent = function Screen() {
   useEffect(() => {
@@ -150,15 +179,11 @@ const Screen: React.FunctionComponent = function Screen() {
       );
     });
   }, []);
+
   return (
-    <NavigationContainer>
-      <SafeAreaProvider>
-        <Stack.Navigator mode="modal">
-          <Stack.Screen name="Home" component={App} />
-          <Stack.Screen name="Create" component={Create} />
-        </Stack.Navigator>
-      </SafeAreaProvider>
-    </NavigationContainer>
+    <Providers>
+      <Root />
+    </Providers>
   );
 };
 
