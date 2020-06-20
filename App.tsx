@@ -1,3 +1,6 @@
+import "react-native-gesture-handler";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import * as SQLite from "expo-sqlite";
 import {
@@ -29,9 +32,67 @@ function useForceUpdate(): [() => void, number] {
   return [() => setValue(value + 1), value];
 }
 
+function read() {
+  return new Promise<any[]>((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql("select * from items", [], (_, { rows }) => {
+        resolve(
+          [...Array(rows.length).keys()].map((index) => rows.item(index))
+        );
+      });
+    });
+  });
+}
+
 function App() {
-  const insets = useSafeArea();
+  const { navigate } = useNavigation();
   const [items, setItems] = useState<any[]>([]);
+  const [forceUpdate, forceUpdateId] = useForceUpdate();
+
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "create table if not exists items (id integer primary key not null, value text);"
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const items = await read();
+      setItems(items);
+    })();
+  }, [setItems, forceUpdateId]);
+
+  return (
+    <SafeAreaView>
+      <View key={`items-${forceUpdateId}`}>
+        {items.map((item) => (
+          <Text key={item.id}>{item.value}</Text>
+        ))}
+      </View>
+      <Button onPress={() => navigate("Create")} title="Create" />
+      <Button
+        onPress={async () => {
+          const items = await read();
+          setItems(items);
+        }}
+        title="Reload"
+      />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+function Create() {
   const [forceUpdate, forceUpdateId] = useForceUpdate();
   const formik = useFormik<Values>({
     initialValues: {
@@ -60,52 +121,8 @@ function App() {
     },
   });
 
-  useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "create table if not exists items (id integer primary key not null, value text);"
-      );
-    });
-  }, []);
-
-  useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql("select * from items", [], (_, { rows }) => {
-        setItems(
-          [...Array(rows.length).keys()].map((index) => rows.item(index))
-        );
-      });
-    });
-  }, [setItems, forceUpdateId]);
-
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: 24,
-          paddingTop: insets.top,
-          marginTop: -insets.top - 5,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowOpacity: 0.2,
-          shadowRadius: 1.41,
-          elevation: 2,
-          marginLeft: -1,
-          marginRight: -1,
-        }}
-      >
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 36,
-          }}
-        >
-          Home
-        </Text>
-      </View>
+    <View>
       <KeyboardAvoidingView style={styles.container}>
         <TextInput
           placeholder="Write something"
@@ -113,35 +130,35 @@ function App() {
           onChangeText={(value) => formik.setFieldValue("text", value)}
         />
         <Button
-          title="Save"
+          title="Create"
           onPress={() => formik.handleSubmit()}
           disabled={!formik.isValid}
         />
         <Text>{JSON.stringify({ forceUpdateId })}</Text>
-        <View key={`items-${forceUpdateId}`}>
-          {items.map((item) => (
-            <Text key={item.id}>{item.value}</Text>
-          ))}
-        </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const Stack = createStackNavigator();
 
 const Screen: React.FunctionComponent = function Screen() {
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "create table if not exists items (id integer primary key not null, value text);"
+      );
+    });
+  }, []);
   return (
-    <SafeAreaProvider>
-      <App />
-    </SafeAreaProvider>
+    <NavigationContainer>
+      <SafeAreaProvider>
+        <Stack.Navigator mode="modal">
+          <Stack.Screen name="Home" component={App} />
+          <Stack.Screen name="Create" component={Create} />
+        </Stack.Navigator>
+      </SafeAreaProvider>
+    </NavigationContainer>
   );
 };
 
