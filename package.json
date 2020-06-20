@@ -33,8 +33,12 @@
     "@babel/core": "~7.9.0",
     "@types/react": "~16.9.23",
     "@types/react-native": "~0.61.23",
+    "@typescript-eslint/parser": "^3.3.0",
     "babel-preset-expo": "~8.1.0",
+    "eslint": "^7.3.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
     "jest-expo": "~37.0.0",
+    "prettier": "^2.0.5",
     "typescript": "~3.8.3"
   },
   "jest": {

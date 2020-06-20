@@ -6,16 +6,17 @@ import React, { useEffect, useState } from "react";
 import {
   Animated,
   Button,
+  Image,
   KeyboardAvoidingView,
-  StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
 import "react-native-gesture-handler";
 import { Providers } from "./application/Providers";
-import { useTheme } from "./application/Theming";
+import { useEdgeSpacing, useTheme } from "./application/Theming";
 import { Font } from "./components/Font";
+import { Frame } from "./components/Frame";
+import { SafeStackArea } from "./components/SafeStackArea";
 
 interface Values {
   text: string;
@@ -46,6 +47,7 @@ function App() {
   const [items, setItems] = useState<any[]>([]);
   const [forceUpdate, forceUpdateId] = useForceUpdate();
   const theme = useTheme();
+  const spacing = useEdgeSpacing();
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -63,10 +65,30 @@ function App() {
   }, [setItems, forceUpdateId]);
 
   return (
-    <>
+    <SafeStackArea>
       <View key={`items-${forceUpdateId}`}>
         {items.map((item) => (
-          <Font key={item.id}>{item.value}</Font>
+          <Frame
+            marginTop={spacing.vertical}
+            justifyContent="flex-start"
+            alignItems="center"
+            flexDirection="row"
+          >
+            <Image
+              style={{
+                width: theme.scales.medium,
+                height: theme.scales.medium,
+                resizeMode: "cover",
+                borderRadius: 16, // TODO: add the theme constants
+              }}
+              source={{
+                uri: "https://i.pravatar.cc/150",
+              }}
+            />
+            <Frame flexGrow={1} paddingLeft="medium">
+              <Font key={item.id}>{item.value}</Font>
+            </Frame>
+          </Frame>
         ))}
       </View>
       <Button onPress={() => navigate("Create")} title="Create" />
@@ -77,16 +99,9 @@ function App() {
           setItems(items);
         }}
       />
-    </>
+    </SafeStackArea>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 function Create() {
   const [forceUpdate, forceUpdateId] = useForceUpdate();
@@ -161,7 +176,6 @@ function Root() {
         },
         cardStyle: {
           backgroundColor: theme.colors.background,
-          // TODO: spacing padding
         },
       }}
     >
