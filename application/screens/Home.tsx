@@ -9,6 +9,7 @@ import { Frame } from "../../components/Frame";
 import { SafeStackArea } from "../../components/SafeStackArea";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { Plus } from "../icons/Plus";
+import { transparentize } from "polished";
 
 function Home() {
   const { navigate } = useNavigation();
@@ -16,7 +17,7 @@ function Home() {
   const spacing = useEdgeSpacing();
   const { data, error, isFetching } = usePosts();
   return (
-    <SafeStackArea>
+    <View>
       {isFetching && (
         <View>
           <Font>TODO: loading state</Font>
@@ -34,6 +35,8 @@ function Home() {
             <Frame
               key={post.id}
               marginTop={spacing.vertical}
+              paddingRight={spacing.horizontal}
+              paddingLeft={spacing.horizontal}
               justifyContent="flex-start"
               alignItems="center"
               flexDirection="row"
@@ -68,12 +71,53 @@ function Home() {
           height: 110,
         }}
       >
+        <Frame
+          alignItems="center"
+          style={{
+            top: -theme.scales.medium / 2,
+            zIndex: 999,
+            position: "absolute",
+            elevation: 2,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 1.41,
+            width: "100%",
+          }}
+        >
+          <TouchableHighlight
+            onPress={() => navigate("Create")}
+            style={{
+              width: theme.scales.medium,
+              height: theme.scales.medium,
+              backgroundColor: theme.colors.backgroundAccent,
+              elevation: 2,
+              borderRadius: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Plus />
+          </TouchableHighlight>
+        </Frame>
         <LinearGradient
-          colors={["transparent", theme.colors.background]}
-          locations={[0.1, 0.7]}
+          colors={[
+            // "red",
+            // "blue",
+            transparentize(1, theme.colors.background),
+            theme.colors.background,
+          ]}
           start={{
-            y: 0.1,
             x: 0,
+            y: 0,
+          }}
+          end={{
+            x: 0,
+            y: 0.5,
           }}
           style={{
             position: "absolute",
@@ -81,36 +125,9 @@ function Home() {
             right: 0,
             bottom: 0,
             height: 110,
+            width: "100%",
           }}
         >
-          <Frame
-            alignItems="center"
-            style={{
-              marginBottom: -theme.scales.medium / 2,
-              zIndex: 999,
-            }}
-          >
-            <TouchableHighlight
-              onPress={() => navigate("Create")}
-              style={{
-                width: theme.scales.medium,
-                height: theme.scales.medium,
-                backgroundColor: theme.colors.backgroundAccent,
-                elevation: 2,
-                borderRadius: 9999,
-                position: "relative",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Plus />
-            </TouchableHighlight>
-          </Frame>
           <Frame
             flexDirection="row"
             justifyContent="space-between"
@@ -120,6 +137,13 @@ function Home() {
               borderRadius: 999,
               elevation: 2,
               position: "relative",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 1.41,
             }}
           >
             <Frame flexGrow={1} alignItems="center" justifyContent="center">
@@ -135,7 +159,7 @@ function Home() {
           </Frame>
         </LinearGradient>
       </Frame>
-    </SafeStackArea>
+    </View>
   );
 }
 
