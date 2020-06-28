@@ -27,7 +27,7 @@ const dark: Theme["colors"] = {
   absoluteLight,
   primary,
   background: "#292F3F",
-  backgroundAccent: "red", // TODO
+  backgroundAccent: "#F2F2F2",
   foregroundPrimary: "#F2F2F2",
   foregroundSecondary: "#9A99A2",
 };

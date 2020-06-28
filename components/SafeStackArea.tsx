@@ -7,7 +7,11 @@ const SafeStackArea: React.FunctionComponent = function SafeStackArea({
 }) {
   const spacing = useEdgeSpacing();
   return (
-    <Frame paddingRight={spacing.horizontal} paddingLeft={spacing.horizontal}>
+    <Frame
+      paddingRight={spacing.horizontal}
+      paddingLeft={spacing.horizontal}
+      flex={1}
+    >
       {children}
     </Frame>
   );

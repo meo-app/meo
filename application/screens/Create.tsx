@@ -1,9 +1,8 @@
-import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useCreatePost } from "../../api/useCreatePost";
-import { useFormik } from "formik";
-import { KeyboardAvoidingView, Button } from "react-native";
+import React, { useState } from "react";
+import { Button, KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { useCreatePost } from "../../api/useCreatePost";
 import { Frame } from "../../components/Frame";
 import { useTheme } from "../providers/Theming";
 
