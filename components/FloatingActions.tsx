@@ -17,40 +17,39 @@ import { Units } from "../foundations/Spacing";
 
 function FloatingActionsDock() {
   const theme = useTheme();
-  const scheme = useColorScheme();
-  const { navigate } = useNavigation();
+  const spacing = useEdgeSpacing();
   return (
-    <>
-      <Frame
-        flexDirection="row"
-        justifyContent="space-between"
-        style={{
-          backgroundColor: theme.colors.background,
-          height: 60,
-          borderRadius: 999,
-          elevation: 2,
-          position: "relative",
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowOpacity: 0.2,
-          shadowRadius: 1.41,
-        }}
-      >
-        <Frame flexGrow={1} alignItems="center" justifyContent="center">
-          <Font variant="display" color="foregroundSecondary">
-            A
-          </Font>
-        </Frame>
-        <Frame flexGrow={1} alignItems="center" justifyContent="center">
-          <Font variant="display" color="foregroundSecondary">
-            B
-          </Font>
-        </Frame>
+    <Frame
+      flexDirection="row"
+      justifyContent="space-between"
+      style={{
+        backgroundColor: theme.colors.background,
+        marginRight: theme.units[spacing.horizontal],
+        marginLeft: theme.units[spacing.horizontal],
+        height: 60,
+        borderRadius: 999,
+        elevation: 2,
+        position: "relative",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+      }}
+    >
+      <Frame flexGrow={1} alignItems="center" justifyContent="center">
+        <Font variant="display" color="foregroundSecondary">
+          A
+        </Font>
       </Frame>
-    </>
+      <Frame flexGrow={1} alignItems="center" justifyContent="center">
+        <Font variant="display" color="foregroundSecondary">
+          B
+        </Font>
+      </Frame>
+    </Frame>
   );
 }
 
@@ -58,12 +57,13 @@ function FloatingMainAction() {
   const size: keyof Units = "large";
   const theme = useTheme();
   const { navigate } = useNavigation();
+  const spacing = useEdgeSpacing();
   return (
     <Frame
       alignItems="center"
       style={{
         top: -theme.scales[size] / 2,
-        zIndex: 999,
+        zIndex: 999, // TODO: make an absoluteRadius constant
         position: "absolute",
         elevation: 2,
         shadowColor: "#000",
@@ -99,16 +99,14 @@ function FloatingMainAction() {
 function FloatingActions() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
-  const { navigate } = useNavigation();
-  const scheme = useColorScheme();
   return (
     <Frame
       alignItems="baseline"
       justifyContent="space-evenly"
       style={{
         position: "absolute",
-        left: theme.units[spacing.horizontal],
-        right: theme.units[spacing.horizontal],
+        left: 0,
+        right: 0,
         bottom: 0,
         height: 110,
       }}

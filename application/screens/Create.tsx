@@ -27,6 +27,8 @@ function Create() {
         placeholder="Write something"
         value={text}
         onChangeText={(value) => setTextValue(value)}
+        multiline
+        numberOfLines={10}
         style={{
           ...(theme.typography.body as Object),
           width: "100%",

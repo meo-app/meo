@@ -35,7 +35,7 @@ const dark: Theme["colors"] = {
 const fontFamily = "Inter_700Bold";
 const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   constants: {
-    borderRadius: 16,
+    borderRadius: 12,
   },
   units: {
     smallest: 2,
@@ -144,7 +144,7 @@ function useEdgeSpacing(): {
   horizontal: keyof Units;
 } {
   return {
-    vertical: "medium",
+    vertical: "large",
     horizontal: "medium",
   };
 }
