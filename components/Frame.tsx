@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { View, FlexStyle, StyleProp, ViewStyle } from "react-native";
 import { Units } from "../foundations/Spacing";
-import { useTheme } from "../application/Theming";
+import { useTheme } from "../application/providers/Theming";
 
 type Value = keyof Units | "none";
 type Spacing =

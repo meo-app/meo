@@ -1,19 +1,17 @@
-import React, { useContext } from "react";
-import { Text, StatusBar, StatusBarStyle } from "react-native";
-import { ColorSchemeName, useColorScheme } from "react-native-appearance";
-import { Theme } from "../foundations/Theme";
 import {
-  useFonts,
-  Inter_700Bold,
   Inter_400Regular,
+  Inter_700Bold,
+  useFonts,
 } from "@expo-google-fonts/inter";
-import { Typography } from "../foundations/Typography";
-import { Units } from "../foundations/Spacing";
+import React, { useContext } from "react";
+import { StatusBar, StatusBarStyle } from "react-native";
+import { ColorSchemeName, useColorScheme } from "react-native-appearance";
+import { Units } from "../../foundations/Spacing";
+import { Theme } from "../../foundations/Theme";
 
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
 const primary = "#2D9CDB";
-
 const light: Theme["colors"] = {
   absoluteDark,
   absoluteLight,
@@ -35,7 +33,10 @@ const dark: Theme["colors"] = {
 };
 
 const fontFamily = "Inter_700Bold";
-const base: Pick<Theme, "scales" | "typography" | "units"> = {
+const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
+  constants: {
+    borderRadius: 16,
+  },
   units: {
     smallest: 2,
     smaller: 4,
@@ -141,7 +142,6 @@ function useEdgeSpacing(): {
   vertical: keyof Units;
   horizontal: keyof Units;
 } {
-  const theme = useTheme();
   return {
     vertical: "medium",
     horizontal: "medium",

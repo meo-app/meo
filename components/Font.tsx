@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 import { Typography } from "../foundations/Typography";
-import { useTheme } from "../application/Theming";
+import { useTheme } from "../application/providers/Theming";
 
 interface Props extends React.ComponentProps<typeof Text> {
   variant?: keyof Typography;
