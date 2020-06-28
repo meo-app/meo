@@ -1,5 +1,5 @@
 import React from "react";
-import { useEdgeSpacing } from "../application/Theming";
+import { useEdgeSpacing } from "../application/providers/Theming";
 import { Frame } from "./Frame";
 
 const SafeStackArea: React.FunctionComponent = function SafeStackArea({
