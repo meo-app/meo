@@ -31,8 +31,10 @@ interface Props
   paddingBottom?: Spacing;
   paddingLeft?: Spacing;
   style?: StyleProp<ViewStyle>;
+  debugTrace?: boolean;
 }
 
+// TODO: hook to get styles without the frame itself
 const Frame: React.FunctionComponent<Props> = function Frame({
   justifyContent,
   alignItems,
@@ -50,9 +52,10 @@ const Frame: React.FunctionComponent<Props> = function Frame({
   paddingBottom,
   paddingLeft,
   style,
+  debugTrace,
   ...props
 }) {
-  const { units } = useTheme();
+  const { units, colors } = useTheme();
   const getSpacing = useCallback(
     (key?: Spacing) =>
       key === "none" || !key ? 0 : units[key as keyof typeof units],
@@ -78,6 +81,12 @@ const Frame: React.FunctionComponent<Props> = function Frame({
         paddingBottom: getSpacing(paddingBottom),
         paddingLeft: getSpacing(paddingLeft),
         ...(style as Object),
+        ...(debugTrace && {
+          // TODO: make sure to only add on dev env
+          borderStyle: "dashed",
+          borderWidth: 1,
+          borderColor: "red", // TODO: use destructive color
+        }),
       }}
       {...props}
     />
