@@ -10,11 +10,17 @@ function usePosts() {
       new Promise<Post[]>((resolve, reject) => {
         db.transaction(
           (tx) => {
-            tx.executeSql("select * from posts", [], (_, { rows }) => {
-              resolve(
-                [...Array(rows.length).keys()].map((index) => rows.item(index))
-              );
-            });
+            tx.executeSql(
+              "select * from posts order by id desc",
+              [],
+              (_, { rows }) => {
+                resolve(
+                  [...Array(rows.length).keys()].map((index) =>
+                    rows.item(index)
+                  )
+                );
+              }
+            );
           },
           (err) => {
             console.error(
