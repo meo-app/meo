@@ -3,7 +3,7 @@ import {
   Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
-import React, { useContext } from "react";
+import React, { useContext, Children } from "react";
 import { StatusBar, StatusBarStyle } from "react-native";
 import { ColorSchemeName, useColorScheme } from "react-native-appearance";
 import { Units } from "../../foundations/Spacing";
@@ -50,10 +50,10 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
     smallest: 6,
     smaller: 12,
     small: 24,
-    medium: 46,
-    large: 92,
-    larger: 184,
-    largest: 368,
+    medium: 32,
+    large: 48,
+    larger: 80,
+    largest: 128,
   },
   typography: {
     body: {
@@ -85,10 +85,11 @@ const STATUS_BAR_SCHEME_MAP: { [key in ColorSchemeName]: StatusBarStyle } = {
 };
 
 const Context = React.createContext<Theme | null>(null);
-const ThemeProvider: React.FunctionComponent = function ThemeProvider({
-  children,
-}) {
-  const scheme = useColorScheme();
+const ThemeProvider: React.FunctionComponent<{
+  forceColorSchemeTo?: ColorSchemeName;
+}> = function ThemeProvider({ children, forceColorSchemeTo }) {
+  const systemColorScheme = useColorScheme();
+  const scheme = forceColorSchemeTo || systemColorScheme;
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_400Regular,
@@ -148,4 +149,19 @@ function useEdgeSpacing(): {
   };
 }
 
-export { ThemeProvider, useTheme, useEdgeSpacing };
+const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
+  children,
+}) {
+  const scheme = useColorScheme();
+  return (
+    <ThemeProvider
+      {...(scheme !== "no-preference" && {
+        forceColorSchemeTo: scheme === "dark" ? "light" : "dark",
+      })}
+    >
+      {children}
+    </ThemeProvider>
+  );
+};
+
+export { ThemeProvider, useTheme, useEdgeSpacing, FlipColorScheme };
