@@ -17,8 +17,8 @@ const light: Theme["colors"] = {
   absoluteLight,
   primary,
   background: "#FFFFFF",
-  backgroundAccent: "#F2F2F2",
-  foregroundPrimary: "#4E4E53",
+  backgroundAccent: "#f2f2f2",
+  foregroundPrimary: "#4F4F4F",
   foregroundSecondary: "#9A99A2",
 };
 
@@ -26,8 +26,8 @@ const dark: Theme["colors"] = {
   absoluteDark,
   absoluteLight,
   primary,
-  background: "#292F3F",
-  backgroundAccent: "#F2F2F2",
+  background: "#1D222D",
+  backgroundAccent: "#292F3F",
   foregroundPrimary: "#F2F2F2",
   foregroundSecondary: "#9A99A2",
 };
