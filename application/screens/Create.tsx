@@ -34,6 +34,7 @@ function Create() {
           />
         </Frame>
         <TextInput
+          autoFocus
           placeholder="Write something"
           value={text}
           onChangeText={(value) => setTextValue(value)}
