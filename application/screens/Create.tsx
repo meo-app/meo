@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Button, KeyboardAvoidingView } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Frame } from "../../components/Frame";
 import { useTheme } from "../providers/Theming";
+import { Font } from "../../components/Font";
 
 function Create() {
   const navigation = useNavigation();
@@ -21,6 +22,8 @@ function Create() {
       style={{
         alignContent: "center",
         alignItems: "center",
+        borderColor: "red",
+        borderWidth: 1,
       }}
     >
       <TextInput
@@ -35,16 +38,17 @@ function Create() {
           padding: theme.units.medium,
         }}
       />
-      <Frame marginTop="medium">
-        <Button
-          title="Create"
+      <Frame marginTop="medium" debugTrace>
+        <TouchableHighlight
           disabled={!text || status === "loading"}
           onPress={() =>
             createPost({
               text,
             })
           }
-        />
+        >
+          <Font>Yo</Font>
+        </TouchableHighlight>
       </Frame>
     </KeyboardAvoidingView>
   );
