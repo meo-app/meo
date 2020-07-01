@@ -8,6 +8,7 @@ import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { FloatingActions } from "../../components/FloatingActions";
 import { Post } from "../../api/Entities";
+import { borderColor } from "polished";
 
 function Home() {
   const theme = useTheme();
@@ -28,7 +29,7 @@ function Home() {
         )}
         {Boolean(data?.length) && (
           <ScrollView>
-            <Frame paddingBottom="largest">
+            <Frame paddingBottom="largest" debugTrace>
               <FlatList
                 keyExtractor={({ id }) => `list-item-${id}`}
                 data={data}
@@ -38,6 +39,28 @@ function Home() {
           </ScrollView>
         )}
       </View>
+      <View
+        style={{
+          width: 150,
+          height: 200,
+          backgroundColor: theme.colors.backgroundAccent,
+          borderRadius: theme.constants.borderRadius,
+        }}
+      >
+        <Font>Oi</Font>
+      </View>
+      <Frame
+        marginTop="medium"
+        debugTrace
+        backgroundColor={theme.colors.backgroundAccent}
+        style={{
+          width: theme.scales.largest,
+          height: theme.scales.largest,
+          borderRadius: theme.constants.borderRadius,
+        }}
+      >
+        <Font>Oi</Font>
+      </Frame>
       <FloatingActions />
     </>
   );

@@ -32,6 +32,7 @@ interface Props
   paddingLeft?: Spacing;
   style?: StyleProp<ViewStyle>;
   debugTrace?: boolean;
+  backgroundColor?:string;
 }
 
 // TODO: hook to get styles without the frame itself

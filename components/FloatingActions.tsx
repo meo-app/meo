@@ -17,6 +17,7 @@ import { Units } from "../foundations/Spacing";
 
 function FloatingActionsDock() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const spacing = useEdgeSpacing();
   return (
     <Frame
@@ -45,9 +46,11 @@ function FloatingActionsDock() {
         </Font>
       </Frame>
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
-        <Font variant="display" color="foregroundSecondary">
-          B
-        </Font>
+        <TouchableHighlight onPress={() => navigation.navigate("Search")}>
+          <Font variant="display" color="foregroundSecondary">
+            B
+          </Font>
+        </TouchableHighlight>
       </Frame>
     </Frame>
   );

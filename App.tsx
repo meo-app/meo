@@ -6,6 +6,7 @@ import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
 import { Home } from "./application/screens/Home";
+import { Search } from "./application/screens/Search";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ function Root() {
     >
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Create" component={Create} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 }
