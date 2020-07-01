@@ -1,3 +1,4 @@
+import React from "react";
 import { ICONS } from "./SVGIconProps";
 import { useTheme } from "../../application/providers/Theming";
 import { Scales } from "../../foundations/Spacing";
