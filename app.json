@@ -9,7 +9,8 @@
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./src/splash.png"
+      "image": "./src/splash.png",
+      "backgroundColor": "#1D222D"
     }
   }
 }
