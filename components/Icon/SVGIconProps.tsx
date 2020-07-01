@@ -1,5 +1,6 @@
 import { Plus } from "./icons/Plus";
 import { Home } from "./icons/Home";
+import { Search } from "./icons/Search";
 
 export interface SVGIconProps {
   width: number;
@@ -7,9 +8,12 @@ export interface SVGIconProps {
   color: string;
 }
 
+type IconTypes = "Plus" | "Home" | "Search";
+
 export const ICONS: {
-  [key in "Plus" | "Home"]: React.FunctionComponent<SVGIconProps>;
+  [key in IconTypes]: React.FunctionComponent<SVGIconProps>;
 } = {
   Plus,
   Home,
+  Search,
 };
