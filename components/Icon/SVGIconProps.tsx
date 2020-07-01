@@ -1,4 +1,5 @@
 import { Plus } from "./icons/Plus";
+import { Home } from "./icons/Home";
 
 export interface SVGIconProps {
   width: number;
@@ -7,7 +8,8 @@ export interface SVGIconProps {
 }
 
 export const ICONS: {
-  [key: string]: React.FunctionComponent<SVGIconProps>;
+  [key in "Plus" | "Home"]: React.FunctionComponent<SVGIconProps>;
 } = {
   Plus,
+  Home,
 };

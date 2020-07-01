@@ -8,12 +8,12 @@ import {
 } from "../application/providers/Theming";
 import { Frame } from "./Frame";
 import { TouchableHighlight } from "react-native-gesture-handler";
-import { Plus } from "../application/icons/Plus";
 import { LinearGradient } from "expo-linear-gradient";
 import { transparentize, darken, lighten } from "polished";
 import { Font } from "./Font";
 import { useColorScheme } from "react-native-appearance";
 import { Units } from "../foundations/Spacing";
+import { Icon } from "./Icon/Icon";
 
 function FloatingActionsDock() {
   const theme = useTheme();
@@ -57,7 +57,7 @@ function FloatingActionsDock() {
 }
 
 function FloatingMainAction() {
-  const size: keyof Units = "large";
+  const size: keyof Units = "largest";
   const theme = useTheme();
   const { navigate } = useNavigation();
   const spacing = useEdgeSpacing();
@@ -93,7 +93,7 @@ function FloatingMainAction() {
           justifyContent: "center",
         }}
       >
-        <Plus />
+        <Icon type="Plus" size="medium" />
       </TouchableHighlight>
     </Frame>
   );
