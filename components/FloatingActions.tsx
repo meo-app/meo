@@ -48,6 +48,12 @@ function FloatingActionsDock({ onHomePressAtHome }: Props) {
     >
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
         <TouchableHighlight
+          style={{
+            height: theme.scales.largest,
+            width: theme.scales.largest,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           onPress={() => {
             if (route.name === "Home") {
               onHomePressAtHome && onHomePressAtHome();
@@ -60,7 +66,15 @@ function FloatingActionsDock({ onHomePressAtHome }: Props) {
         </TouchableHighlight>
       </Frame>
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
-        <TouchableHighlight onPress={() => navigation.navigate("Search")}>
+        <TouchableHighlight
+          onPress={() => navigation.navigate("Search")}
+          style={{
+            height: theme.scales.largest,
+            width: theme.scales.largest,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Icon type="Search" size="medium" />
         </TouchableHighlight>
       </Frame>
