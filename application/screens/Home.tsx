@@ -1,18 +1,15 @@
-import { useNavigation, ThemeProvider } from "@react-navigation/native";
 import React from "react";
-import { Image, View, FlatList } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { Post } from "../../api/Entities";
 import { usePosts } from "../../api/usePosts";
+import { FloatingActions } from "../../components/FloatingActions";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { FloatingActions } from "../../components/FloatingActions";
-import { Post } from "../../api/Entities";
-import { borderColor } from "polished";
 
 function Home() {
   const theme = useTheme();
-  const spacing = useEdgeSpacing();
   const { data, error, isFetching } = usePosts();
   return (
     <>
@@ -29,7 +26,7 @@ function Home() {
         )}
         {Boolean(data?.length) && (
           <ScrollView>
-            <Frame paddingBottom="largest" debugTrace>
+            <Frame paddingBottom="largest">
               <FlatList
                 keyExtractor={({ id }) => `list-item-${id}`}
                 data={data}
@@ -39,28 +36,6 @@ function Home() {
           </ScrollView>
         )}
       </View>
-      <View
-        style={{
-          width: 150,
-          height: 200,
-          backgroundColor: theme.colors.backgroundAccent,
-          borderRadius: theme.constants.borderRadius,
-        }}
-      >
-        <Font>Oi</Font>
-      </View>
-      <Frame
-        marginTop="medium"
-        debugTrace
-        backgroundColor={theme.colors.backgroundAccent}
-        style={{
-          width: theme.scales.largest,
-          height: theme.scales.largest,
-          borderRadius: theme.constants.borderRadius,
-        }}
-      >
-        <Font>Oi</Font>
-      </Frame>
       <FloatingActions />
     </>
   );
