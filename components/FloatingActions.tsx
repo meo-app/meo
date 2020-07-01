@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   useEdgeSpacing,
   useTheme,
@@ -14,10 +14,16 @@ import { Font } from "./Font";
 import { useColorScheme } from "react-native-appearance";
 import { Units } from "../foundations/Spacing";
 import { Icon } from "./Icon/Icon";
+import { Alert } from "react-native";
 
-function FloatingActionsDock() {
+interface Props {
+  onHomePressAtHome?: () => void;
+}
+
+function FloatingActionsDock({ onHomePressAtHome }: Props) {
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
   const spacing = useEdgeSpacing();
   return (
     <Frame
@@ -41,15 +47,21 @@ function FloatingActionsDock() {
       }}
     >
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
-        <Font variant="display" color="foregroundSecondary">
-          A
-        </Font>
+        <TouchableHighlight
+          onPress={() => {
+            if (route.name === "Home") {
+              onHomePressAtHome && onHomePressAtHome();
+              return;
+            }
+            navigation.navigate("Home");
+          }}
+        >
+          <Icon type="Home" size="medium" />
+        </TouchableHighlight>
       </Frame>
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
         <TouchableHighlight onPress={() => navigation.navigate("Search")}>
-          <Font variant="display" color="foregroundSecondary">
-            B
-          </Font>
+          <Icon type="Search" size="medium" />
         </TouchableHighlight>
       </Frame>
     </Frame>
@@ -99,7 +111,7 @@ function FloatingMainAction() {
   );
 }
 
-function FloatingActions() {
+function FloatingActions({ onHomePressAtHome }: Props) {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   return (
@@ -140,7 +152,7 @@ function FloatingActions() {
         }}
       >
         <FlipColorScheme>
-          <FloatingActionsDock />
+          <FloatingActionsDock onHomePressAtHome={onHomePressAtHome} />
         </FlipColorScheme>
       </LinearGradient>
     </Frame>
