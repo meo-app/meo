@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { View, FlexStyle, StyleProp, ViewStyle } from "react-native";
-import { Units } from "../foundations/Spacing";
+import { Units, Scales } from "../foundations/Spacing";
 import { useTheme } from "../application/providers/Theming";
 
 type Value = keyof Units | "none";
@@ -32,7 +32,9 @@ interface Props
   paddingLeft?: Spacing;
   style?: StyleProp<ViewStyle>;
   debugTrace?: boolean;
-  backgroundColor?:string;
+  backgroundColor?: string;
+  width?: keyof Scales;
+  height?: keyof Scales;
 }
 
 // TODO: hook to get styles without the frame itself
@@ -54,9 +56,11 @@ const Frame: React.FunctionComponent<Props> = function Frame({
   paddingLeft,
   style,
   debugTrace,
+  width,
+  height,
   ...props
 }) {
-  const { units, colors } = useTheme();
+  const { units, colors, scales } = useTheme();
   const getSpacing = useCallback(
     (key?: Spacing) =>
       key === "none" || !key ? 0 : units[key as keyof typeof units],
@@ -87,6 +91,12 @@ const Frame: React.FunctionComponent<Props> = function Frame({
           borderStyle: "dashed",
           borderWidth: 1,
           borderColor: "red", // TODO: use destructive color
+        }),
+        ...(width && {
+          width: scales[width],
+        }),
+        ...(height && {
+          height: scales[height],
         }),
       }}
       {...props}

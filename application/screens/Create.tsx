@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Button, KeyboardAvoidingView } from "react-native";
+import { Image, KeyboardAvoidingView } from "react-native";
 import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
+import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { useTheme } from "../providers/Theming";
-import { Font } from "../../components/Font";
 
 function Create() {
   const navigation = useNavigation();
@@ -18,26 +18,34 @@ function Create() {
   });
 
   return (
-    <KeyboardAvoidingView
-      style={{
-        alignContent: "center",
-        alignItems: "center",
-        borderColor: "red",
-        borderWidth: 1,
-      }}
-    >
-      <TextInput
-        placeholder="Write something"
-        value={text}
-        onChangeText={(value) => setTextValue(value)}
-        multiline
-        numberOfLines={10}
-        style={{
-          ...(theme.typography.body as Object),
-          width: "100%",
-          padding: theme.units.medium,
-        }}
-      />
+    <KeyboardAvoidingView>
+      <Frame flexDirection="row" alignItems="center">
+        <Frame width="largest" height="largest">
+          <Image
+            style={{
+              width: theme.scales.largest,
+              height: theme.scales.largest,
+              resizeMode: "cover",
+              borderRadius: theme.constants.borderRadius,
+            }}
+            source={{
+              uri: "https://i.pravatar.cc/150",
+            }}
+          />
+        </Frame>
+        <TextInput
+          placeholder="Write something"
+          value={text}
+          onChangeText={(value) => setTextValue(value)}
+          multiline
+          numberOfLines={10}
+          style={{
+            ...(theme.typography.body as Object),
+            width: "80%",
+            padding: theme.units.medium,
+          }}
+        />
+      </Frame>
       <Frame marginTop="medium" debugTrace>
         <TouchableHighlight
           disabled={!text || status === "loading"}

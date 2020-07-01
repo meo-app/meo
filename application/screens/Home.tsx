@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList, Image, View } from "react-native";
+import React, { useRef } from "react";
+import { FlatList, Image, View, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Post } from "../../api/Entities";
 import { usePosts } from "../../api/usePosts";
@@ -11,6 +11,7 @@ import { useEdgeSpacing, useTheme } from "../providers/Theming";
 function Home() {
   const theme = useTheme();
   const { data, error, isFetching } = usePosts();
+  const ref = useRef<FlatList>(null);
   return (
     <>
       <View>
@@ -25,18 +26,29 @@ function Home() {
           </View>
         )}
         {Boolean(data?.length) && (
-          <ScrollView>
-            <Frame paddingBottom="largest">
-              <FlatList
-                keyExtractor={({ id }) => `list-item-${id}`}
-                data={data}
-                renderItem={({ item }) => <PostLine {...item} />}
-              />
-            </Frame>
-          </ScrollView>
+          <Frame paddingBottom="largest">
+            <FlatList
+              style={{
+                height: "100%",
+              }}
+              ref={ref}
+              keyExtractor={({ id }) => `list-item-${id}`}
+              data={data}
+              renderItem={({ item }) => <PostLine {...item} />}
+            />
+          </Frame>
         )}
       </View>
-      <FloatingActions />
+      <FloatingActions
+        onHomePressAtHome={() => {
+          ref.current?.scrollToIndex({
+            animated: true,
+            index: 0,
+          });
+          // Alert.alert("yo");
+          // ref.current?.scrollView.scrollTo({ x: 0, y: 0, animated: true });
+        }}
+      />
     </>
   );
 }
@@ -73,7 +85,7 @@ function PostLine({ value }: Post) {
         />
       </Frame>
       <Frame flexGrow={1} flex={1} paddingLeft="medium">
-        <Font>{value}</Font>
+        <Font numberOfLines={5}>{value}</Font>
       </Frame>
     </Frame>
   );
