@@ -5,20 +5,27 @@ import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
-import { useTheme } from "../providers/Theming";
+import { RouteNames } from "../../route-names";
+import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 function Create() {
   const navigation = useNavigation();
   const [text, setTextValue] = useState("");
   const theme = useTheme();
+  const spacing = useEdgeSpacing();
   const [createPost, { status }] = useCreatePost({
     onSuccess: () => {
-      navigation.navigate("Home"); // TODO: Create enum with possible screens
+      navigation.navigate(RouteNames.Home);
     },
   });
 
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView
+      style={{
+        paddingLeft: theme.units[spacing.horizontal],
+        paddingRight: theme.units[spacing.horizontal],
+      }}
+    >
       <Frame flexDirection="row" alignItems="center">
         <Frame width="largest" height="largest">
           <Image
@@ -56,7 +63,7 @@ function Create() {
             })
           }
         >
-          <Font>Yo</Font>
+          <Font>Create</Font>
         </TouchableHighlight>
       </Frame>
     </KeyboardAvoidingView>

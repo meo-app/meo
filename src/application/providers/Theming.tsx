@@ -36,6 +36,18 @@ const fontFamily = "Inter_700Bold";
 const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   constants: {
     borderRadius: 12,
+    absoluteRadius: 999,
+    shadow: {
+      elevation: 2,
+      position: "relative",
+      shadowColor: absoluteDark,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
+    },
   },
   units: {
     smallest: 2,
@@ -120,8 +132,8 @@ const ThemeProvider: React.FunctionComponent<{
       }}
     >
       <StatusBar
-        barStyle={STATUS_BAR_SCHEME_MAP[scheme]}
-        backgroundColor={background}
+        barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme]}
+        backgroundColor={colors[systemColorScheme].background}
       />
       {children}
     </Context.Provider>
