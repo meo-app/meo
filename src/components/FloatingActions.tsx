@@ -50,7 +50,7 @@ function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
   );
 }
 
-const Gradient: React.SFC = function Gradient({ children }) {
+const Gradient: React.FunctionComponent = function Gradient({ children }) {
   const theme = useTheme();
   return (
     <LinearGradient
