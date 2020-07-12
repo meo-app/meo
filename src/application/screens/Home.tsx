@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
-import { FlatList, Image, View, Alert } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, Image, View } from "react-native";
 import { Post } from "../../api/Entities";
 import { usePosts } from "../../api/usePosts";
 import { FloatingActions } from "../../components/FloatingActions";
@@ -9,7 +8,6 @@ import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 function Home() {
-  const theme = useTheme();
   const { data, error, isFetching } = usePosts();
   const ref = useRef<FlatList>(null);
   return (
@@ -39,16 +37,14 @@ function Home() {
           </Frame>
         )}
       </View>
-      <FloatingActions
-        onHomePressAtHome={() => {
+      {/* <FloatingActions
+        onScrollTopRequest={() => {
           ref.current?.scrollToIndex({
             animated: true,
             index: 0,
           });
-          // Alert.alert("yo");
-          // ref.current?.scrollView.scrollTo({ x: 0, y: 0, animated: true });
         }}
-      />
+      /> */}
     </>
   );
 }
