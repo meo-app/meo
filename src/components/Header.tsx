@@ -12,7 +12,7 @@ function useStatusBarHeight() {
     let headerHeight;
     if (Platform.OS === "ios") {
       if (isLandscape && !Platform.isPad) {
-        headerHeight = 32;
+        headerHeight = 36;
       } else {
         headerHeight = 44;
       }

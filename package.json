@@ -32,7 +32,8 @@
     "react-native-unimodules": "~0.9.0",
     "react-native-web": "~0.11.7",
     "react-navigation-hooks": "^1.1.0",
-    "react-query": "^2.4.2"
+    "react-query": "^2.4.2",
+    "reanimated-bottom-sheet": "^1.0.0-alpha.20"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

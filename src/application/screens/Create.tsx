@@ -1,7 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, KeyboardAvoidingView } from "react-native";
-import { TextInput, TouchableHighlight } from "react-native-gesture-handler";
+import {
+  TextInput,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
@@ -16,18 +20,19 @@ function Create() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const [createPost, { status }] = useCreatePost({
-    onSuccess: () => {
-      navigation.navigate(RouteNames.Home);
-    },
+    onSuccess: () => navigation.navigate(RouteNames.Home),
   });
 
   return (
     <>
       <SafeHeader>
-        <Icon type="Close" size="small" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon type="Close" size="small" />
+        </TouchableOpacity>
       </SafeHeader>
       <KeyboardAvoidingView
         style={{
+          flex: 1,
           paddingLeft: theme.units[spacing.horizontal],
           paddingRight: theme.units[spacing.horizontal],
         }}
@@ -56,12 +61,21 @@ function Create() {
             style={{
               ...(theme.typography.body as Object),
               width: "80%",
+              maxHeight: 80,
               padding: theme.units.medium,
             }}
           />
         </Frame>
-        <Frame marginTop="medium" debugTrace>
+        <Frame />
+        <Frame marginTop="medium">
           <TouchableHighlight
+            style={{
+              backgroundColor: theme.colors.primary,
+              padding: theme.units.medium,
+              borderRadius: theme.constants.absoluteRadius,
+              alignItems: "center",
+              ...(theme.typography.body as Object),
+            }}
             disabled={!text || status === "loading"}
             onPress={() =>
               createPost({
@@ -69,7 +83,7 @@ function Create() {
               })
             }
           >
-            <Font>Create</Font>
+            <Font color="absoluteLight">Create</Font>
           </TouchableHighlight>
         </Frame>
       </KeyboardAvoidingView>

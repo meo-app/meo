@@ -7,9 +7,11 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { Header } from "../../components/Header";
+import { ThemeProvider } from "@react-navigation/native";
 
 function Home() {
   const { data, error, isFetching } = usePosts();
+  const theme = useTheme();
   const ref = useRef<FlatList>(null);
   return (
     <>
@@ -26,7 +28,7 @@ function Home() {
           </View>
         )}
         {Boolean(data?.length) && (
-          <Frame paddingBottom="largest">
+          <Frame>
             <FlatList
               style={{
                 height: "100%",
@@ -34,7 +36,19 @@ function Home() {
               ref={ref}
               keyExtractor={({ id }) => `list-item-${id}`}
               data={data}
-              renderItem={({ item }) => <PostLine {...item} />}
+              renderItem={({ item, index }) =>
+                data && index === data?.length - 1 ? (
+                  <Frame
+                    style={{
+                      paddingBottom: theme.units.largest * 4.5,
+                    }}
+                  >
+                    <PostLine {...item} />
+                  </Frame>
+                ) : (
+                  <PostLine {...item} />
+                )
+              }
             />
           </Frame>
         )}
