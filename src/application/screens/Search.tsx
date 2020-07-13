@@ -1,15 +1,24 @@
 import React from "react";
-import { View } from "react-native";
 import { Font } from "../../components/Font";
+import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
+import { useEdgeSpacing } from "../providers/Theming";
 
 function Search() {
+  const spacing = useEdgeSpacing();
   return (
     <>
       <Header title="Search" />
-      <View style={{ flex: 1 }}>
-        <Font>Hello world search</Font>
-      </View>
+      <Frame
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        marginTop={spacing.vertical}
+        paddingLeft={spacing.horizontal}
+        paddingRight={spacing.horizontal}
+      >
+        <Font>Not yet implement</Font>
+      </Frame>
     </>
   );
 }

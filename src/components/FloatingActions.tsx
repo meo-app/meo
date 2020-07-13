@@ -1,7 +1,10 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
 import React, { useContext } from "react";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import {
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import {
   FlipColorScheme,
   useEdgeSpacing,
@@ -105,14 +108,14 @@ function Dock() {
       }}
     >
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
-        <TouchableHighlight onPress={() => onHomePress?.()} style={touchable}>
+        <TouchableOpacity onPress={() => onHomePress?.()} style={touchable}>
           <Icon type="Home" size="medium" />
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Frame>
       <Frame flexGrow={1} alignItems="center" justifyContent="center">
-        <TouchableHighlight onPress={() => onSearchPress?.()} style={touchable}>
+        <TouchableOpacity onPress={() => onSearchPress?.()} style={touchable}>
           <Icon type="Search" size="medium" />
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Frame>
     </Frame>
   );
@@ -139,7 +142,7 @@ function CreateButton() {
         style={{
           width: theme.scales[size],
           height: theme.scales[size],
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.colors.backgroundAccent,
           borderRadius: theme.constants.absoluteRadius,
           display: "flex",
           alignItems: "center",
