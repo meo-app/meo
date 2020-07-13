@@ -26,7 +26,9 @@ function useStatusBarHeight() {
   }, [isLandscape]);
 }
 
-interface Props extends StackHeaderProps {}
+interface Props {
+  title?: string;
+}
 
 const SafeHeader: React.FunctionComponent = function SafeHeader({ children }) {
   const theme = useTheme();
@@ -51,10 +53,10 @@ const SafeHeader: React.FunctionComponent = function SafeHeader({ children }) {
   );
 };
 
-function Header({ insets, scene }: Props) {
+function Header({ title }: Props) {
   return (
     <SafeHeader>
-      <Font variant="display">{scene.route.name}</Font>
+      <Font variant="display">{title}</Font>
     </SafeHeader>
   );
 }

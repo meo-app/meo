@@ -7,6 +7,8 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { SafeHeader } from "../../components/Header";
+import { Icon } from "../../components/Icon/Icon";
 
 function Create() {
   const navigation = useNavigation();
@@ -20,53 +22,58 @@ function Create() {
   });
 
   return (
-    <KeyboardAvoidingView
-      style={{
-        paddingLeft: theme.units[spacing.horizontal],
-        paddingRight: theme.units[spacing.horizontal],
-      }}
-    >
-      <Frame flexDirection="row" alignItems="center">
-        <Frame width="largest" height="largest">
-          <Image
+    <>
+      <SafeHeader>
+        <Icon type="Close" size="small" />
+      </SafeHeader>
+      <KeyboardAvoidingView
+        style={{
+          paddingLeft: theme.units[spacing.horizontal],
+          paddingRight: theme.units[spacing.horizontal],
+        }}
+      >
+        <Frame flexDirection="row" alignItems="center">
+          <Frame width="largest" height="largest">
+            <Image
+              style={{
+                width: theme.scales.largest,
+                height: theme.scales.largest,
+                resizeMode: "cover",
+                borderRadius: theme.constants.borderRadius,
+              }}
+              source={{
+                uri: "https://i.pravatar.cc/150",
+              }}
+            />
+          </Frame>
+          <TextInput
+            autoFocus
+            placeholder="Write something"
+            value={text}
+            onChangeText={(value) => setTextValue(value)}
+            multiline
+            numberOfLines={10}
             style={{
-              width: theme.scales.largest,
-              height: theme.scales.largest,
-              resizeMode: "cover",
-              borderRadius: theme.constants.borderRadius,
-            }}
-            source={{
-              uri: "https://i.pravatar.cc/150",
+              ...(theme.typography.body as Object),
+              width: "80%",
+              padding: theme.units.medium,
             }}
           />
         </Frame>
-        <TextInput
-          autoFocus
-          placeholder="Write something"
-          value={text}
-          onChangeText={(value) => setTextValue(value)}
-          multiline
-          numberOfLines={10}
-          style={{
-            ...(theme.typography.body as Object),
-            width: "80%",
-            padding: theme.units.medium,
-          }}
-        />
-      </Frame>
-      <Frame marginTop="medium" debugTrace>
-        <TouchableHighlight
-          disabled={!text || status === "loading"}
-          onPress={() =>
-            createPost({
-              text,
-            })
-          }
-        >
-          <Font>Create</Font>
-        </TouchableHighlight>
-      </Frame>
-    </KeyboardAvoidingView>
+        <Frame marginTop="medium" debugTrace>
+          <TouchableHighlight
+            disabled={!text || status === "loading"}
+            onPress={() =>
+              createPost({
+                text,
+              })
+            }
+          >
+            <Font>Create</Font>
+          </TouchableHighlight>
+        </Frame>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 

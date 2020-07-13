@@ -6,12 +6,14 @@ import { FloatingActions } from "../../components/FloatingActions";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { Header } from "../../components/Header";
 
 function Home() {
   const { data, error, isFetching } = usePosts();
   const ref = useRef<FlatList>(null);
   return (
     <>
+      <Header title="Home" />
       <View>
         {isFetching && (
           <View>
@@ -37,14 +39,6 @@ function Home() {
           </Frame>
         )}
       </View>
-      {/* <FloatingActions
-        onScrollTopRequest={() => {
-          ref.current?.scrollToIndex({
-            animated: true,
-            index: 0,
-          });
-        }}
-      /> */}
     </>
   );
 }
