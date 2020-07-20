@@ -89,10 +89,11 @@ function Dock() {
   const { onSearchPress, onHomePress } = useContext(Context);
   const touchable = useFrameStyles({
     height: "largest",
-    width: "largest",
     alignItems: "center",
     justifyContent: "center",
-    flexGrow: 1,
+    style: {
+      width: "100%",
+    },
   });
   return (
     <Frame
@@ -107,12 +108,12 @@ function Dock() {
         ...theme.constants.shadow,
       }}
     >
-      <Frame flexGrow={1} alignItems="center" justifyContent="center">
+      <Frame flexGrow={1}>
         <TouchableOpacity onPress={() => onHomePress?.()} style={touchable}>
           <Icon type="Home" size="medium" />
         </TouchableOpacity>
       </Frame>
-      <Frame flexGrow={1} alignItems="center" justifyContent="center">
+      <Frame flexGrow={1}>
         <TouchableOpacity onPress={() => onSearchPress?.()} style={touchable}>
           <Icon type="Search" size="medium" />
         </TouchableOpacity>
@@ -128,6 +129,7 @@ function CreateButton() {
   return (
     <Frame
       alignItems="center"
+      pointerEvents="box-none"
       style={{
         top: -theme.scales[size] / 1.3,
         zIndex: theme.constants.absoluteRadius,

@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useRef } from "react";
+import React, { useRef, useCallback } from "react";
 import { FlatList, Image, View } from "react-native";
 import { Post } from "../../api/Entities";
 import { usePosts } from "../../api/usePosts";
@@ -15,6 +15,7 @@ function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
   const ref = useRef<FlatList>(null);
+  const keyExtractor = useCallback(({ id }) => `list-item-${id}`, []);
   return (
     <View>
       {isFetching && (
@@ -39,7 +40,7 @@ function Home() {
               height: "100%",
             }}
             ref={ref}
-            keyExtractor={({ id }) => `list-item-${id}`}
+            keyExtractor={keyExtractor}
             data={data}
             renderItem={({ item, index }) =>
               data && index === data?.length - 1 ? (
