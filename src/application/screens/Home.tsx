@@ -8,52 +8,65 @@ import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { Header } from "../../components/Header";
 import { ThemeProvider } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { RouteNames } from "../../route-names";
+
+const Stack = createStackNavigator();
 
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
   const ref = useRef<FlatList>(null);
   return (
-    <>
-      <Header title="Home" />
-      <View>
-        {isFetching && (
-          <View>
-            <Font>TODO: loading state</Font>
-          </View>
-        )}
-        {error && (
-          <View>
-            <Font>TODO: error state</Font>
-          </View>
-        )}
-        {Boolean(data?.length) && (
-          <Frame>
-            <FlatList
-              style={{
-                height: "100%",
-              }}
-              ref={ref}
-              keyExtractor={({ id }) => `list-item-${id}`}
-              data={data}
-              renderItem={({ item, index }) =>
-                data && index === data?.length - 1 ? (
-                  <Frame
-                    style={{
-                      paddingBottom: theme.units.largest * 4.5,
-                    }}
-                  >
-                    <PostLine {...item} />
-                  </Frame>
-                ) : (
+    <View>
+      {isFetching && (
+        <View>
+          <Font>TODO: loading state</Font>
+        </View>
+      )}
+      {error && (
+        <View>
+          <Font>TODO: error state</Font>
+        </View>
+      )}
+      {Boolean(data?.length) && (
+        <Frame>
+          <FlatList
+            style={{
+              height: "100%",
+            }}
+            ref={ref}
+            keyExtractor={({ id }) => `list-item-${id}`}
+            data={data}
+            renderItem={({ item, index }) =>
+              data && index === data?.length - 1 ? (
+                <Frame
+                  style={{
+                    paddingBottom: theme.units.largest * 4.5,
+                  }}
+                >
                   <PostLine {...item} />
-                )
-              }
-            />
-          </Frame>
-        )}
-      </View>
-    </>
+                </Frame>
+              ) : (
+                <PostLine {...item} />
+              )
+            }
+          />
+        </Frame>
+      )}
+    </View>
+  );
+}
+
+function Root() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        header: Header,
+      }}
+    >
+      <Stack.Screen name={RouteNames.Home} component={Home} />
+    </Stack.Navigator>
   );
 }
 
@@ -95,4 +108,4 @@ function PostLine({ value }: Post) {
   );
 }
 
-export { Home };
+export { Root as Home };

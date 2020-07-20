@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView } from "react-native";
+import { Image, KeyboardAvoidingView, View } from "react-native";
 import {
   TextInput,
   TouchableHighlight,
@@ -9,10 +10,12 @@ import {
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
+import { Header } from "../../components/Header";
+import { Icon } from "../../components/Icon/Icon";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { SafeHeader } from "../../components/Header";
-import { Icon } from "../../components/Icon/Icon";
+
+const Stack = createStackNavigator();
 
 function Create() {
   const navigation = useNavigation();
@@ -24,71 +27,93 @@ function Create() {
   });
 
   return (
-    <>
-      <SafeHeader>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon type="Close" size="small" />
-        </TouchableOpacity>
-      </SafeHeader>
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          paddingLeft: theme.units[spacing.horizontal],
-          paddingRight: theme.units[spacing.horizontal],
-        }}
+    <KeyboardAvoidingView
+      style={{
+        flex: 1,
+        paddingLeft: theme.units[spacing.horizontal],
+        paddingRight: theme.units[spacing.horizontal],
+      }}
+    >
+      <Frame
+        flexDirection="row"
+        alignItems="center"
+        paddingTop={spacing.horizontal}
       >
-        <Frame flexDirection="row" alignItems="center">
-          <Frame width="largest" height="largest">
-            <Image
-              style={{
-                width: theme.scales.largest,
-                height: theme.scales.largest,
-                resizeMode: "cover",
-                borderRadius: theme.constants.borderRadius,
-              }}
-              source={{
-                uri: "https://i.pravatar.cc/150",
-              }}
-            />
-          </Frame>
-          <TextInput
-            autoFocus
-            placeholder="Write something"
-            value={text}
-            onChangeText={(value) => setTextValue(value)}
-            multiline
-            numberOfLines={10}
+        <Frame width="largest" height="largest">
+          <Image
             style={{
-              ...(theme.typography.body as Object),
-              width: "80%",
-              maxHeight: 80,
-              padding: theme.units.medium,
+              width: theme.scales.largest,
+              height: theme.scales.largest,
+              resizeMode: "cover",
+              borderRadius: theme.constants.borderRadius,
+            }}
+            source={{
+              uri: "https://i.pravatar.cc/150",
             }}
           />
         </Frame>
-        <Frame />
-        <Frame marginTop="medium">
-          <TouchableHighlight
-            style={{
-              backgroundColor: theme.colors.primary,
-              padding: theme.units.medium,
-              borderRadius: theme.constants.absoluteRadius,
-              alignItems: "center",
-              ...(theme.typography.body as Object),
-            }}
-            disabled={!text || status === "loading"}
-            onPress={() =>
-              createPost({
-                text,
-              })
-            }
-          >
-            <Font color="absoluteLight">Create</Font>
-          </TouchableHighlight>
-        </Frame>
-      </KeyboardAvoidingView>
-    </>
+        <TextInput
+          autoFocus
+          placeholder="Write something"
+          value={text}
+          onChangeText={(value) => setTextValue(value)}
+          multiline
+          numberOfLines={10}
+          style={{
+            ...(theme.typography.body as Object),
+            width: "80%",
+            maxHeight: 80,
+            padding: theme.units.medium,
+          }}
+        />
+      </Frame>
+      <Frame />
+      <Frame marginTop="medium">
+        <TouchableHighlight
+          style={{
+            backgroundColor: theme.colors.primary,
+            padding: theme.units.medium,
+            borderRadius: theme.constants.absoluteRadius,
+            alignItems: "center",
+            ...(theme.typography.body as Object),
+          }}
+          disabled={!text || status === "loading"}
+          onPress={() =>
+            createPost({
+              text,
+            })
+          }
+        >
+          <Font color="absoluteLight">Create</Font>
+        </TouchableHighlight>
+      </Frame>
+    </KeyboardAvoidingView>
   );
 }
 
-export { Create };
+function Root() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        header: (props) => (
+          <Header {...props}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignSelf: "flex-start",
+              }}
+            >
+              <TouchableOpacity onPress={() => props.navigation.goBack()}>
+                <Icon type="Close" size="small" />
+              </TouchableOpacity>
+            </View>
+          </Header>
+        ),
+      }}
+    >
+      <Stack.Screen name={RouteNames.Create} component={Create} />
+    </Stack.Navigator>
+  );
+}
+
+export { Root as Create };
