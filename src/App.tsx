@@ -14,32 +14,30 @@ const Placeholder = () => <View style={{ flex: 1, backgroundColor: "blue" }} />;
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 
-const AppScreen = () => {
-  return (
-    <Tab.Navigator
-      tabBar={({ navigation }) => (
-        <FloatingActions
-          onHomePress={() => navigation.navigate(RouteNames.Home)}
-          onSearchPress={() => navigation.navigate(RouteNames.Search)}
-          onCreatePress={() => navigation.navigate(RouteNames.Create)}
-        />
-      )}
-    >
-      <Tab.Screen name={RouteNames.Home} component={Home} />
-      <Tab.Screen name={RouteNames.Search} component={Search} />
-      <Tab.Screen
-        name={RouteNames.Placeholder}
-        component={Placeholder}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate(RouteNames.Create);
-          },
-        })}
+const AppTabsNavigator = () => (
+  <Tab.Navigator
+    tabBar={({ navigation }) => (
+      <FloatingActions
+        onHomePress={() => navigation.navigate(RouteNames.Home)}
+        onSearchPress={() => navigation.navigate(RouteNames.Search)}
+        onCreatePress={() => navigation.navigate(RouteNames.Create)}
       />
-    </Tab.Navigator>
-  );
-};
+    )}
+  >
+    <Tab.Screen name={RouteNames.Home} component={Home} />
+    <Tab.Screen name={RouteNames.Search} component={Search} />
+    <Tab.Screen
+      name={RouteNames.Placeholder}
+      component={Placeholder}
+      listeners={({ navigation }) => ({
+        tabPress: (e) => {
+          e.preventDefault();
+          navigation.navigate(RouteNames.Create);
+        },
+      })}
+    />
+  </Tab.Navigator>
+);
 
 function Root() {
   return (
@@ -50,7 +48,7 @@ function Root() {
         animationEnabled: true,
       }}
     >
-      <RootStack.Screen name="App" component={AppScreen} />
+      <RootStack.Screen name="App" component={AppTabsNavigator} />
       <RootStack.Screen
         name={RouteNames.Create}
         component={Create}
