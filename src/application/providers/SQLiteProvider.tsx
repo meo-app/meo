@@ -20,7 +20,7 @@ const SQLiteProvider: React.FunctionComponent = function SQLiteProvider({
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        "create table if not exists posts (id integer primary key not null, value text);"
+        "create table if not exists posts (id integer primary key not null, value text,  timestamp datetime default current_timestamp);"
       );
     });
   }, [db]);

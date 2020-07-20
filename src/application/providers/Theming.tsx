@@ -32,7 +32,7 @@ const dark: Theme["colors"] = {
   foregroundSecondary: "#9A99A2",
 };
 
-const fontFamily = "Inter_700Bold";
+const fontFamily = "Inter_400Regular";
 const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   constants: {
     borderRadius: 12,
@@ -79,7 +79,9 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
       lineHeight: 28,
     },
     caption: {
-      fontFamily,
+      fontFamily: "Inter_400Regular",
+      fontSize: 12,
+      lineHeight: 16,
     },
   },
 };
@@ -111,7 +113,7 @@ const ThemeProvider: React.FunctionComponent<{
     return null;
   }
 
-  const { background, foregroundPrimary } = colors[scheme];
+  const { foregroundPrimary } = colors[scheme];
 
   return (
     <Context.Provider

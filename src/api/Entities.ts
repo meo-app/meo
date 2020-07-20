@@ -6,7 +6,5 @@ export interface Tag {
 export interface Post {
   id: string;
   value: string;
-  image: string;
-  tags?: Tag[];
-  parentpost?: string;
+  timestamp: string;
 }

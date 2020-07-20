@@ -1,15 +1,13 @@
+import { createStackNavigator } from "@react-navigation/stack";
 import React, { useRef } from "react";
 import { FlatList, Image, View } from "react-native";
 import { Post } from "../../api/Entities";
 import { usePosts } from "../../api/usePosts";
-import { FloatingActions } from "../../components/FloatingActions";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { Header } from "../../components/Header";
-import { ThemeProvider } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { RouteNames } from "../../route-names";
+import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +25,11 @@ function Home() {
       {error && (
         <View>
           <Font>TODO: error state</Font>
+        </View>
+      )}
+      {!Boolean(data?.length) && (
+        <View>
+          <Font>TODO: Empty view</Font>
         </View>
       )}
       {Boolean(data?.length) && (
@@ -70,41 +73,53 @@ function Root() {
   );
 }
 
-function PostLine({ value }: Post) {
+function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   return (
-    <Frame
-      marginTop={spacing.vertical}
-      paddingRight={spacing.horizontal}
-      paddingLeft={spacing.horizontal}
-      justifyContent="flex-start"
-      alignItems="center"
-      flexDirection="row"
-    >
+    <>
       <Frame
+        marginTop={spacing.vertical}
+        paddingRight={spacing.horizontal}
+        paddingLeft={spacing.horizontal}
+        justifyContent="flex-start"
+        alignItems="center"
         flexDirection="row"
-        alignItems="baseline"
-        style={{
-          height: "100%",
-        }}
       >
-        <Image
+        <Frame
+          flexDirection="row"
+          alignItems="baseline"
           style={{
-            width: theme.scales.medium,
-            height: theme.scales.medium,
-            resizeMode: "cover",
-            borderRadius: theme.constants.borderRadius,
+            height: "100%",
           }}
-          source={{
-            uri: "https://i.pravatar.cc/150",
-          }}
-        />
+        >
+          <Image
+            style={{
+              width: theme.scales.medium,
+              height: theme.scales.medium,
+              resizeMode: "cover",
+              borderRadius: theme.constants.borderRadius,
+            }}
+            source={{
+              uri: "https://i.pravatar.cc/150",
+            }}
+          />
+        </Frame>
+        <Frame flexGrow={1} flex={1} paddingLeft="medium">
+          <Font numberOfLines={5}>{value}</Font>
+        </Frame>
       </Frame>
-      <Frame flexGrow={1} flex={1} paddingLeft="medium">
-        <Font numberOfLines={5}>{value}</Font>
+      <Frame
+        alignItems="flex-end"
+        paddingTop="small"
+        paddingRight={spacing.horizontal}
+        paddingLeft={spacing.horizontal}
+      >
+        <Font variant="caption" color="foregroundSecondary">
+          {timestamp}
+        </Font>
       </Frame>
-    </Frame>
+    </>
   );
 }
 
