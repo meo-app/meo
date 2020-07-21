@@ -41,6 +41,7 @@ interface Props
 const Frame: React.FunctionComponent<
   Props & React.ComponentProps<typeof View>
 > = function Frame({ children, ...props }) {
+  const viewStyle = useFrameStyles(props);
   const {
     justifyContent,
     alignItems,
@@ -63,28 +64,6 @@ const Frame: React.FunctionComponent<
     height,
     ...rest
   } = props;
-
-  const viewStyle = useFrameStyles({
-    justifyContent,
-    alignItems,
-    flex,
-    flexBasis,
-    flexDirection,
-    flexGrow,
-    flexWrap,
-    marginTop,
-    marginRight,
-    marginBottom,
-    marginLeft,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-    style,
-    debugTrace,
-    width,
-    height,
-  });
 
   return (
     <View style={viewStyle} {...rest}>

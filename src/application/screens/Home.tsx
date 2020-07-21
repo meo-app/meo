@@ -8,6 +8,8 @@ import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { FormattedDate } from "react-intl";
+import { timestampToDate } from "../../utils/timestamp-to-date";
 
 const Stack = createStackNavigator();
 
@@ -15,7 +17,10 @@ function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
   const ref = useRef<FlatList>(null);
-  const keyExtractor = useCallback(({ id }) => `list-item-${id}`, []);
+  const keyExtractor = useCallback(
+    ({ id }: { id: string }) => `list-item-${id}`,
+    []
+  );
   return (
     <View>
       {isFetching && (
@@ -35,7 +40,7 @@ function Home() {
       )}
       {Boolean(data?.length) && (
         <Frame>
-          <FlatList
+          <FlatList<Post>
             style={{
               height: "100%",
             }}
@@ -46,7 +51,7 @@ function Home() {
               data && index === data?.length - 1 ? (
                 <Frame
                   style={{
-                    paddingBottom: theme.units.largest * 4.5,
+                    paddingBottom: theme.units.largest * 3.5,
                   }}
                 >
                   <PostLine {...item} />
@@ -74,7 +79,7 @@ function Root() {
   );
 }
 
-function PostLine({ value, timestamp }: Post) {
+const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   return (
@@ -96,8 +101,8 @@ function PostLine({ value, timestamp }: Post) {
         >
           <Image
             style={{
-              width: theme.scales.medium,
-              height: theme.scales.medium,
+              width: theme.scales.larger,
+              height: theme.scales.larger,
               resizeMode: "cover",
               borderRadius: theme.constants.borderRadius,
             }}
@@ -117,11 +122,17 @@ function PostLine({ value, timestamp }: Post) {
         paddingLeft={spacing.horizontal}
       >
         <Font variant="caption" color="foregroundSecondary">
-          {timestamp}
+          <FormattedDate
+            value={timestampToDate(timestamp)}
+            dateStyle="short"
+            month="long"
+            year="numeric"
+            day="2-digit"
+          />
         </Font>
       </Frame>
     </>
   );
-}
+});
 
 export { Root as Home };
