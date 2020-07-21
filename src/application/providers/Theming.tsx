@@ -53,7 +53,7 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
     smallest: 2,
     smaller: 4,
     small: 8,
-    medium: 12,
+    medium: 16,
     large: 24,
     larger: 36,
     largest: 48,
