@@ -1,5 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+/**
+* Use the international variant of JavaScriptCore
+* This variant includes the ICU i18n library to make APIs like `Date.toLocaleString`
+* and `String.localeCompare` work when using with locales other than en-US.
+* Note that this variant is about 6MiB larger per architecture than the default.
+*/
+def useIntlJsc = true
+
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
@@ -12,6 +20,8 @@ buildscript {
         jcenter()
     }
     dependencies {
+        // Make sure to put android-jsc at the the first
+        implementation "org.webkit:android-jsc-intl:r241213"
         classpath("com.android.tools.build:gradle:3.5.3")
 
         // NOTE: Do not place your application dependencies here; they belong

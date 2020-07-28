@@ -10,6 +10,7 @@ import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { FormattedDate } from "react-intl";
 import { timestampToDate } from "../../utils/timestamp-to-date";
+import { Picture } from "../../components/Picture";
 
 const Stack = createStackNavigator();
 
@@ -99,16 +100,14 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
             height: "100%",
           }}
         >
-          <Image
+          <Picture
             style={{
-              width: theme.scales.larger,
-              height: theme.scales.larger,
-              resizeMode: "cover",
               borderRadius: theme.constants.borderRadius,
             }}
-            source={{
-              uri: "https://i.pravatar.cc/150",
-            }}
+            width={theme.scales.larger}
+            aspectRatio="square"
+            resizeMode="cover"
+            source="https://i.pravatar.cc/150"
           />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="medium">
