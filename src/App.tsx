@@ -1,3 +1,5 @@
+import "intl";
+import "intl/locale-data/jsonp/en";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
