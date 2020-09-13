@@ -11,13 +11,15 @@ import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { FormattedDate } from "react-intl";
 import { timestampToDate } from "../../utils/timestamp-to-date";
 import { Picture } from "../../components/Picture";
+import { usePostsFlatList } from "../providers/HomeProvider";
+import { useIsFocused } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
-  const ref = useRef<FlatList>(null);
+  const { postsRef } = usePostsFlatList();
   const keyExtractor = useCallback(
     ({ id }: { id: string }) => `list-item-${id}`,
     []
@@ -45,7 +47,7 @@ function Home() {
             style={{
               height: "100%",
             }}
-            ref={ref}
+            ref={postsRef}
             keyExtractor={keyExtractor}
             data={data}
             renderItem={({ item, index }) =>
