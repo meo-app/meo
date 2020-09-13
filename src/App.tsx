@@ -1,10 +1,11 @@
-import "intl";
-import "intl/locale-data/jsonp/en";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import "intl";
+import "intl/locale-data/jsonp/en";
 import React from "react";
 import { View } from "react-native";
 import "react-native-gesture-handler";
+import { usePostsFlatList } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
 import { Create } from "./application/screens/Create";
 import { Home } from "./application/screens/Home";
@@ -16,30 +17,42 @@ const Placeholder = () => <View style={{ flex: 1, backgroundColor: "blue" }} />;
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 
-const AppTabsNavigator = () => (
-  <Tab.Navigator
-    tabBar={({ navigation }) => (
-      <FloatingActions
-        onHomePress={() => navigation.navigate(RouteNames.Home)}
-        onSearchPress={() => navigation.navigate(RouteNames.Search)}
-        onCreatePress={() => navigation.navigate(RouteNames.Create)}
+const AppTabsNavigator = () => {
+  const { postsRef } = usePostsFlatList();
+  return (
+    <Tab.Navigator
+      tabBar={({ navigation, state }) => (
+        <FloatingActions
+          onSearchPress={() => navigation.navigate(RouteNames.Search)}
+          onCreatePress={() => navigation.navigate(RouteNames.Create)}
+          onHomePress={() => {
+            if (/Home/.test(state.history[1]?.key)) {
+              postsRef?.current?.scrollToIndex({
+                animated: true,
+                index: 0,
+              });
+            } else {
+              navigation.navigate(RouteNames.Home);
+            }
+          }}
+        />
+      )}
+    >
+      <Tab.Screen name={RouteNames.Home} component={Home} />
+      <Tab.Screen name={RouteNames.Search} component={Search} />
+      <Tab.Screen
+        name={RouteNames.Placeholder}
+        component={Placeholder}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate(RouteNames.Create);
+          },
+        })}
       />
-    )}
-  >
-    <Tab.Screen name={RouteNames.Home} component={Home} />
-    <Tab.Screen name={RouteNames.Search} component={Search} />
-    <Tab.Screen
-      name={RouteNames.Placeholder}
-      component={Placeholder}
-      listeners={({ navigation }) => ({
-        tabPress: (e) => {
-          e.preventDefault();
-          navigation.navigate(RouteNames.Create);
-        },
-      })}
-    />
-  </Tab.Navigator>
-);
+    </Tab.Navigator>
+  );
+};
 
 function Root() {
   return (
