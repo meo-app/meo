@@ -37,7 +37,7 @@ function TabsNavigator() {
   const { postsRef } = usePostsFlatList();
   return (
     <>
-      <ForceNavigationRoute route={"Settings"} />
+      {/* <ForceNavigationRoute route={"Settings"} /> */}
       <Tab.Navigator
         tabBar={({ navigation, state }) => (
           <FloatingActions

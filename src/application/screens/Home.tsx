@@ -46,6 +46,7 @@ function Home() {
           <FlatList<Post>
             style={{
               height: "100%",
+              backgroundColor: theme.colors.background,
             }}
             ref={postsRef}
             keyExtractor={keyExtractor}

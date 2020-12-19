@@ -14,6 +14,7 @@ import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { Picture } from "../../components/Picture";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ function Create() {
         flex: 1,
         paddingLeft: theme.units[spacing.horizontal],
         paddingRight: theme.units[spacing.horizontal],
+        backgroundColor: theme.colors.background,
       }}
     >
       <Frame
@@ -40,21 +42,20 @@ function Create() {
         paddingTop={spacing.horizontal}
       >
         <Frame width="largest" height="largest">
-          <Image
+          <Picture
             style={{
-              width: theme.scales.largest,
-              height: theme.scales.largest,
-              resizeMode: "cover",
               borderRadius: theme.constants.borderRadius,
             }}
-            source={{
-              uri: "https://i.pravatar.cc/150",
-            }}
+            width={theme.scales.larger}
+            aspectRatio="square"
+            resizeMode="cover"
+            source="https://i.pravatar.cc/150"
           />
         </Frame>
         <TextInput
           autoFocus
           placeholder="Write something"
+          placeholderTextColor={theme.colors.foregroundPrimary}
           value={text}
           onChangeText={(value) => setTextValue(value)}
           multiline

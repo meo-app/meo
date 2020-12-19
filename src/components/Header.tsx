@@ -14,19 +14,31 @@ const Header: React.FunctionComponent<Props> = function Header({
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   return (
-    <Frame
-      style={{
-        paddingLeft: theme.units[spacing.horizontal],
-        paddingRight: theme.units[spacing.horizontal],
-        paddingTop: insets.top,
-        paddingBottom: theme.units.large,
-        backgroundColor: theme.colors.background,
-        ...theme.constants.shadow,
-      }}
-    >
-      {!children && <Font variant="display">{scene.route.name}</Font>}
-      {children}
-    </Frame>
+    <>
+      <Frame
+        style={{
+          height: insets.top,
+          width: "100%",
+          backgroundColor: theme.colors.background,
+        }}
+      />
+      <Frame
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingLeft: theme.units[spacing.horizontal],
+          paddingRight: theme.units[spacing.horizontal],
+          paddingBottom: theme.units.large,
+          paddingTop: theme.units.large,
+          backgroundColor: theme.colors.background,
+          ...theme.constants.shadow,
+        }}
+      >
+        {!children && <Font variant="display">{scene.route.name}</Font>}
+        {children}
+      </Frame>
+    </>
   );
 };
 
