@@ -23,7 +23,7 @@ function Create() {
   const [text, setTextValue] = useState("");
   const theme = useTheme();
   const spacing = useEdgeSpacing();
-  const [createPost, { status }] = useCreatePost({
+  const { status, mutate: createPost } = useCreatePost({
     onSuccess: () => navigation.navigate(RouteNames.Home),
   });
 

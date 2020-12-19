@@ -1,14 +1,17 @@
-import { useMutation, queryCache } from "react-query";
+import { MutationOptions, useMutation, useQueryClient } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
+import { Post } from "./Entities";
 
-function useCreatePost(options: Parameters<typeof useMutation>[1]) {
+function useCreatePost(
+  options: MutationOptions<Post, unknown, { text: string }>
+) {
   const db = useDB();
-  return useMutation<undefined, { text: string }>(
+  const client = useQueryClient();
+  return useMutation<Post, unknown, { text: string }>(
     ({ text }) =>
       new Promise((resolve, reject) =>
         db.transaction(
           (tx) => {
-            // TODO: handle tags?
             tx.executeSql("insert into posts (value) values (?)", [text]);
             resolve();
           },
@@ -23,9 +26,7 @@ function useCreatePost(options: Parameters<typeof useMutation>[1]) {
     {
       ...options,
       onSuccess: (...args) => {
-        // Looks like invalidateQueries is missing from ts definitions
-        // @ts-ignore
-        queryCache.invalidateQueries(["posts"]);
+        client.invalidateQueries(["posts"]);
         options?.onSuccess?.call(null, ...args);
       },
     }

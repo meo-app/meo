@@ -6,6 +6,7 @@ import { SQLiteProvider } from "./SQLiteProvider";
 import { ThemeProvider } from "./Theming";
 import { NavigationContainer } from "@react-navigation/native";
 import { HomeProvider } from "./HomeProvider";
+import { ReactQueryProvider } from "./ReactQueryProvider";
 
 const Providers: React.FunctionComponent = function Providers({ children }) {
   // TODO: retrieve user locale?
@@ -13,13 +14,15 @@ const Providers: React.FunctionComponent = function Providers({ children }) {
     <IntlProvider locale="en">
       <HomeProvider>
         <SQLiteProvider>
-          <NavigationContainer>
-            <AppearanceProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>{children}</ThemeProvider>
-              </SafeAreaProvider>
-            </AppearanceProvider>
-          </NavigationContainer>
+          <ReactQueryProvider>
+            <NavigationContainer>
+              <AppearanceProvider>
+                <SafeAreaProvider>
+                  <ThemeProvider>{children}</ThemeProvider>
+                </SafeAreaProvider>
+              </AppearanceProvider>
+            </NavigationContainer>
+          </ReactQueryProvider>
         </SQLiteProvider>
       </HomeProvider>
     </IntlProvider>

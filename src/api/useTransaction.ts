@@ -1,7 +1,11 @@
-import { useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 
-function useTransaction<T>(id: string, query: string) {
+function useTransaction<T>(
+  id: string,
+  query: string,
+  options?: UseQueryOptions<T[]>
+) {
   const db = useDB();
   return useQuery(
     id,
@@ -22,7 +26,10 @@ function useTransaction<T>(id: string, query: string) {
             reject(err);
           }
         );
-      })
+      }),
+    {
+      ...options,
+    }
   );
 }
 
