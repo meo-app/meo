@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import React, { useEffect } from "react";
-import { View, processColor } from "react-native";
+import { View, processColor, PointPropType } from "react-native";
 import "react-native-gesture-handler";
 import { usePostsFlatList } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
@@ -39,6 +39,9 @@ function TabsNavigator() {
     <>
       {/* <ForceNavigationRoute route={"Settings"} /> */}
       <Tab.Navigator
+        screenOptions={{
+          unmountOnBlur: false,
+        }}
         tabBar={({ navigation, state }) => (
           <FloatingActions
             onSearchPress={() => navigation.navigate(RouteNames.Search)}
@@ -75,18 +78,35 @@ function TabsNavigator() {
 
 function Root() {
   return (
-    <RootStack.Navigator
-      headerMode="none"
-      mode="modal"
-      screenOptions={{
-        animationEnabled: true,
-      }}
-    >
-      <RootStack.Screen name={RouteNames.Tabs} component={TabsNavigator} />
+    <RootStack.Navigator headerMode="none" mode="modal">
+      <RootStack.Screen
+        name={RouteNames.Tabs}
+        component={TabsNavigator}
+        options={{
+          animationEnabled: false,
+        }}
+      />
       <RootStack.Screen
         name={RouteNames.Create}
         component={Create}
-        options={{ animationEnabled: true }}
+        options={{
+          animationEnabled: true,
+          gestureEnabled: false,
+          transitionSpec: {
+            close: {
+              animation: "spring",
+              config: {
+                speed: 100,
+              },
+            },
+            open: {
+              animation: "spring",
+              config: {
+                speed: 100,
+              },
+            },
+          },
+        }}
       />
       <RootStack.Screen
         name={RouteNames.Settings}
