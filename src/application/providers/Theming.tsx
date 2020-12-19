@@ -4,7 +4,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext, Children } from "react";
-import { StatusBar, StatusBarStyle } from "react-native";
+import { StatusBar, StatusBarStyle, View } from "react-native";
 import { ColorSchemeName, useColorScheme } from "react-native-appearance";
 import { Units } from "../../foundations/Spacing";
 import { Theme } from "../../foundations/Theme";
@@ -32,7 +32,6 @@ const dark: Theme["colors"] = {
   foregroundSecondary: "#9A99A2",
 };
 
-const fontFamily = "Inter_400Regular";
 const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   constants: {
     borderRadius: 12,
@@ -46,7 +45,7 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
         height: 1,
       },
       shadowOpacity: 0.2,
-      shadowRadius: 1.41,
+      shadowRadius: 0.9,
     },
   },
   units: {
