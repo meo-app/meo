@@ -121,7 +121,15 @@ const Picture = React.memo(function Picture(props: Props) {
     <View ref={ref} style={styles}>
       {shouldRenderImage && (
         <FastImage
-          source={typeof source === "string" ? { uri: source } : source}
+          source={
+            typeof source === "string"
+              ? {
+                  uri: source,
+                  priority: FastImage.priority.high,
+                  cache: "cacheOnly",
+                }
+              : source
+          }
           style={{ ...styles, position: "absolute" }}
           resizeMode={resizeMode}
           onLoad={onLoad}

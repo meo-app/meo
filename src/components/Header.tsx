@@ -30,7 +30,7 @@ const Header: React.FunctionComponent<Props> = function Header({
           paddingLeft: theme.units[spacing.horizontal],
           paddingRight: theme.units[spacing.horizontal],
           paddingBottom: theme.units.large,
-          paddingTop: theme.units.large,
+          paddingTop: theme.units.medium,
           backgroundColor: theme.colors.background,
           ...theme.constants.shadow,
         }}

@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { Post } from "./Entities";
+import { QueryIds } from "./QueryIds";
 import { useTransaction } from "./useTransaction";
 
 function useSearch(text?: string) {
   const client = useQueryClient();
   const result = useTransaction<Post>(
-    // TODO: enum with query id's
-    "search",
-    `select * from posts where value like "%${text}%" order by id desc`,
+    QueryIds.search,
+    `select * from posts where value like "%${text}%" collate nocase order by id desc`,
     {
       enabled: Boolean(text),
     }
   );
 
   useEffect(() => {
-    client.invalidateQueries(["search"]);
+    client.invalidateQueries([QueryIds.search]);
     result.refetch();
   }, [text]);
 

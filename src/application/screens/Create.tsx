@@ -50,6 +50,7 @@ function Create() {
             aspectRatio="square"
             resizeMode="cover"
             source="https://i.pravatar.cc/150"
+            lazyload={false}
           />
         </Frame>
         <TextInput
@@ -93,21 +94,40 @@ function Create() {
 }
 
 function Root() {
+  const theme = useTheme();
   return (
     <Stack.Navigator
       screenOptions={{
         header: (props) => (
-          <Header {...props}>
-            <View
+          <Header
+            {...props}
+            insets={{
+              ...props.insets,
+              top: props.insets.top - theme.units.medium,
+              left: props.insets.left - theme.units.medium,
+              bottom: props.insets.bottom - theme.units.medium,
+            }}
+          >
+            <Frame
               style={{
-                flexDirection: "row",
-                alignSelf: "flex-start",
+                marginLeft: -theme.units.medium,
+                marginBottom: -theme.units.medium,
               }}
             >
-              <TouchableOpacity onPress={() => props.navigation.goBack()}>
+              <TouchableOpacity
+                onPress={() => props.navigation.goBack()}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  paddingTop: theme.units.medium,
+                  paddingBottom: theme.units.medium,
+                  paddingLeft: theme.units.medium,
+                  paddingRight: theme.units.large,
+                }}
+              >
                 <Icon type="Close" size="small" />
               </TouchableOpacity>
-            </View>
+            </Frame>
           </Header>
         ),
       }}
