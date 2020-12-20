@@ -13,7 +13,7 @@ import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
-import { Onboarding } from "./application/screens/Onboarding";
+import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
