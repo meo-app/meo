@@ -100,9 +100,15 @@ const STATUS_BAR_SCHEME_MAP: { [key in ColorSchemeName]: StatusBarStyle } = {
 const Context = React.createContext<Theme | null>(null);
 const ThemeProvider: React.FunctionComponent<{
   forceColorSchemeTo?: ColorSchemeName;
-}> = function ThemeProvider({ children, forceColorSchemeTo }) {
+  forceStatusBarTo?: ColorSchemeName;
+}> = function ThemeProvider({
+  children,
+  forceColorSchemeTo,
+  forceStatusBarTo,
+}) {
   const systemColorScheme = useColorScheme();
   const scheme = forceColorSchemeTo || systemColorScheme;
+  const statusBarScheme = forceStatusBarTo || scheme;
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_400Regular,
@@ -133,8 +139,8 @@ const ThemeProvider: React.FunctionComponent<{
       }}
     >
       <StatusBar
-        barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme]}
-        backgroundColor={colors[systemColorScheme].background}
+        barStyle={STATUS_BAR_SCHEME_MAP[statusBarScheme]}
+        backgroundColor={colors[statusBarScheme].background}
       />
       {children}
     </Context.Provider>

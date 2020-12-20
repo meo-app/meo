@@ -1,43 +1,28 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import React, { useEffect } from "react";
-import { View, processColor, PointPropType } from "react-native";
-import "react-native-gesture-handler";
+import { View } from "react-native";
 import { usePostsFlatList } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
 import { Create } from "./application/screens/Create";
 import { Home } from "./application/screens/Home";
 import { Search } from "./application/screens/Search";
+import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
-import { Settings } from "./application/screens/Settings";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { Onboarding } from "./application/screens/Onboarding";
 
-const Placeholder = () => <View style={{ flex: 1, backgroundColor: "blue" }} />;
+const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
-
-/**
- * Force navigation to a specific route
- */
-function ForceNavigationRoute({ route }: { route: string }) {
-  // TODO: should only navigate on dev
-  // TODO: should read route from env variable
-  const navigation = useNavigation();
-  useEffect(() => {
-    navigation.navigate(route);
-  }, []);
-
-  return null;
-}
 
 function TabsNavigator() {
   const { postsRef } = usePostsFlatList();
   return (
     <>
-      {/* <ForceNavigationRoute route={"Settings"} /> */}
       <Tab.Navigator
         screenOptions={{
           unmountOnBlur: false,
@@ -77,6 +62,11 @@ function TabsNavigator() {
 }
 
 function Root() {
+  const hasOnboarded = false;
+  if (!hasOnboarded) {
+    return <Onboarding />;
+  }
+
   return (
     <RootStack.Navigator headerMode="none" mode="modal">
       <RootStack.Screen
