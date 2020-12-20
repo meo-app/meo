@@ -66,15 +66,15 @@ function OnboardingSlider() {
       >
         <OnboardingFrame key="1">
           <Font variant="display">👋 👋 👋</Font>
-          <Font variant="display">onboarding</Font>
+          <Font variant="display">Welcome to Meo</Font>
         </OnboardingFrame>
         <OnboardingFrame key="2">
           <Font variant="display">📝 📝 📝</Font>
-          <Font variant="display">content</Font>
+          <Font variant="display">moar onboarding content</Font>
         </OnboardingFrame>
         <OnboardingFrame key="3">
           <Font variant="display">🤷‍♂️ 🤷‍♂️ 🤷‍♂️</Font>
-          <Font variant="display">goes here</Font>
+          <Font variant="display">and more onboarding stuff</Font>
         </OnboardingFrame>
       </ViewPager>
       <Indicators length={3} active={page} />

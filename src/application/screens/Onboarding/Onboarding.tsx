@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useMemo } from "react";
+import React from "react";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { useSafeArea } from "react-native-safe-area-context";
 import { Font } from "../../../components/Font";
@@ -13,13 +13,13 @@ import {
 import { OnboardingAvatarSelection } from "./OnboardingAvatarSelection";
 import {
   OnboardingNavigationProvider,
-  useOnboardingContext,
   RouteNames,
+  useOnboardingContext,
 } from "./OnboardingContext";
-import { OnboardingSlider } from "./OnboardingSlider";
-import { OnboardingInsertName } from "./OnboardingInsertName";
-import { backgroundImages } from "polished";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
+import { OnboardingInsertName } from "./OnboardingInsertName";
+import { OnboardingSlider } from "./OnboardingSlider";
+import { useCompleteOnboarding } from "../../../api/onboarding";
 
 function OnboardingBackgroundImage() {
   const theme = useTheme();
@@ -44,7 +44,7 @@ function OnboardingBackgroundImage() {
 const Stack = createStackNavigator();
 
 const OnboardingSliderScreen = () => (
-  <OnboardingFadeInView screenIndex={0}>
+  <OnboardingFadeInView screenIndex={0} bleed>
     <OnboardingSlider />
   </OnboardingFadeInView>
 );
@@ -65,7 +65,10 @@ function Onboarding() {
   const safeArea = useSafeArea();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
-  const { index, back, next } = useOnboardingContext();
+  const { back, next, finalize } = useOnboardingContext();
+  const { mutate: completeOnboarding, status } = useCompleteOnboarding({
+    onSuccess: finalize,
+  });
 
   return (
     <Frame
@@ -115,6 +118,8 @@ function Onboarding() {
         <Frame>
           {back && (
             <TouchableHighlight
+              // TODO: handle error
+              disabled={status !== "idle"}
               onPress={() => {
                 back();
               }}
@@ -131,6 +136,17 @@ function Onboarding() {
               }}
             >
               <Font color="primary">Next</Font>
+            </TouchableHighlight>
+          )}
+          {!next && (
+            <TouchableHighlight
+              // TODO: handle error
+              disabled={status !== "idle"}
+              onPress={() => {
+                completeOnboarding();
+              }}
+            >
+              <Font color="primary">Done</Font>
             </TouchableHighlight>
           )}
         </Frame>

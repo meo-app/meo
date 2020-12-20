@@ -15,6 +15,7 @@ import { Icon } from "../../components/Icon/Icon";
 import { Picture } from "../../components/Picture";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { useFlushOnboarding } from "../../api/onboarding";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,8 @@ function Create() {
   const { status, mutate: createPost } = useCreatePost({
     onSuccess: () => navigation.navigate(RouteNames.Home),
   });
+
+  const { mutate: flush } = useFlushOnboarding();
 
   return (
     <KeyboardAvoidingView
@@ -89,6 +92,7 @@ function Create() {
           <Font color="absoluteLight">Create</Font>
         </TouchableHighlight>
       </Frame>
+      <Font onPress={() => flush()}>Flush onboarding status</Font>
     </KeyboardAvoidingView>
   );
 }
