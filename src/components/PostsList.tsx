@@ -34,7 +34,8 @@ function PostsList({ data }: { data?: Post[] }) {
   );
 
   const renderItem = useCallback<ListRenderItem<Post>>(({ item, index }) => {
-    // // TODO: conditional wrap
+    // TODO: conditional wrap
+    // TODO: fix this in search and home
     if (data && index === data.length - 1) {
       return (
         <Frame
