@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Image, KeyboardAvoidingView, View } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
 import {
   TextInput,
   TouchableHighlight,
@@ -12,9 +12,9 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
+import { Picture } from "../../components/Picture";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { Picture } from "../../components/Picture";
 
 const Stack = createStackNavigator();
 

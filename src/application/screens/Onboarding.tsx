@@ -5,6 +5,24 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
 import { ThemeProvider, useEdgeSpacing, useTheme } from "../providers/Theming";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { createBottomStackNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionPresets,
+  TransitionSpecs,
+} from "@react-navigation/stack";
+import { opacify } from "polished";
+
+const Stack = createStackNavigator();
+
+enum RouteNames {
+  Onboarding = "Onboarding",
+  NameSelection = "NameSelection",
+  AvatarSelection = "AvatarSelection",
+}
 
 const OnboardingFrame: React.FunctionComponent = function OnboardingFrame({
   children,
@@ -57,22 +75,10 @@ function Onboarding() {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   const [page, setPage] = useState(0);
+  const navigation = useNavigation();
 
   return (
     <>
-      <Picture
-        source={require("../../assets/bg-pattern.png")}
-        resizeMode="cover"
-        lazyload={false}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          backgroundColor: theme.colors.background,
-        }}
-      />
       <Frame
         style={{
           height: safeArea.top,
@@ -105,20 +111,106 @@ function Onboarding() {
           paddingRight={spacing.vertical}
           style={{
             paddingTop: theme.units.large,
-            paddingBottom: safeArea.bottom,
+            paddingBottom: safeArea.bottom + theme.units.medium,
           }}
         >
-          <Font>Skip</Font>
+          <TouchableHighlight
+            onPress={() => {
+              navigation.navigate(RouteNames.AvatarSelection);
+            }}
+          >
+            <Font color="primary">Skip</Font>
+          </TouchableHighlight>
         </Frame>
       </Frame>
     </>
   );
 }
 
+function OnboardingImageBackground() {
+  const theme = useTheme();
+  return (
+    <Picture
+      source={require("../../assets/bg-pattern.png")}
+      resizeMode="cover"
+      lazyload={false}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        zIndex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    />
+  );
+}
+
+function AvatarSelection() {
+  return (
+    <Frame
+      debugTrace
+      style={{
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.4)",
+      }}
+    >
+      <Font>Hello</Font>
+    </Frame>
+  );
+}
+
 function Root() {
   return (
     <ThemeProvider forceColorSchemeTo="dark" forceStatusBarTo="dark">
-      <Onboarding />
+      <Frame
+        style={{
+          flex: 1,
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: 2,
+          backgroundColor: "transparent",
+        }}
+      >
+        <Stack.Navigator
+          initialRouteName={RouteNames.Onboarding}
+          screenOptions={{
+            header: () => null,
+            gestureEnabled: false,
+            transitionSpec: {
+              open: TransitionSpecs.TransitionIOSSpec,
+              close: TransitionSpecs.TransitionIOSSpec,
+            },
+            cardStyleInterpolator: ({ current, next, ...rest }) => {
+              const interpolator = CardStyleInterpolators.forHorizontalIOS({
+                current,
+                next,
+                ...rest,
+              });
+
+              return {
+                ...interpolator,
+                cardStyle: {
+                  ...interpolator.cardStyle,
+                  opacity: (next ? next : current).progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: next ? [0, 0] : [0, 1],
+                  }),
+                },
+              };
+            },
+          }}
+        >
+          <Stack.Screen component={Onboarding} name={RouteNames.Onboarding} />
+          <Stack.Screen
+            component={AvatarSelection}
+            name={RouteNames.AvatarSelection}
+          />
+        </Stack.Navigator>
+      </Frame>
+      <OnboardingImageBackground />
     </ThemeProvider>
   );
 }
