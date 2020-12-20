@@ -6,6 +6,8 @@ import {
   DefaultTheme,
 } from "@react-navigation/native";
 import React, { useContext, useRef, useState, useEffect } from "react";
+import { useQueryClient } from "react-query";
+import { QueryIds } from "../../../api/QueryIds";
 
 export enum RouteNames {
   OnboardingSlider = "OnboardingSlider",
@@ -17,6 +19,7 @@ const Context = React.createContext<{
   index: number;
   next?: () => void;
   back?: () => void;
+  finalize: () => void;
 } | null>(null);
 
 function useOnboardingContext() {
@@ -39,6 +42,7 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
 }) {
   const navigationRef = useRef<NavigationContainerRef>(null);
   const [index, setIndex] = useState(0);
+  const client = useQueryClient();
   useEffect(() => {
     const current = navigationRef.current;
     const listener: EventListenerCallback<
@@ -53,6 +57,9 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
     <Context.Provider
       value={{
         index,
+        finalize: () => {
+          client.refetchQueries([QueryIds.hasSeenOnboarding]);
+        },
         ...(index + 1 <= routes.length - 1 && {
           next: () => {
             navigationRef.current?.navigate(routes[index + 1]);

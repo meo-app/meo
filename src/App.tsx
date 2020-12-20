@@ -14,6 +14,7 @@ import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
+import { useHasSeenOnboarding } from "./api/onboarding";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -62,8 +63,8 @@ function TabsNavigator() {
 }
 
 function Root() {
-  const hasOnboarded = false;
-  if (!hasOnboarded) {
+  const { data } = useHasSeenOnboarding();
+  if (!data) {
     return <Onboarding />;
   }
 

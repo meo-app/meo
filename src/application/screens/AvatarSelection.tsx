@@ -9,34 +9,45 @@ import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 function AvatarSelection() {
-  const spacing = useEdgeSpacing();
-  const theme = useTheme();
   return (
-    <View>
-      <FlatList<JSX.Element>
-        keyExtractor={(_, index) => `avatar-key-${index}`}
-        numColumns={2}
-        data={[<Avatar01 />, <Avatar02 />, <Avatar03 />, <Avatar04 />]}
+    <Frame
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Frame
         style={{
-          height: "100%",
-          paddingTop: theme.units[spacing.vertical],
-          paddingBottom: theme.units[spacing.vertical],
-          paddingRight: theme.units[spacing.horizontal],
-          paddingLeft: theme.units[spacing.horizontal],
+          height: "80%",
+          flexWrap: "wrap",
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
-        renderItem={({ item }) => (
-          <Frame
-            debugTrace
-            style={{
-              width: "50%",
-              height: 80,
-            }}
-          >
-            {item}
-          </Frame>
-        )}
-      />
-    </View>
+      >
+        {[
+          <Avatar01 />,
+          <Avatar02 />,
+          <Avatar03 />,
+          <Avatar04 />,
+          <Avatar01 />,
+          <Avatar02 />,
+        ].map((content, index) => {
+          return (
+            <Frame
+              key={`avatar-${index}`}
+              marginTop="largest"
+              style={{
+                width: "50%",
+                height: 100,
+              }}
+            >
+              {content}
+            </Frame>
+          );
+        })}
+      </Frame>
+    </Frame>
   );
 }
 

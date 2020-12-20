@@ -8,6 +8,7 @@ import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
 import { RouteNames } from "../../route-names";
 import { useTheme } from "../providers/Theming";
+import { useFlushOnboarding } from "../../api/onboarding";
 
 const Stack = createStackNavigator();
 
