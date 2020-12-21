@@ -1,9 +1,12 @@
 platform :ios, '10.0'
 
+require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/react-native-unimodules/cocoapods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'claudio' do
+  config = use_native_modules!
+  use_react_native!(:path => config["reactNativePath"])
   rnPrefix = "../node_modules/react-native"
 
   # React Native and its dependencies
@@ -29,7 +32,7 @@ target 'claudio' do
   pod 'React-jsi', :path => "#{rnPrefix}/ReactCommon/jsi"
   pod 'React-jsiexecutor', :path => "#{rnPrefix}/ReactCommon/jsiexecutor"
   pod 'React-jsinspector', :path => "#{rnPrefix}/ReactCommon/jsinspector"
-  pod 'ReactCommon/jscallinvoker', :path => "#{rnPrefix}/ReactCommon"
+  pod 'React-callinvoker', :path => "../node_modules/react-native/ReactCommon/callinvoker"
   pod 'ReactCommon/turbomodule/core', :path => "#{rnPrefix}/ReactCommon"
   pod 'Yoga', :path => "#{rnPrefix}/ReactCommon/yoga"
   pod 'DoubleConversion', :podspec => "#{rnPrefix}/third-party-podspecs/DoubleConversion.podspec"
@@ -46,5 +49,13 @@ target 'claudio' do
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['OTHER_CPLUSPLUSFLAGS'] = '-DDONT_AUTOINSTALL_REANIMATED'
+        end
+    end
+ end
 
 end

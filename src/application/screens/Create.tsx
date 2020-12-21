@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { KeyboardAvoidingView } from "react-native";
+import { KeyboardAvoidingView, Pressable } from "react-native";
 import {
   TextInput,
   TouchableHighlight,
@@ -118,7 +118,7 @@ function Root() {
                 marginBottom: -theme.units.medium,
               }}
             >
-              <TouchableOpacity
+              <Pressable
                 onPress={() => props.navigation.goBack()}
                 style={{
                   display: "flex",
@@ -130,7 +130,7 @@ function Root() {
                 }}
               >
                 <Icon type="Close" size="small" />
-              </TouchableOpacity>
+              </Pressable>
             </Frame>
           </Header>
         ),
