@@ -6,6 +6,7 @@ import { useLinkProps } from "@react-navigation/native";
 import { useIsInView } from "../hooks/use-is-in-view";
 import { useTransaction } from "../api/useTransaction";
 import { useTheme } from "../application/providers/Theming";
+import Animated from "react-native-reanimated";
 
 type ResizeMode = "cover" | "contain" | "stretch" | "center";
 type MediaOrientation = "portrait" | "landscape";
@@ -56,6 +57,8 @@ const defaultProps: DefaultProps = {
   orientation: "landscape",
   lazyload: true,
 };
+
+const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
 const Picture = React.memo(function Picture(props: Props) {
   const {

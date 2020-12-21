@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import {
   TouchableHighlight,
   TouchableOpacity,
@@ -13,6 +13,11 @@ import {
 import { Units } from "../foundations/Spacing";
 import { Frame, useFrameStyles } from "./Frame";
 import { Icon } from "./Icon/Icon";
+import {
+  Pressable,
+  PressableStateCallbackType,
+  PressableProps,
+} from "react-native";
 
 interface Props {
   onHomePress: () => void;
@@ -87,7 +92,7 @@ function Dock() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const { onSearchPress, onHomePress } = useContext(Context);
-  const touchable = useFrameStyles({
+  const touch = useFrameStyles({
     height: "largest",
     alignItems: "center",
     justifyContent: "center",
@@ -95,6 +100,13 @@ function Dock() {
       width: "100%",
     },
   });
+  const touchable: PressableProps["style"] = useCallback(
+    ({ pressed }) => ({
+      ...touch,
+      opacity: pressed ? 0.5 : 1,
+    }),
+    [touch]
+  );
   return (
     <Frame
       flexDirection="row"
@@ -109,14 +121,14 @@ function Dock() {
       }}
     >
       <Frame flexGrow={1}>
-        <TouchableOpacity onPress={() => onHomePress?.()} style={touchable}>
+        <Pressable onPress={() => onHomePress?.()} style={touchable}>
           <Icon type="Home" size="medium" />
-        </TouchableOpacity>
+        </Pressable>
       </Frame>
       <Frame flexGrow={1}>
-        <TouchableOpacity onPress={() => onSearchPress?.()} style={touchable}>
+        <Pressable onPress={() => onSearchPress?.()} style={touchable}>
           <Icon type="Search" size="medium" />
-        </TouchableOpacity>
+        </Pressable>
       </Frame>
     </Frame>
   );
@@ -138,22 +150,23 @@ function CreateButton() {
         ...theme.constants.shadow,
       }}
     >
-      <TouchableHighlight
-        underlayColor={lighten(0.6, theme.colors.background)}
+      <Pressable
         onPress={() => onCreatePress?.()}
-        style={{
+        style={({ pressed }) => ({
           width: theme.scales[size],
           height: theme.scales[size],
-          backgroundColor: theme.colors.backgroundAccent,
+          backgroundColor: pressed
+            ? lighten(0.1, theme.colors.background)
+            : theme.colors.backgroundAccent,
           borderRadius: theme.constants.absoluteRadius,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           ...theme.constants.shadow,
-        }}
+        })}
       >
         <Icon type="Plus" size="medium" />
-      </TouchableHighlight>
+      </Pressable>
     </Frame>
   );
 }
