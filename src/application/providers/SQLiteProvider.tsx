@@ -22,6 +22,10 @@ const SQLiteProvider: React.FunctionComponent = function SQLiteProvider({
       tx.executeSql(
         "create table if not exists posts (id integer primary key not null, value text,  timestamp datetime default current_timestamp);"
       );
+      // TODO: change post_id integer to something to connect with posts table
+      tx.executeSql(
+        "create table if not exists hashtags (id integer primary key not null, value text,  timestamp datetime default current_timestamp, post_id integer not null);"
+      );
     });
   }, [db]);
 

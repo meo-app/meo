@@ -2,18 +2,37 @@ import { MutationOptions, useMutation, useQueryClient } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 import { Post } from "./Entities";
 
+const regex = /(\#\w+)/g;
+
 function useCreatePost(
   options: MutationOptions<Post, unknown, { text: string }>
 ) {
   const db = useDB();
   const client = useQueryClient();
   return useMutation<Post, unknown, { text: string }>(
-    ({ text }) =>
-      new Promise((resolve, reject) =>
+    ({ text }) => {
+      const hashtags = text.split(regex).filter((item) => /#/.test(item));
+      return new Promise((resolve, reject) =>
         db.transaction(
           (tx) => {
-            tx.executeSql("insert into posts (value) values (?)", [text]);
-            resolve();
+            tx.executeSql(
+              "insert into posts (value) values (?)",
+              [text],
+              (_, { insertId }) => {
+                if (hashtags.length) {
+                  Promise.all(
+                    hashtags.map((value) =>
+                      tx.executeSql(
+                        "insert into hashtags (value, post_id) values (?, ?)",
+                        [value, insertId]
+                      )
+                    )
+                  ).then(() => resolve());
+                } else {
+                  resolve();
+                }
+              }
+            );
           },
           (err) => {
             console.error(
@@ -22,7 +41,8 @@ function useCreatePost(
             reject(err);
           }
         )
-      ),
+      );
+    },
     {
       ...options,
       onSuccess: (...args) => {

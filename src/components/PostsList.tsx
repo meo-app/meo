@@ -17,6 +17,8 @@ import { timestampToDate } from "../utils/timestamp-to-date";
 import { ListRenderItem } from "react-native";
 import FastImage from "react-native-fast-image";
 import { opacify, lighten } from "polished";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+import { RouteNames } from "../route-names";
 
 function PostsList({ data }: { data?: Post[] }) {
   const theme = useTheme();
@@ -33,23 +35,26 @@ function PostsList({ data }: { data?: Post[] }) {
     []
   );
 
-  const renderItem = useCallback<ListRenderItem<Post>>(({ item, index }) => {
-    // TODO: conditional wrap
-    // TODO: fix this in search and home
-    if (data && index === data.length - 1) {
-      return (
-        <Frame
-          style={{
-            paddingBottom: theme.units.largest * 3.5,
-          }}
-        >
-          <PostLine {...item} />
-        </Frame>
-      );
-    }
+  const renderItem = useCallback<ListRenderItem<Post>>(
+    ({ item, index }) => {
+      // TODO: conditional wrap
+      // TODO: fix this in search and home
+      if (data && index === data.length - 1) {
+        return (
+          <Frame
+            style={{
+              paddingBottom: theme.units.largest * 3.5,
+            }}
+          >
+            <PostLine {...item} />
+          </Frame>
+        );
+      }
 
-    return <PostLine {...item} />;
-  }, []);
+      return <PostLine {...item} />;
+    },
+    [data, theme.units.largest]
+  );
 
   if (!Boolean(data?.length)) {
     return null;
@@ -72,6 +77,7 @@ const regex = /(\#\w+)/g;
 const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
+  const navigation = useNavigation();
   return (
     <Frame
       paddingBottom="medium"
@@ -106,9 +112,21 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         <Frame flexGrow={1} flex={1} paddingLeft="small">
           <Font numberOfLines={5}>
             {/* TODO: split into a different component and handle touch + bring to search */}
-            {value.split(regex).map((item) => {
+            {value.split(regex).map((item, index) => {
               if (/\#/.test(item)) {
-                return <Font color="primary">{item}</Font>;
+                return (
+                  <Font
+                    color="primary"
+                    key={`hashtag-${index}-${item}`}
+                    onPress={() => {
+                      navigation.navigate(RouteNames.Search, {
+                        hashtag: item,
+                      });
+                    }}
+                  >
+                    {item}
+                  </Font>
+                );
               }
 
               return item;
