@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableOpacity,
+  ScrollView,
 } from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
@@ -31,69 +32,85 @@ function Create() {
   const { mutate: flush } = useFlushOnboarding();
 
   return (
-    <KeyboardAvoidingView
+    <ScrollView
       style={{
         flex: 1,
-        paddingLeft: theme.units[spacing.horizontal],
-        paddingRight: theme.units[spacing.horizontal],
         backgroundColor: theme.colors.background,
       }}
     >
-      <Frame
-        flexDirection="row"
-        alignItems="center"
-        paddingTop={spacing.horizontal}
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          paddingLeft: theme.units[spacing.horizontal],
+          paddingRight: theme.units[spacing.horizontal],
+          backgroundColor: theme.colors.background,
+        }}
       >
-        <Frame width="largest" height="largest">
-          <Picture
+        <Frame
+          flexDirection="row"
+          alignItems="center"
+          paddingTop={spacing.horizontal}
+        >
+          <Frame height="largest">
+            <Picture
+              style={{
+                borderRadius: theme.constants.borderRadius,
+              }}
+              width={theme.scales.larger}
+              aspectRatio="square"
+              resizeMode="cover"
+              source="https://i.pravatar.cc/150"
+              lazyload={false}
+            />
+          </Frame>
+          <TextInput
+            autoFocus
+            placeholder="Write something"
+            placeholderTextColor={theme.colors.foregroundPrimary}
+            value={text}
+            onChangeText={(value) => setTextValue(value)}
+            multiline
+            numberOfLines={10}
             style={{
-              borderRadius: theme.constants.borderRadius,
+              ...(theme.typography.body as Object),
+              width: "80%",
+              maxHeight: 80,
+              paddingBottom: theme.units.medium,
+              paddingLeft: theme.units.small,
             }}
-            width={theme.scales.larger}
-            aspectRatio="square"
-            resizeMode="cover"
-            source="https://i.pravatar.cc/150"
-            lazyload={false}
           />
         </Frame>
-        <TextInput
-          autoFocus
-          placeholder="Write something"
-          placeholderTextColor={theme.colors.foregroundPrimary}
-          value={text}
-          onChangeText={(value) => setTextValue(value)}
-          multiline
-          numberOfLines={10}
+        <Frame />
+        <Frame marginTop="large">
+          <Pressable
+            style={{
+              backgroundColor: theme.colors.primary,
+              padding: theme.units.medium,
+              borderRadius: theme.constants.absoluteRadius,
+              alignItems: "center",
+              ...(theme.typography.body as Object),
+            }}
+            disabled={!text || status === "loading"}
+            onPress={() =>
+              createPost({
+                text,
+              })
+            }
+          >
+            <Font color="absoluteLight">Create</Font>
+          </Pressable>
+        </Frame>
+        <Pressable
           style={{
-            ...(theme.typography.body as Object),
-            width: "80%",
-            maxHeight: 80,
-            padding: theme.units.medium,
+            marginTop: theme.units.large,
           }}
-        />
-      </Frame>
-      <Frame />
-      <Frame marginTop="medium">
-        <TouchableHighlight
-          style={{
-            backgroundColor: theme.colors.primary,
-            padding: theme.units.medium,
-            borderRadius: theme.constants.absoluteRadius,
-            alignItems: "center",
-            ...(theme.typography.body as Object),
-          }}
-          disabled={!text || status === "loading"}
-          onPress={() =>
-            createPost({
-              text,
-            })
-          }
         >
-          <Font color="absoluteLight">Create</Font>
-        </TouchableHighlight>
-      </Frame>
-      <Font onPress={() => flush()}>Flush onboarding status</Font>
-    </KeyboardAvoidingView>
+          <Font variant="caption" onPress={() => flush()}>
+            Flush onboarding status
+          </Font>
+        </Pressable>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
@@ -105,6 +122,7 @@ function Root() {
         header: (props) => (
           <Header
             {...props}
+            hideBackground
             insets={{
               ...props.insets,
               top: props.insets.top - theme.units.medium,

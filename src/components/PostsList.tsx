@@ -77,10 +77,6 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
       paddingBottom="medium"
       paddingRight={spacing.horizontal}
       paddingLeft={spacing.horizontal}
-      style={{
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: lighten(0.2, theme.colors.foregroundSecondary),
-      }}
     >
       <Frame
         marginTop={spacing.vertical}
@@ -101,13 +97,13 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
             }}
             lazyload={false}
             key={`picture-${id}`}
-            width={theme.scales.large}
+            width={theme.scales.larger}
             aspectRatio="square"
             resizeMode="cover"
             source="https://i.pravatar.cc/150"
           />
         </Frame>
-        <Frame flexGrow={1} flex={1} paddingLeft="medium">
+        <Frame flexGrow={1} flex={1} paddingLeft="small">
           <Font numberOfLines={5}>
             {/* TODO: split into a different component and handle touch + bring to search */}
             {value.split(regex).map((item) => {
@@ -130,8 +126,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
           <FormattedDate
             value={timestampToDate(timestamp)}
             dateStyle="short"
-            month="long"
-            year="numeric"
+            month="short"
             day="2-digit"
           />
         </Font>
