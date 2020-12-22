@@ -19,6 +19,8 @@ import FastImage from "react-native-fast-image";
 import { opacify, lighten } from "polished";
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import { RouteNames } from "../route-names";
+import { HASHTAG_REGEX } from "../utils/hashtag-regex";
+import { PostTextContent } from "./PostTextContent";
 
 function PostsList({ data }: { data?: Post[] }) {
   const theme = useTheme();
@@ -73,7 +75,6 @@ function PostsList({ data }: { data?: Post[] }) {
   );
 }
 
-const regex = /(\#\w+)/g;
 const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
@@ -110,28 +111,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
           />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="small">
-          <Font numberOfLines={5}>
-            {/* TODO: split into a different component and handle touch + bring to search */}
-            {value.split(regex).map((item, index) => {
-              if (/\#/.test(item)) {
-                return (
-                  <Font
-                    color="primary"
-                    key={`hashtag-${index}-${item}`}
-                    onPress={() => {
-                      navigation.navigate(RouteNames.Search, {
-                        hashtag: item,
-                      });
-                    }}
-                  >
-                    {item}
-                  </Font>
-                );
-              }
-
-              return item;
-            })}
-          </Font>
+          <PostTextContent value={value} />
         </Frame>
       </Frame>
       <Frame
