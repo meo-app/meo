@@ -1,13 +1,13 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { TextInput } from "react-native-gesture-handler";
+import { useSearch } from "../../api/useSearch";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
+import { PostsList } from "../../components/PostsList";
+import { useDebounce } from "../../hooks/use-debounce";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { useSearch } from "../../api/useSearch";
-import { useDebounce } from "../../hooks/use-debounce";
-import { PostsList } from "../../components/PostsList";
 
 const Stack = createStackNavigator();
 

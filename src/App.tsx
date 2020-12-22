@@ -24,7 +24,6 @@ function TabsNavigator() {
   return (
     <>
       <Tab.Navigator
-        lazy={false}
         screenOptions={{
           unmountOnBlur: false,
         }}

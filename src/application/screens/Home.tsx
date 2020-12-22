@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import { View } from "react-native";
+import React, { useState } from "react";
+import { View, Pressable } from "react-native";
 import { usePosts } from "../../api/usePosts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
@@ -9,12 +9,19 @@ import { PostsList } from "../../components/PostsList";
 import { RouteNames } from "../../route-names";
 import { useTheme } from "../providers/Theming";
 import { useFlushOnboarding } from "../../api/onboarding";
+import { useTransaction } from "../../api/useTransaction";
 
 const Stack = createStackNavigator();
 
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
+  const { data: hashtags } = useTransaction<null>(
+    "hashtags",
+    // "select count(*) as total from hashtags where value = '#cu'"
+    "select count(value) as total, value from hashtags group by value"
+  );
+
   return (
     <View>
       {isFetching && (

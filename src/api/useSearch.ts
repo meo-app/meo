@@ -15,9 +15,9 @@ function useSearch(text?: string) {
   );
 
   useEffect(() => {
-    client.invalidateQueries([QueryIds.search]);
     result.refetch();
-  }, [text]);
+    client.invalidateQueries([QueryIds.search]);
+  }, [client, result, text]);
 
   return result;
 }
