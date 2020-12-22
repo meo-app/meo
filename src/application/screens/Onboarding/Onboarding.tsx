@@ -20,6 +20,7 @@ import { OnboardingFadeInView } from "./OnboardingFadeInView";
 import { OnboardingInsertName } from "./OnboardingInsertName";
 import { OnboardingSlider } from "./OnboardingSlider";
 import { useCompleteOnboarding } from "../../../api/onboarding";
+import { Pressable, processColor } from "react-native";
 
 function OnboardingBackgroundImage() {
   const theme = useTheme();
@@ -117,37 +118,44 @@ function Onboarding() {
       >
         <Frame>
           {back && (
-            <TouchableHighlight
+            <Pressable
               // TODO: handle error
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
               disabled={status !== "idle"}
               onPress={() => {
                 back();
               }}
             >
               <Font color="primary">Back</Font>
-            </TouchableHighlight>
+            </Pressable>
           )}
         </Frame>
         <Frame>
           {next && (
-            <TouchableHighlight
+            <Pressable
               onPress={() => {
                 next?.();
               }}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
             >
               <Font color="primary">Next</Font>
-            </TouchableHighlight>
+            </Pressable>
           )}
           {!next && (
-            <TouchableHighlight
+            <Pressable
               // TODO: handle error
               disabled={status !== "idle"}
-              onPress={() => {
-                completeOnboarding();
-              }}
+              onPress={() => completeOnboarding()}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}
             >
               <Font color="primary">Done</Font>
-            </TouchableHighlight>
+            </Pressable>
           )}
         </Frame>
       </Frame>
@@ -157,12 +165,10 @@ function Onboarding() {
 
 function Root() {
   return (
-    <ThemeProvider forceColorSchemeTo="dark" forceStatusBarTo="dark">
-      <OnboardingNavigationProvider>
-        <Onboarding />
-        <OnboardingBackgroundImage />
-      </OnboardingNavigationProvider>
-    </ThemeProvider>
+    <OnboardingNavigationProvider>
+      <Onboarding />
+      <OnboardingBackgroundImage />
+    </OnboardingNavigationProvider>
   );
 }
 

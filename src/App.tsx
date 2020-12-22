@@ -1,20 +1,19 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
-import React, { useEffect } from "react";
+import React from "react";
 import { View } from "react-native";
+import { useHasSeenOnboarding } from "./api/onboarding";
 import { usePostsFlatList } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
 import { Create } from "./application/screens/Create";
 import { Home } from "./application/screens/Home";
+import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
-import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { useHasSeenOnboarding } from "./api/onboarding";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -25,6 +24,7 @@ function TabsNavigator() {
   return (
     <>
       <Tab.Navigator
+        lazy={false}
         screenOptions={{
           unmountOnBlur: false,
         }}
@@ -69,7 +69,16 @@ function Root() {
   }
 
   return (
-    <RootStack.Navigator headerMode="none" mode="modal">
+    <RootStack.Navigator
+      headerMode="none"
+      screenOptions={{
+        headerTitle: () => null,
+        headerTitleStyle: {
+          textShadowColor: "red",
+        },
+      }}
+      mode="modal"
+    >
       <RootStack.Screen
         name={RouteNames.Tabs}
         component={TabsNavigator}

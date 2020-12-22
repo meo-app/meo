@@ -8,6 +8,21 @@ import { Avatar04 } from "../../components/Avatars/Avatar04";
 import { Frame } from "../../components/Frame";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
+function UploadButton() {
+  const theme = useTheme();
+  return (
+    <Frame
+      debugTrace
+      backgroundColor="red"
+      style={{
+        width: theme.scales.largest,
+        height: theme.scales.largest,
+        borderRadius: theme.constants.absoluteRadius,
+      }}
+    />
+  );
+}
+
 function AvatarSelection() {
   return (
     <Frame
@@ -31,7 +46,7 @@ function AvatarSelection() {
           <Avatar03 />,
           <Avatar04 />,
           <Avatar01 />,
-          <Avatar02 />,
+          <UploadButton />,
         ].map((content, index) => {
           return (
             <Frame
@@ -40,6 +55,8 @@ function AvatarSelection() {
               style={{
                 width: "50%",
                 height: 100,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               {content}
