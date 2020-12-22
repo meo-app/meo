@@ -1,8 +1,7 @@
 import { MutationOptions, useMutation, useQueryClient } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 import { Post } from "./Entities";
-
-const regex = /(\#\w+)/g;
+import { HASHTAG_REGEX } from "../utils/hashtag-regex";
 
 function useCreatePost(
   options: MutationOptions<Post, unknown, { text: string }>
@@ -11,7 +10,9 @@ function useCreatePost(
   const client = useQueryClient();
   return useMutation<Post, unknown, { text: string }>(
     ({ text }) => {
-      const hashtags = text.split(regex).filter((item) => /#/.test(item));
+      const hashtags = text
+        .split(HASHTAG_REGEX)
+        .filter((item) => /#/.test(item));
       return new Promise((resolve, reject) =>
         db.transaction(
           (tx) => {

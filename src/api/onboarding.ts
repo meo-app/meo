@@ -1,9 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  useQueries,
-  useQuery,
-  useMutation,
   MutationOptions,
+  useMutation,
+  useQuery,
   useQueryClient,
 } from "react-query";
 import { QueryIds } from "./QueryIds";

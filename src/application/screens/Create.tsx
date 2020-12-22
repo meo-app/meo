@@ -1,121 +1,141 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState } from "react";
-import { KeyboardAvoidingView, Pressable } from "react-native";
-import {
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native-gesture-handler";
+import React, { useState, useContext } from "react";
+import { Pressable, View } from "react-native";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { useFlushOnboarding } from "../../api/onboarding";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { Picture } from "../../components/Picture";
+import { PostTextContent } from "../../components/PostTextContent";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { useFlushOnboarding } from "../../api/onboarding";
 
 const Stack = createStackNavigator();
 
-function Create() {
+const Context = React.createContext<{
+  text: string;
+  createPost: ReturnType<typeof useCreatePost>["mutate"];
+  onChangeText: (text: string) => void;
+} | null>(null);
+
+const CreateProvider: React.FunctionComponent = ({ children }) => {
+  const [text, setText] = useState("");
   const navigation = useNavigation();
-  const [text, setTextValue] = useState("");
-  const theme = useTheme();
-  const spacing = useEdgeSpacing();
   const { status, mutate: createPost } = useCreatePost({
     onSuccess: () => navigation.navigate(RouteNames.Home),
   });
 
+  return (
+    <Context.Provider
+      value={{
+        text,
+        onChangeText: setText,
+        createPost,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
+};
+
+function useCreateContext() {
+  const context = useContext(Context);
+  if (!context) {
+    throw new Error("CreateContext not found");
+  }
+
+  return context;
+}
+
+function Create() {
+  const theme = useTheme();
+  const spacing = useEdgeSpacing();
+  const { onChangeText, text } = useCreateContext();
+
   const { mutate: flush } = useFlushOnboarding();
 
   return (
-    <ScrollView
+    <View
       style={{
         flex: 1,
         backgroundColor: theme.colors.background,
       }}
     >
-      <KeyboardAvoidingView
+      <ScrollView
         style={{
           flex: 1,
-          paddingLeft: theme.units[spacing.horizontal],
-          paddingRight: theme.units[spacing.horizontal],
           backgroundColor: theme.colors.background,
         }}
       >
-        <Frame
-          flexDirection="row"
-          alignItems="center"
-          paddingTop={spacing.horizontal}
-        >
-          <Frame height="largest">
-            <Picture
-              style={{
-                borderRadius: theme.constants.borderRadius,
-              }}
-              width={theme.scales.larger}
-              aspectRatio="square"
-              resizeMode="cover"
-              source="https://i.pravatar.cc/150"
-              lazyload={false}
-            />
-          </Frame>
-          <TextInput
-            autoFocus
-            placeholder="Write something"
-            placeholderTextColor={theme.colors.foregroundPrimary}
-            value={text}
-            onChangeText={(value) => setTextValue(value)}
-            multiline
-            numberOfLines={10}
-            style={{
-              ...(theme.typography.body as Object),
-              width: "80%",
-              maxHeight: 80,
-              paddingBottom: theme.units.medium,
-              paddingLeft: theme.units.small,
-            }}
-          />
-        </Frame>
-        <Frame />
-        <Frame marginTop="large">
-          <Pressable
-            style={{
-              backgroundColor: theme.colors.primary,
-              padding: theme.units.medium,
-              borderRadius: theme.constants.absoluteRadius,
-              alignItems: "center",
-              ...(theme.typography.body as Object),
-            }}
-            disabled={!text || status === "loading"}
-            onPress={() =>
-              createPost({
-                text,
-              })
-            }
-          >
-            <Font color="absoluteLight">Create</Font>
-          </Pressable>
-        </Frame>
-        <Pressable
+        <View
           style={{
-            marginTop: theme.units.large,
+            flex: 1,
+            paddingLeft: theme.units[spacing.horizontal],
+            paddingRight: theme.units[spacing.horizontal],
+            backgroundColor: theme.colors.background,
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "flex-start",
           }}
         >
-          <Font variant="caption" onPress={() => flush()}>
-            Flush onboarding status
-          </Font>
-        </Pressable>
-      </KeyboardAvoidingView>
-    </ScrollView>
+          <Frame
+            flexDirection="row"
+            paddingTop={spacing.horizontal}
+            flex={1}
+            style={{
+              width: "100%",
+            }}
+          >
+            <Frame height="largest" alignItems="flex-end">
+              <Picture
+                style={{
+                  borderRadius: theme.constants.borderRadius,
+                }}
+                width={theme.scales.larger}
+                aspectRatio="square"
+                resizeMode="cover"
+                source="https://i.pravatar.cc/150"
+                lazyload={false}
+              />
+            </Frame>
+            <TextInput
+              autoFocus
+              placeholder="Write something"
+              placeholderTextColor={theme.colors.foregroundPrimary}
+              onChangeText={onChangeText}
+              multiline
+              style={{
+                ...(theme.typography.body as Object),
+                width: "80%",
+                paddingBottom: theme.units.medium,
+                paddingLeft: theme.units.small,
+              }}
+            >
+              <PostTextContent value={text} />
+            </TextInput>
+          </Frame>
+          {/* <Pressable
+            style={{
+              marginTop: theme.units.large,
+            }}
+          >
+            <Font variant="caption" onPress={() => flush()}>
+              Flush onboarding status
+            </Font>
+          </Pressable> */}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
-function Root() {
+function Screens() {
   const theme = useTheme();
+  const { createPost, text } = useCreateContext();
   return (
     <Stack.Navigator
       screenOptions={{
@@ -130,25 +150,50 @@ function Root() {
               bottom: props.insets.bottom - theme.units.medium,
             }}
           >
-            <Frame
-              style={{
-                marginLeft: -theme.units.medium,
-                marginBottom: -theme.units.medium,
-              }}
-            >
-              <Pressable
-                onPress={() => props.navigation.goBack()}
+            <Frame flexDirection="row" justifyContent="space-between" flex={1}>
+              <Frame
                 style={{
-                  display: "flex",
-                  width: "100%",
-                  paddingTop: theme.units.medium,
-                  paddingBottom: theme.units.medium,
-                  paddingLeft: theme.units.medium,
-                  paddingRight: theme.units.large,
+                  marginLeft: -theme.units.medium,
+                  marginBottom: -theme.units.medium,
                 }}
               >
-                <Icon type="Close" size="small" />
-              </Pressable>
+                <Pressable
+                  onPress={() => props.navigation.goBack()}
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    paddingTop: theme.units.medium,
+                    paddingBottom: theme.units.medium,
+                    paddingLeft: theme.units.medium,
+                    paddingRight: theme.units.large,
+                  }}
+                >
+                  <Icon type="Close" size="small" />
+                </Pressable>
+              </Frame>
+              <Frame marginTop="large">
+                <Pressable
+                  disabled={!text}
+                  onPress={() => {
+                    createPost({ text });
+                  }}
+                  style={({ pressed }) => ({
+                    backgroundColor: !text
+                      ? theme.colors.foregroundSecondary
+                      : theme.colors.primary,
+                    opacity: pressed ? 0.5 : 1,
+                    paddingTop: theme.units.smaller,
+                    paddingBottom: theme.units.smaller,
+                    paddingLeft: theme.units.small,
+                    paddingRight: theme.units.small,
+                    borderRadius: theme.constants.absoluteRadius,
+                    alignItems: "center",
+                    ...(theme.typography.caption as Object),
+                  })}
+                >
+                  <Font color="absoluteLight">Create</Font>
+                </Pressable>
+              </Frame>
             </Frame>
           </Header>
         ),
@@ -156,6 +201,14 @@ function Root() {
     >
       <Stack.Screen name={RouteNames.Create} component={Create} />
     </Stack.Navigator>
+  );
+}
+
+function Root() {
+  return (
+    <CreateProvider>
+      <Screens />
+    </CreateProvider>
   );
 }
 
