@@ -1,37 +1,20 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState, useMemo } from "react";
-import { TextInput } from "react-native-gesture-handler";
+import { opacify } from "polished";
+import React, { useMemo, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { QueryIds } from "../../api/QueryIds";
 import { useSearch } from "../../api/useSearch";
+import { useTransaction } from "../../api/useTransaction";
+import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
+import { Grid } from "../../components/Grid";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
 import { useDebounce } from "../../hooks/use-debounce";
 import { RouteNames } from "../../route-names";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { useTransaction } from "../../api/useTransaction";
-import { Font } from "../../components/Font";
-import {
-  StyleSheet,
-  Pressable,
-  Alert,
-  ViewStyle,
-  TextStyle,
-  ImageStyle,
-  View,
-} from "react-native";
-import { opacify } from "polished";
-import { QueryIds } from "../../api/QueryIds";
-
-// <T extends NamedStyles<T> | NamedStyles<any>>(styles: T | NamedStyles<T>): T;
-function useStyles<
-  T extends { [key: string]: ViewStyle | TextStyle | ImageStyle }
->(fn: (theme: ReturnType<typeof useTheme>) => T) {
-  const theme = useTheme();
-  return useMemo(() => {
-    console.log("creating styles");
-    return StyleSheet.create(fn(theme));
-  }, [fn, theme]);
-}
+import { useStyles } from "../../hooks/use-styles";
 
 const Stack = createStackNavigator();
 
@@ -106,29 +89,17 @@ function Search() {
           }}
         />
       </Frame>
-      <Frame
-        justifyContent="center"
-        flex={1}
-        alignItems="center"
-        paddingLeft={spacing.horizontal}
-        paddingRight={spacing.horizontal}
-      >
-        <Frame
-          style={{
-            height: "80%",
-            flexWrap: "wrap",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+      <ScrollView>
+        <Grid
+          gap="medium"
+          numColumns={2}
+          margin={theme.units[spacing.horizontal]}
         >
           {hashtags?.map((item) => (
             <View
               key={item.value + item.total}
               style={{
-                position: "relative",
-                width: "50%",
-                height: 160,
-                transform: [{ scale: 0.92 }],
+                width: "100%",
               }}
             >
               <View key={item.total + item.value} style={styles.root}>
@@ -155,11 +126,30 @@ function Search() {
               />
             </View>
           ))}
+        </Grid>
+
+        <Frame
+          justifyContent="center"
+          flex={1}
+          alignItems="center"
+          paddingLeft={spacing.horizontal}
+          paddingRight={spacing.horizontal}
+        >
+          <Frame
+            style={{
+              height: "80%",
+              flexWrap: "wrap",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Font>Stuff here</Font>
+          </Frame>
         </Frame>
-      </Frame>
-      <Frame>
-        <PostsList data={data} />
-      </Frame>
+        <Frame>
+          <PostsList data={data} />
+        </Frame>
+      </ScrollView>
     </Frame>
   );
 }
