@@ -2,6 +2,7 @@ import { MutationOptions, useMutation, useQueryClient } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 import { Post } from "./Entities";
 import { HASHTAG_REGEX } from "../utils/hashtag-regex";
+import { QueryIds } from "./QueryIds";
 
 function useCreatePost(
   options: MutationOptions<Post, unknown, { text: string }>
@@ -47,7 +48,10 @@ function useCreatePost(
     {
       ...options,
       onSuccess: (...args) => {
-        client.invalidateQueries(["posts"]);
+        // Note: react-query may have a bug where adding multiple query ids to invalidate doesnt work (aka: [QueryIds.posts, QueryIds.topHashtags])
+        // instead calling it twice works
+        client.invalidateQueries([QueryIds.posts]);
+        client.invalidateQueries([QueryIds.topHashtags]);
         options?.onSuccess?.call(null, ...args);
       },
     }

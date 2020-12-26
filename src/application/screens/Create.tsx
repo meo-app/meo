@@ -93,7 +93,7 @@ function Create() {
             <Frame height="largest" alignItems="flex-end">
               <Picture
                 style={{
-                  borderRadius: theme.constants.borderRadius,
+                  borderRadius: theme.constants.absoluteRadius,
                 }}
                 width={theme.scales.larger}
                 aspectRatio="square"
@@ -111,6 +111,7 @@ function Create() {
               style={{
                 ...(theme.typography.body as Object),
                 width: "80%",
+                marginTop: theme.units.small,
                 paddingBottom: theme.units.medium,
                 paddingLeft: theme.units.small,
               }}
@@ -150,7 +151,12 @@ function Screens() {
               bottom: props.insets.bottom - theme.units.medium,
             }}
           >
-            <Frame flexDirection="row" justifyContent="space-between" flex={1}>
+            <Frame
+              flexDirection="row"
+              justifyContent="space-between"
+              flex={1}
+              alignItems="center"
+            >
               <Frame
                 style={{
                   marginLeft: -theme.units.medium,

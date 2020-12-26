@@ -2,7 +2,7 @@ enum RouteNames {
   Tabs = "Tabs",
   Home = "Home",
   Create = "Create",
-  Search = "Search",
+  Search = "Explore",
   Placeholder = "Placeholder",
   Settings = "Settings",
 }
