@@ -127,4 +127,4 @@ function useFrameStyles({
   };
 }
 
-export { Frame, useFrameStyles };
+export { Frame, useFrameStyles, Spacing };
