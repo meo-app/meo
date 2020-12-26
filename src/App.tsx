@@ -70,13 +70,10 @@ function Root() {
   return (
     <RootStack.Navigator
       headerMode="none"
+      mode="modal"
       screenOptions={{
         headerTitle: () => null,
-        headerTitleStyle: {
-          textShadowColor: "red",
-        },
       }}
-      mode="modal"
     >
       <RootStack.Screen
         name={RouteNames.Tabs}
@@ -95,7 +92,7 @@ function Root() {
             close: {
               animation: "spring",
               config: {
-                speed: 100,
+                speed: 200,
               },
             },
             open: {
