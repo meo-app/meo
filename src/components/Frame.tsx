@@ -66,7 +66,10 @@ const Frame: React.FunctionComponent<
   } = props;
 
   return (
-    <View style={viewStyle} {...rest}>
+    <View
+      style={[viewStyle, ...(Array.isArray(props.style) ? props.style : [])]}
+      {...rest}
+    >
       {children}
     </View>
   );

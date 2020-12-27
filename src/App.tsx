@@ -14,6 +14,7 @@ import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
+import { usePosts } from "./api/usePosts";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -62,7 +63,11 @@ function TabsNavigator() {
 }
 
 function Root() {
-  const { data } = useHasSeenOnboarding();
+  const { data, isLoading } = useHasSeenOnboarding();
+  usePosts();
+  if (isLoading) {
+    return null;
+  }
   if (!data) {
     return <Onboarding />;
   }
