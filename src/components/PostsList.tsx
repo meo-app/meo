@@ -1,25 +1,15 @@
-import { Post } from "../api/Entities";
-import { StyleSheet, Alert } from "react-native";
-import { Frame } from "./Frame";
-import {
-  FlatList,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native-gesture-handler";
-import { useTheme, useEdgeSpacing } from "../application/providers/Theming";
-import { usePostsFlatList } from "../application/providers/HomeProvider";
-import { useCallback, useEffect } from "react";
-import React from "react";
-import { Picture } from "./Picture";
-import { Font } from "./Font";
+import React, { useCallback, useEffect } from "react";
 import { FormattedDate } from "react-intl";
-import { timestampToDate } from "../utils/timestamp-to-date";
 import { ListRenderItem } from "react-native";
 import FastImage from "react-native-fast-image";
-import { opacify, lighten } from "polished";
-import { useNavigation, CommonActions } from "@react-navigation/native";
-import { RouteNames } from "../route-names";
-import { HASHTAG_REGEX } from "../utils/hashtag-regex";
+import { FlatList } from "react-native-gesture-handler";
+import { Post } from "../api/Entities";
+import { usePostsFlatList } from "../application/providers/HomeProvider";
+import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
+import { timestampToDate } from "../utils/timestamp-to-date";
+import { Font } from "./Font";
+import { Frame } from "./Frame";
+import { Picture } from "./Picture";
 import { PostTextContent } from "./PostTextContent";
 
 function PostsList({ data }: { data?: Post[] }) {
@@ -78,7 +68,6 @@ function PostsList({ data }: { data?: Post[] }) {
 const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
-  const navigation = useNavigation();
   return (
     <Frame
       paddingBottom="medium"
@@ -100,7 +89,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         >
           <Picture
             style={{
-              borderRadius: theme.constants.borderRadius,
+              borderRadius: theme.constants.absoluteRadius,
             }}
             lazyload={false}
             key={`picture-${id}`}

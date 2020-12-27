@@ -3,11 +3,12 @@ import {
   Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
-import React, { useContext, Children } from "react";
-import { StatusBar, StatusBarStyle, View } from "react-native";
+import React, { useContext } from "react";
+import { StatusBar, StatusBarStyle } from "react-native";
 import { ColorSchemeName, useColorScheme } from "react-native-appearance";
 import { Units } from "../../foundations/Spacing";
 import { Theme } from "../../foundations/Theme";
+import { opacify } from "polished";
 
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
@@ -42,10 +43,10 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
       shadowColor: absoluteDark,
       shadowOffset: {
         width: 0,
-        height: 1,
+        height: 0.5,
       },
-      shadowOpacity: 0.2,
-      shadowRadius: 0.9,
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
     },
   },
   units: {
@@ -100,15 +101,9 @@ const STATUS_BAR_SCHEME_MAP: { [key in ColorSchemeName]: StatusBarStyle } = {
 const Context = React.createContext<Theme | null>(null);
 const ThemeProvider: React.FunctionComponent<{
   forceColorSchemeTo?: ColorSchemeName;
-  forceStatusBarTo?: ColorSchemeName;
-}> = function ThemeProvider({
-  children,
-  forceColorSchemeTo,
-  forceStatusBarTo,
-}) {
+}> = function ThemeProvider({ children, forceColorSchemeTo }) {
   const systemColorScheme = useColorScheme();
   const scheme = forceColorSchemeTo || systemColorScheme;
-  const statusBarScheme = forceStatusBarTo || scheme;
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_400Regular,

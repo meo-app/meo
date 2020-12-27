@@ -1,23 +1,16 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useContext, useCallback } from "react";
-import {
-  TouchableHighlight,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
+import React, { useCallback, useContext } from "react";
+import { Pressable, PressableProps } from "react-native";
 import {
   FlipColorScheme,
   useEdgeSpacing,
   useTheme,
 } from "../application/providers/Theming";
 import { Units } from "../foundations/Spacing";
+import { useStyles } from "../hooks/use-styles";
 import { Frame, useFrameStyles } from "./Frame";
 import { Icon } from "./Icon/Icon";
-import {
-  Pressable,
-  PressableStateCallbackType,
-  PressableProps,
-} from "react-native";
 
 interface Props {
   onHomePress: () => void;
@@ -28,17 +21,21 @@ interface Props {
 const Context = React.createContext<Partial<Props>>({});
 
 function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
+  const styles = useStyles(() => ({
+    root: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: 110,
+    },
+  }));
+
   return (
     <Frame
       alignItems="baseline"
       justifyContent="space-evenly"
-      style={{
-        position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 110,
-      }}
+      style={styles.root}
     >
       <Context.Provider
         value={{
@@ -89,7 +86,6 @@ const Gradient: React.FunctionComponent = function Gradient({ children }) {
 };
 
 function Dock() {
-  const theme = useTheme();
   const spacing = useEdgeSpacing();
   const { onSearchPress, onHomePress } = useContext(Context);
   const touch = useFrameStyles({
@@ -100,6 +96,7 @@ function Dock() {
       width: "100%",
     },
   });
+
   const touchable: PressableProps["style"] = useCallback(
     ({ pressed }) => ({
       ...touch,
@@ -107,18 +104,23 @@ function Dock() {
     }),
     [touch]
   );
+
+  const styles = useStyles((theme) => ({
+    root: {
+      backgroundColor: theme.colors.background,
+      marginRight: theme.units[spacing.horizontal],
+      marginLeft: theme.units[spacing.horizontal],
+      height: theme.scales.largest,
+      borderRadius: theme.constants.absoluteRadius,
+      ...theme.constants.shadow,
+    },
+  }));
+
   return (
     <Frame
       flexDirection="row"
       justifyContent="space-between"
-      style={{
-        backgroundColor: theme.colors.background,
-        marginRight: theme.units[spacing.horizontal],
-        marginLeft: theme.units[spacing.horizontal],
-        height: theme.scales.largest,
-        borderRadius: theme.constants.absoluteRadius,
-        ...theme.constants.shadow,
-      }}
+      style={styles.root}
     >
       <Frame flexGrow={1}>
         <Pressable onPress={() => onHomePress?.()} style={touchable}>
@@ -138,31 +140,34 @@ function CreateButton() {
   const size: keyof Units = "largest";
   const theme = useTheme();
   const { onCreatePress } = useContext(Context);
+  const styles = useStyles((theme) => ({
+    root: {
+      top: -theme.scales[size] / 1.3,
+      zIndex: theme.constants.absoluteRadius,
+      position: "absolute",
+      width: "100%",
+      ...theme.constants.shadow,
+    },
+    pressabe: {
+      width: theme.scales[size],
+      height: theme.scales[size],
+      borderRadius: theme.constants.absoluteRadius,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      ...theme.constants.shadow,
+    },
+  }));
+
   return (
-    <Frame
-      alignItems="center"
-      pointerEvents="box-none"
-      style={{
-        top: -theme.scales[size] / 1.3,
-        zIndex: theme.constants.absoluteRadius,
-        position: "absolute",
-        width: "100%",
-        ...theme.constants.shadow,
-      }}
-    >
+    <Frame alignItems="center" pointerEvents="box-none" style={styles.root}>
       <Pressable
         onPress={() => onCreatePress?.()}
         style={({ pressed }) => ({
-          width: theme.scales[size],
-          height: theme.scales[size],
+          ...styles.pressabe,
           backgroundColor: pressed
             ? lighten(0.1, theme.colors.background)
             : theme.colors.backgroundAccent,
-          borderRadius: theme.constants.absoluteRadius,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          ...theme.constants.shadow,
         })}
       >
         <Icon type="Plus" size="medium" />

@@ -93,20 +93,19 @@ const Grid: React.FunctionComponent<Props> = function Grid({
         data={data}
         numColumns={numColumns}
         contentContainerStyle={styles.container}
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={[
-                styles.item,
-                {
-                  marginRight: verticalGap,
-                },
-              ]}
-            >
-              {item.node}
-            </View>
-          );
-        }}
+        keyExtractor={(item) => item.key}
+        renderItem={({ item }) => (
+          <View
+            style={[
+              styles.item,
+              {
+                marginRight: verticalGap,
+              },
+            ]}
+          >
+            {item.node}
+          </View>
+        )}
       />
     );
   }
@@ -115,6 +114,7 @@ const Grid: React.FunctionComponent<Props> = function Grid({
     <View style={styles.container}>
       {data.map((item, index) => (
         <View
+          key={item.key}
           style={[
             styles.item,
             {
