@@ -46,7 +46,7 @@ const Header: React.FunctionComponent<Props> = function Header({
     <ImageBackground
       style={styles.backgrond}
       source={
-        hideBackground ? "" : require("../assets/bg-pattern-grayscale.png")
+        hideBackground ? null : require("../assets/bg-pattern-grayscale.png")
       }
     >
       <Frame style={styles.spacer} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStyles } from "../hooks/use-styles";
 import { View } from "react-native";
 import { Font } from "./Font";
@@ -37,10 +37,11 @@ function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
       zIndex: 0,
     },
   }));
+
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        <Font variant="display">{hashtag}</Font>
+        <HashTagDisplay>{hashtag}</HashTagDisplay>
         <Font variant="caption">{total} thoughts</Font>
       </View>
       <View
@@ -64,5 +65,37 @@ function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
     </View>
   );
 }
+
+const HashTagDisplay: React.FunctionComponent = function HashTagDisplay({
+  children,
+}) {
+  const [props, setFontSettings] = useState<React.ComponentProps<typeof Font>>({
+    color: "backgroundAccent",
+  });
+  return (
+    <Font
+      {...props}
+      numberOfLines={2}
+      onTextLayout={(event) => {
+        if (
+          event.nativeEvent.lines.length >= 2 &&
+          props.color === "backgroundAccent"
+        ) {
+          setFontSettings({
+            color: undefined,
+            variant: "subtitle",
+          });
+        } else if (props.color === "backgroundAccent") {
+          setFontSettings({
+            color: undefined,
+            variant: "display",
+          });
+        }
+      }}
+    >
+      {children}
+    </Font>
+  );
+};
 
 export { HashtagCard };

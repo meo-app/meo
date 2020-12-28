@@ -77,6 +77,11 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
       fontSize: 24,
       lineHeight: 28,
     },
+    subtitle: {
+      fontFamily: "Inter_700Bold",
+      fontSize: 20,
+      lineHeight: 22,
+    },
     caption: {
       fontFamily: "Inter_400Regular",
       fontSize: 12,
@@ -127,6 +132,9 @@ const ThemeProvider: React.FunctionComponent<{
             color: foregroundPrimary,
           }),
           caption: Object.assign({}, base.typography.caption, {
+            color: foregroundPrimary,
+          }),
+          subtitle: Object.assign({}, base.typography.subtitle, {
             color: foregroundPrimary,
           }),
         },

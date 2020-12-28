@@ -1,6 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { TextInputProps, Pressable } from "react-native";
+import { Pressable, TextInputProps } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { QueryIds } from "../../api/QueryIds";
 import { useSearch } from "../../api/useSearch";
@@ -10,19 +11,20 @@ import { Frame } from "../../components/Frame";
 import { Grid } from "../../components/Grid";
 import { HashtagCard } from "../../components/HashtagCard";
 import { Header } from "../../components/Header";
+import { OpenDrawerButton } from "../../components/OpenDrawerButton";
 import { PostsList } from "../../components/PostsList";
 import { SearchTextInput } from "../../components/SearchTextInput";
 import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { useNavigation } from "@react-navigation/native";
-import { OpenDrawerButton } from "../../components/OpenDrawerButton";
 
 const Stack = createStackNavigator();
 type Modes = "search" | "explore";
 
 const Context = createContext<
   | ({
+      isFocused: boolean;
+      setIsFocused: (value: boolean) => void;
       term: string;
       mode: "search" | "explore";
     } & Required<Pick<TextInputProps, "onChangeText">>)
@@ -34,22 +36,24 @@ const SearchContext: React.FunctionComponent = function SearchContext({
 }) {
   const [term, onChangeText] = useState("");
   const [mode, setMode] = useState<Modes>("explore");
+  const [isFocused, setIsFocused] = useState(false);
   useEffect(() => {
-    const text = Boolean(term.trim());
-    if (text && mode === "explore") {
+    if (isFocused && mode === "explore") {
       setMode("search");
       return;
-    } else if (!text && mode === "search") {
+    } else if (!isFocused && mode === "search") {
       setMode("explore");
     }
-  }, [mode, term]);
+  }, [mode, isFocused]);
 
   return (
     <Context.Provider
       value={{
         term,
-        onChangeText: (text) => onChangeText(text),
         mode,
+        isFocused,
+        setIsFocused,
+        onChangeText: onChangeText,
       }}
     >
       {children}
@@ -118,7 +122,7 @@ function Search() {
 }
 
 function Screen() {
-  const { term, onChangeText, mode } = useSearchContext();
+  const { term, onChangeText, mode, setIsFocused } = useSearchContext();
   return (
     <Stack.Navigator
       screenOptions={{
@@ -144,7 +148,12 @@ function Screen() {
                     width: "100%",
                   }}
                 >
-                  <SearchTextInput value={term} onChangeText={onChangeText} />
+                  <SearchTextInput
+                    value={term}
+                    onChangeText={onChangeText}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                  />
                 </Frame>
               </Frame>
             </Header>

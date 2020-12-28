@@ -5,6 +5,7 @@ import { Pressable, View } from "react-native";
 import { QueryIds } from "../../api/QueryIds";
 import { useTransaction } from "../../api/useTransaction";
 import { Font } from "../../components/Font";
+import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { PostsList } from "../../components/PostsList";
@@ -59,7 +60,11 @@ function Screens() {
             >
               <Icon type="Back" size="medium" />
             </Pressable>
-            <Font variant="display">{route?.params?.hashtag}</Font>
+            <Frame marginRight="medium" paddingRight="medium">
+              <Font variant="display" numberOfLines={1}>
+                {route?.params?.hashtag}
+              </Font>
+            </Frame>
           </Header>
         ),
       }}
