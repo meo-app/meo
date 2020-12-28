@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
 import { ListRenderItem } from "react-native";
-import FastImage from "react-native-fast-image";
 import { FlatList } from "react-native-gesture-handler";
 import { Post } from "../api/Entities";
 import { usePostsFlatList } from "../application/providers/HomeProvider";
@@ -9,19 +8,12 @@ import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
-import { Picture } from "./Picture";
 import { PostTextContent } from "./PostTextContent";
+import { UserAvatar } from "./UserAvatar";
 
 function PostsList({ data }: { data?: Post[] }) {
   const theme = useTheme();
   const { postsRef } = usePostsFlatList();
-  useEffect(() => {
-    FastImage.preload([
-      {
-        uri: "https://i.pravatar.cc/150",
-      },
-    ]);
-  }, []);
   const keyExtractor = useCallback(
     ({ id }: { id: string }) => `list-item-${id}`,
     []
@@ -48,7 +40,7 @@ function PostsList({ data }: { data?: Post[] }) {
     [data, theme.units.largest]
   );
 
-  if (!Boolean(data?.length)) {
+  if (!data?.length) {
     return null;
   }
   return (
@@ -65,9 +57,8 @@ function PostsList({ data }: { data?: Post[] }) {
   );
 }
 
-const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
+const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
-  const theme = useTheme();
   return (
     <Frame
       paddingBottom="smallest"
@@ -87,17 +78,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
             height: "100%",
           }}
         >
-          <Picture
-            style={{
-              borderRadius: theme.constants.absoluteRadius,
-            }}
-            lazyload={false}
-            key={`picture-${id}`}
-            width={theme.scales.larger}
-            aspectRatio="square"
-            resizeMode="cover"
-            source="https://i.pravatar.cc/150"
-          />
+          <UserAvatar />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="small">
           <PostTextContent value={value} />

@@ -54,7 +54,6 @@ function Create() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const { onChangeText, text } = useCreateContext();
-  const navigation = useNavigation();
 
   return (
     <View
@@ -116,27 +115,6 @@ function Create() {
             >
               <PostTextContent value={text} />
             </TextInput>
-          </Frame>
-          <Frame justifyContent="flex-end" flex={1} flexDirection="row">
-            <Pressable
-              onPress={() => {
-                navigation.navigate(RootStackRoutes.Settings);
-              }}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-                width: "100%",
-              })}
-            >
-              <Font
-                color="primary"
-                variant="caption"
-                style={{
-                  textAlign: "right",
-                }}
-              >
-                Settings
-              </Font>
-            </Pressable>
           </Frame>
         </View>
       </ScrollView>

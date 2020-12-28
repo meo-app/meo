@@ -8,7 +8,6 @@ import { StatusBar, StatusBarStyle } from "react-native";
 import { ColorSchemeName, useColorScheme } from "react-native-appearance";
 import { Units } from "../../foundations/Spacing";
 import { Theme } from "../../foundations/Theme";
-import { opacify } from "polished";
 
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";

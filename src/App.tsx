@@ -18,8 +18,9 @@ import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
+import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
-import { RootStackRoutes, RootStackParamList } from "./root-stack-routes";
+import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -69,7 +70,7 @@ function TabsNavigator() {
   );
 }
 
-function RootScreens() {
+function MainScreens() {
   const theme = useTheme();
   return (
     <RootStack.Navigator
@@ -115,6 +116,7 @@ function RootScreens() {
         options={{
           animationEnabled: true,
           gestureEnabled: true,
+          headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
@@ -139,6 +141,7 @@ function RootScreens() {
 }
 
 function Root() {
+  const theme = useTheme();
   // TODO: pre fetch stuff
   const { data, isLoading } = useHasSeenOnboarding();
   if (isLoading) {
@@ -149,10 +152,13 @@ function Root() {
   }
 
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerStyle={{ backgroundColor: theme.colors.background }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
       <Drawer.Screen
         name={RootStackRoutes.Placeholder}
-        component={RootScreens}
+        component={MainScreens}
       />
     </Drawer.Navigator>
   );
