@@ -18,6 +18,7 @@
     "quotes": ["warn", "double", "avoid-escape"],
     "semi": "warn",
     "prefer-const": "error",
+    "no-shadow": "off",
     "no-console": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
