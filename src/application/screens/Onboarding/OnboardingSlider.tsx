@@ -67,17 +67,27 @@ function OnboardingSlider() {
         }}
       >
         <OnboardingFrame key="1">
+          <View
+            style={{
+              height: 500,
+              width: 200,
+              display: "flex",
+            }}
+          >
+          </View>
           <Font variant="display">👋 👋 👋</Font>
           <Font variant="display">Welcome to Meo</Font>
           <Font variant="body">Your private feed of thoughts. Locally saved private by default.</Font>
         </OnboardingFrame>
         <OnboardingFrame key="2">
           <Font variant="display">📝 📝 📝</Font>
-          <Font variant="display">moar onboarding content</Font>
+          <Font variant="display">A social feed-like experience</Font>
+          <Font variant="body">Write your thoughts, ideas and browse them in a timeline form</Font>
         </OnboardingFrame>
         <OnboardingFrame key="3">
-          <Font variant="display">🤷‍♂️ 🤷‍♂️ 🤷‍♂️</Font>
-          <Font variant="display">and more onboarding stuff</Font>
+          <Font variant="display">#️⃣ #️⃣ #️⃣</Font>
+          <Font variant="display">Easily orgnize things</Font>
+          <Font variant="body">No more folders or tabs, just add a hastagh to your post and find them organized for you in the explore tab</Font>
         </OnboardingFrame>
       </ViewPager>
       <Indicators length={3} active={page} />
