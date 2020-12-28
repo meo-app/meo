@@ -5,15 +5,13 @@ import { useState } from "react";
 
 function useFlushDatabase() {
   const [enabled, setEnable] = useState(false);
-  useTransaction<null>(QueryIds.flushDatabase, "delete from posts;", {
+
+  useTransaction<null>(QueryIds.flushPosts, "delete from posts;", {
     enabled,
   });
 
-  useTransaction<null>("hashtagsflush", "delete from hashtags;", {
+  useTransaction<null>(QueryIds.flushHashtags, "delete from hashtags;", {
     enabled,
-    onSuccess: () => {
-      console.log("sucess");
-    },
   });
 
   return () => setEnable(true);
