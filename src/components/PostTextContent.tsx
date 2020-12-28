@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
+import { RouteNames } from "../route-names";
 import { HASHTAG_REGEX } from "../utils/hashtag-regex";
 import { Font } from "./Font";
-import { Alert } from "react-native";
 
 function PostTextContent({ value }: { value: string }) {
+  const navigation = useNavigation();
   return (
     <Font>
       {value.split(HASHTAG_REGEX).map((item, index) => {
@@ -12,7 +14,11 @@ function PostTextContent({ value }: { value: string }) {
             <Font
               color="primary"
               key={`hashtag-${index}-${item}`}
-              onPress={() => Alert.alert("TODO: navigate to hashtag")}
+              onPress={() =>
+                navigation.navigate(RouteNames.HashtagViewer, {
+                  hashtag: item,
+                })
+              }
             >
               {item}
             </Font>

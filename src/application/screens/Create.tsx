@@ -1,9 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Pressable, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { useFlushOnboarding } from "../../api/onboarding";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
@@ -55,8 +54,7 @@ function Create() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const { onChangeText, text } = useCreateContext();
-
-  const { mutate: flush } = useFlushOnboarding();
+  const navigation = useNavigation();
 
   return (
     <View
@@ -119,15 +117,27 @@ function Create() {
               <PostTextContent value={text} />
             </TextInput>
           </Frame>
-          {/* <Pressable
-            style={{
-              marginTop: theme.units.large,
-            }}
-          >
-            <Font variant="caption" onPress={() => flush()}>
-              Flush onboarding status
-            </Font>
-          </Pressable> */}
+          <Frame justifyContent="flex-end" flex={1} flexDirection="row">
+            <Pressable
+              onPress={() => {
+                navigation.navigate(RouteNames.Settings);
+              }}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+                width: "100%",
+              })}
+            >
+              <Font
+                color="primary"
+                variant="caption"
+                style={{
+                  textAlign: "right",
+                }}
+              >
+                Settings
+              </Font>
+            </Pressable>
+          </Frame>
         </View>
       </ScrollView>
     </View>

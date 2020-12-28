@@ -1,7 +1,11 @@
 import React from "react";
-import { TextInput } from "react-native-gesture-handler";
+import {
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { useStyles } from "../hooks/use-styles";
 import { useTheme } from "../application/providers/Theming";
+import { Keyboard } from "react-native";
 
 function SearchTextInput(
   props: Omit<
@@ -30,15 +34,17 @@ function SearchTextInput(
   }));
 
   return (
-    <TextInput
-      clearButtonMode="always"
-      placeholderTextColor={theme.colors.foregroundSecondary}
-      placeholder="thoughts or tags"
-      numberOfLines={2}
-      style={styles.root}
-      editable
-      {...props}
-    />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TextInput
+        clearButtonMode="always"
+        placeholderTextColor={theme.colors.foregroundSecondary}
+        placeholder="thoughts or tags"
+        numberOfLines={2}
+        style={styles.root}
+        editable
+        {...props}
+      />
+    </TouchableWithoutFeedback>
   );
 }
 

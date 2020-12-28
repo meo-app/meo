@@ -1,28 +1,21 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { opacify, textInputs } from "polished";
-import React, {
-  useState,
-  createContext,
-  Children,
-  useContext,
-  useEffect,
-} from "react";
-import { StyleSheet, View, TextInputProps } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { TextInputProps, Pressable } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { QueryIds } from "../../api/QueryIds";
 import { useSearch } from "../../api/useSearch";
 import { useTransaction } from "../../api/useTransaction";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Grid } from "../../components/Grid";
+import { HashtagCard } from "../../components/HashtagCard";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
-import { useDebounce } from "../../hooks/use-debounce";
-import { useStyles } from "../../hooks/use-styles";
-import { RouteNames } from "../../route-names";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { SearchTextInput } from "../../components/SearchTextInput";
+import { RouteNames } from "../../route-names";
 import { assert } from "../../utils/assert";
+import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 type Modes = "search" | "explore";
@@ -69,41 +62,14 @@ function useSearchContext() {
 }
 
 function Search() {
-  const styles = useStyles((theme) => ({
-    root: {
-      position: "relative",
-      zIndex: 1,
-      width: "100%",
-      justifyContent: "flex-end",
-      height: 160,
-      borderRadius: theme.constants.borderRadius,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.backgroundAccent,
-      backgroundColor: theme.colors.backgroundAccent,
-      shadowColor: opacify(0.5, theme.colors.absoluteDark),
-      padding: theme.units.medium,
-      ...theme.constants.shadow,
-    },
-    decoration: {
-      ...theme.constants.shadow,
-      position: "absolute",
-      borderRadius: theme.constants.borderRadius,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.backgroundAccent,
-      backgroundColor: theme.colors.background,
-      bottom: -10,
-      width: "100%",
-      height: 100,
-      zIndex: 0,
-    },
-  }));
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   const { term, mode } = useSearchContext();
+  const navigation = useNavigation();
   const { data } = useSearch(term);
   const { data: hashtags } = useTransaction<{ total: string; value: string }>(
     QueryIds.topHashtags,
-    "select count(value) as total, value from hashtags group by value order by total desc limit 8"
+    "select count(value) as total, value from hashtags group by value order by total desc limit 4"
   );
 
   return (
@@ -113,6 +79,7 @@ function Search() {
       flex={1}
     >
       {mode === "explore" && (
+        // TODO: adds "safe" padding at bottom based on tabbar height
         <ScrollView
           style={{
             paddingTop: theme.units[spacing.horizontal],
@@ -125,35 +92,16 @@ function Search() {
             margin={theme.units[spacing.horizontal]}
           >
             {hashtags?.map((item) => (
-              <View
+              <Pressable
                 key={String(item.value + item.total)}
-                style={{
-                  width: "100%",
+                onPress={() => {
+                  navigation.navigate(RouteNames.HashtagViewer, {
+                    hashtag: item.value,
+                  });
                 }}
               >
-                <View style={styles.root}>
-                  <Font variant="display">{item.value}</Font>
-                  <Font variant="caption">{item.total} thoughts</Font>
-                </View>
-                <View
-                  style={[
-                    styles.decoration,
-                    {
-                      bottom: -10,
-                      transform: [{ scale: 0.92 }],
-                    },
-                  ]}
-                />
-                <View
-                  style={[
-                    styles.decoration,
-                    {
-                      bottom: -5,
-                      transform: [{ scale: 0.96 }],
-                    },
-                  ]}
-                />
-              </View>
+                <HashtagCard hashtag={item.value} total={item.total} />
+              </Pressable>
             ))}
           </Grid>
         </ScrollView>
@@ -172,6 +120,7 @@ function Screen() {
   return (
     <Stack.Navigator
       screenOptions={{
+        // TODO: animate mode transitions
         header: (props) => {
           return (
             <Header {...props}>
