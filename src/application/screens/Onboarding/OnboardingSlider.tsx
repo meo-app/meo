@@ -3,29 +3,9 @@ import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
-import { useTheme } from "../../providers/Theming";
-import { OnboardingFadeInView } from "./OnboardingFadeInView";
 import { Picture } from "../../../components/Picture";
-
-
-const OnboardingFrame: React.FunctionComponent = function OnboardingFrame({
-  children,
-}) {
-  return (
-    <View
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        flex: 1,
-        alignItems: "center",
-        padding: 10,
-      }}
-    >
-      {children}
-    </View>
-  );
-};
+import { useStyles } from "../../../hooks/use-styles";
+import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 
 const Indicators: React.FunctionComponent<{
   length: number;
@@ -58,52 +38,63 @@ const Indicators: React.FunctionComponent<{
 // I cant align the freaking image correctly, the screen looks like starts with a negative margin and I don't know where it is coming
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
+  const spacing = useEdgeSpacing();
+  const styles = useStyles((theme) => ({
+    slider: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingLeft: theme.units[spacing.horizontal],
+      paddingRight: theme.units[spacing.horizontal],
+    },
+  }));
   return (
     <>
       <ViewPager
         initialPage={0}
         onPageSelected={(event) => setPage(event.nativeEvent.position)}
         style={{
-          flexGrow: 2,
+          flex: 1,
+          justifyContent: "center",
+          height: "100%",
         }}
       >
-        <OnboardingFrame key="1">
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              flex: 1,
-              alignItems: "center",
-            }}
-          >
+        <View key="1" style={styles.slider}>
           <Picture
+            style={{
+              width: 300,
+            }}
             aspectRatio="classic"
             resizeMode="cover"
-            height="100%"
-            source={{
-              uri: 'https://i.imgur.com/a8r5TI3.gif',
-            }}
             lazyload={false}
+            source={{
+              uri: "https://i.imgur.com/a8r5TI3.gif",
+            }}
           />
-            <Font variant="display">👋 👋 👋</Font>
-            <Font variant="display">Welcome to Meo</Font>
-            <Font variant="body">Your private feed of thoughts. Locally saved private by default.</Font>
-          </View>
-        </OnboardingFrame>
-        <OnboardingFrame key="2">
+          <Font variant="display">👋 👋 👋</Font>
+          <Font variant="display">Welcome to Meo</Font>
+          <Font variant="body">
+            Your private feed of thoughts. Locally saved private by default.
+          </Font>
+        </View>
+        <View key="2" style={styles.slider}>
           <Font variant="display">📝 📝 📝</Font>
           <Font variant="display">A social feed-like experience</Font>
-          <Font variant="body">Write your thoughts, ideas and browse them in a timeline form</Font>
-        </OnboardingFrame>
-        <OnboardingFrame key="3">
+          <Font variant="body">
+            Write your thoughts, ideas and browse them in a timeline form
+          </Font>
+        </View>
+        <View key="3" style={styles.slider}>
           <Font variant="display">#️⃣ #️⃣ #️⃣</Font>
           <Font variant="display">Easily orgnize things</Font>
-          <Font variant="body">No more folders or tabs, just add a hastagh to your post and find them organized for you in the explore tab</Font>
-        </OnboardingFrame>
+          <Font variant="body">
+            No more folders or tabs, just add a hastagh to your post and find
+            them organized for you in the explore tab
+          </Font>
+        </View>
       </ViewPager>
       <Indicators length={3} active={page} />
-    </> 
+    </>
   );
 }
 
