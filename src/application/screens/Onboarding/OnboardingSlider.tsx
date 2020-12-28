@@ -5,6 +5,7 @@ import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { useTheme } from "../../providers/Theming";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
+import { Picture } from "../../../components/Picture";
 
 
 const OnboardingFrame: React.FunctionComponent = function OnboardingFrame({
@@ -54,7 +55,7 @@ const Indicators: React.FunctionComponent<{
     </Frame>
   );
 };
-
+// I cant align the freaking image correctly, the screen looks like starts with a negative margin and I don't know where it is coming
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
   return (
@@ -69,15 +70,26 @@ function OnboardingSlider() {
         <OnboardingFrame key="1">
           <View
             style={{
-              height: 500,
-              width: 200,
               display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              flex: 1,
+              alignItems: "center",
             }}
           >
+          <Picture
+            aspectRatio="classic"
+            resizeMode="cover"
+            height="100%"
+            source={{
+              uri: 'https://i.imgur.com/a8r5TI3.gif',
+            }}
+            lazyload={false}
+          />
+            <Font variant="display">👋 👋 👋</Font>
+            <Font variant="display">Welcome to Meo</Font>
+            <Font variant="body">Your private feed of thoughts. Locally saved private by default.</Font>
           </View>
-          <Font variant="display">👋 👋 👋</Font>
-          <Font variant="display">Welcome to Meo</Font>
-          <Font variant="body">Your private feed of thoughts. Locally saved private by default.</Font>
         </OnboardingFrame>
         <OnboardingFrame key="2">
           <Font variant="display">📝 📝 📝</Font>
