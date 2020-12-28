@@ -70,7 +70,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const theme = useTheme();
   return (
     <Frame
-      paddingBottom="medium"
+      paddingBottom="smallest"
       paddingRight={spacing.horizontal}
       paddingLeft={spacing.horizontal}
     >
