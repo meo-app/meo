@@ -71,6 +71,7 @@ const HashTagDisplay: React.FunctionComponent = function HashTagDisplay({
 }) {
   const [props, setFontSettings] = useState<React.ComponentProps<typeof Font>>({
     color: "backgroundAccent",
+    variant: "display",
   });
   return (
     <Font
