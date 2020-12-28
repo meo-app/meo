@@ -35,7 +35,7 @@ const Indicators: React.FunctionComponent<{
     </Frame>
   );
 };
-// I cant align the freaking image correctly, the screen looks like starts with a negative margin and I don't know where it is coming
+
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
   const spacing = useEdgeSpacing();

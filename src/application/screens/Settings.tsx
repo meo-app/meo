@@ -1,18 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import { Pressable } from "react-native";
+import { useFlushOnboarding } from "../../api/onboarding";
+import { useFlushDatabase } from "../../api/useFlushDatabase";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
-import { AvatarSelection } from "./AvatarSelection";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity, Pressable } from "react-native";
-import { useTheme, useEdgeSpacing } from "../providers/Theming";
-import { useFlushOnboarding } from "../../api/onboarding";
 import { useStyles } from "../../hooks/use-styles";
-import { useFlushDatabase } from "../../api/useFlushDatabase";
+import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { AvatarSelection } from "./AvatarSelection";
 
 const Stack = createStackNavigator();
 
-enum SettingsRouteNames {
+enum SettingsRootStackRoutes {
   Settings = "Settings",
   AvatarSelection = "AvatarSelection",
 }
@@ -40,7 +40,9 @@ function Settings() {
     >
       <Pressable
         style={styles.pressable}
-        onPress={() => navigation.navigate(SettingsRouteNames.AvatarSelection)}
+        onPress={() =>
+          navigation.navigate(SettingsRootStackRoutes.AvatarSelection)
+        }
       >
         <Font color="primary">Select avatar</Font>
       </Pressable>
@@ -57,9 +59,12 @@ function Settings() {
 function Root() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={SettingsRouteNames.Settings} component={Settings} />
       <Stack.Screen
-        name={SettingsRouteNames.AvatarSelection}
+        name={SettingsRootStackRoutes.Settings}
+        component={Settings}
+      />
+      <Stack.Screen
+        name={SettingsRootStackRoutes.AvatarSelection}
         component={AvatarSelection}
       />
     </Stack.Navigator>

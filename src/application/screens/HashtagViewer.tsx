@@ -4,7 +4,7 @@ import { useTheme } from "../providers/Theming";
 import { View, Pressable } from "react-native";
 import { useSafeAreaInsets, useSafeArea } from "react-native-safe-area-context";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { RouteNames } from "../../route-names";
+import { RootStackRoutes } from "../../root-stack-routes";
 import { Header } from "../../components/Header";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Icon } from "../../components/Icon/Icon";
@@ -56,7 +56,7 @@ function Screens() {
                   return;
                 }
 
-                navigation.navigate(RouteNames.Home);
+                navigation.navigate(RootStackRoutes.Home);
               }}
               style={({ pressed }) => ({
                 marginRight: theme.units.medium,
@@ -71,7 +71,7 @@ function Screens() {
       }}
     >
       <Stack.Screen
-        name={RouteNames.HashtagViewer}
+        name={RootStackRoutes.HashtagViewer}
         component={HashtagViewer}
         initialParams={route.params}
       />

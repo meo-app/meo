@@ -1,11 +1,12 @@
 import { StackHeaderProps } from "@react-navigation/stack";
+import { rgba } from "polished";
 import React, { useCallback } from "react";
+import { ImageBackground } from "react-native";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
+import { useStyles } from "../hooks/use-styles";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
-import { Picture } from "./Picture";
-import { opacify, rgba } from "polished";
-import { ImageBackground } from "react-native";
+import { OpenDrawerButton } from "./OpenDrawerButton";
 
 interface Props extends StackHeaderProps {
   hideBackground?: boolean;
@@ -19,58 +20,54 @@ const Header: React.FunctionComponent<Props> = function Header({
 }) {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
+  const styles = useStyles(() => ({
+    backgrond: {
+      display: "flex",
+      backgroundColor: theme.colors.background,
+      ...theme.constants.shadow,
+    },
+    spacer: {
+      height: insets.top,
+      width: "100%",
+      backgroundColor: rgba(255, 255, 255, 0),
+    },
+    root: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "row",
+      paddingLeft: theme.units[spacing.horizontal],
+      paddingRight: theme.units[spacing.horizontal],
+      paddingBottom: theme.units.large,
+      paddingTop: theme.units.medium,
+    },
+  }));
   const Wrapper = useCallback<React.FunctionComponent>(
-    ({ children }) => {
+    ({ children: node }) => {
       if (hideBackground) {
-        return (
-          <Frame
-            style={{
-              display: "flex",
-              backgroundColor: theme.colors.background,
-              ...theme.constants.shadow,
-            }}
-          >
-            {children}
-          </Frame>
-        );
+        return <Frame style={styles.backgrond}>{children}</Frame>;
       }
 
       return (
         <ImageBackground
           source={require("../assets/bg-pattern-grayscale.png")}
-          style={{
-            display: "flex",
-            backgroundColor: theme.colors.background,
-            ...theme.constants.shadow,
-          }}
+          style={styles.backgrond}
         >
-          {children}
+          {node}
         </ImageBackground>
       );
     },
-    [hideBackground, theme.colors.background, theme.constants.shadow]
+    [children, hideBackground, styles.backgrond]
   );
   return (
     <Wrapper>
-      <Frame
-        style={{
-          height: insets.top,
-          width: "100%",
-          backgroundColor: rgba(255, 255, 255, 0),
-        }}
-      />
-      <Frame
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          paddingLeft: theme.units[spacing.horizontal],
-          paddingRight: theme.units[spacing.horizontal],
-          paddingBottom: theme.units.large,
-          paddingTop: theme.units.medium,
-        }}
-      >
-        {!children && <Font variant="display">{scene.route.name}</Font>}
+      <Frame style={styles.spacer} />
+      <Frame style={styles.root}>
+        {!children && (
+          <Frame flexDirection="row">
+            <OpenDrawerButton />
+            <Font variant="display">{scene.route.name}</Font>
+          </Frame>
+        )}
         {children}
       </Frame>
     </Wrapper>

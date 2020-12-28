@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -18,11 +19,12 @@ import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
-import { RouteNames } from "./route-names";
+import { RootStackRoutes, RootStackParamList } from "./root-stack-routes";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
-const RootStack = createStackNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator();
 
 function TabsNavigator() {
   const { postsRef } = usePostsFlatList();
@@ -34,8 +36,8 @@ function TabsNavigator() {
         }}
         tabBar={({ navigation, state }) => (
           <FloatingActions
-            onSearchPress={() => navigation.navigate(RouteNames.Search)}
-            onCreatePress={() => navigation.navigate(RouteNames.Create)}
+            onSearchPress={() => navigation.navigate(RootStackRoutes.Search)}
+            onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
             onHomePress={() => {
               if (/Home/.test(state.history[1]?.key)) {
                 postsRef?.current?.scrollToIndex({
@@ -43,21 +45,21 @@ function TabsNavigator() {
                   index: 0,
                 });
               } else {
-                navigation.navigate(RouteNames.Home);
+                navigation.navigate(RootStackRoutes.Home);
               }
             }}
           />
         )}
       >
-        <Tab.Screen name={RouteNames.Home} component={Home} />
-        <Tab.Screen name={RouteNames.Search} component={Search} />
+        <Tab.Screen name={RootStackRoutes.Home} component={Home} />
+        <Tab.Screen name={RootStackRoutes.Search} component={Search} />
         <Tab.Screen
-          name={RouteNames.Placeholder}
+          name={RootStackRoutes.Placeholder}
           component={Placeholder}
           listeners={({ navigation }) => ({
             tabPress: (e) => {
               e.preventDefault();
-              navigation.navigate(RouteNames.Create);
+              navigation.navigate(RootStackRoutes.Create);
             },
           })}
         />
@@ -66,17 +68,8 @@ function TabsNavigator() {
   );
 }
 
-function Root() {
-  // TODO: pre fetch stuff
-  const { data, isLoading } = useHasSeenOnboarding();
+function RootScreens() {
   const theme = useTheme();
-  if (isLoading) {
-    return null;
-  }
-  if (!data) {
-    return <Onboarding />;
-  }
-
   return (
     <RootStack.Navigator
       mode="modal"
@@ -85,7 +78,7 @@ function Root() {
       }}
     >
       <RootStack.Screen
-        name={RouteNames.Tabs}
+        name={RootStackRoutes.Tabs}
         component={TabsNavigator}
         options={{
           animationEnabled: true,
@@ -93,7 +86,7 @@ function Root() {
         }}
       />
       <RootStack.Screen
-        name={RouteNames.Create}
+        name={RootStackRoutes.Create}
         component={Create}
         options={{
           headerShown: false,
@@ -116,7 +109,7 @@ function Root() {
         }}
       />
       <RootStack.Screen
-        name={RouteNames.Settings}
+        name={RootStackRoutes.Settings}
         component={Settings}
         options={{
           animationEnabled: true,
@@ -125,7 +118,7 @@ function Root() {
         }}
       />
       <RootStack.Screen
-        name={RouteNames.HashtagViewer}
+        name={RootStackRoutes.HashtagViewer}
         component={HashtagViewer}
         options={{
           animationEnabled: true,
@@ -141,6 +134,23 @@ function Root() {
         }}
       />
     </RootStack.Navigator>
+  );
+}
+
+function Root() {
+  // TODO: pre fetch stuff
+  const { data, isLoading } = useHasSeenOnboarding();
+  if (isLoading) {
+    return null;
+  }
+  if (!data) {
+    return <Onboarding />;
+  }
+
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name={RootStackRoutes.Placeholder} component={RootScreens} />
+    </Drawer.Navigator>
   );
 }
 
