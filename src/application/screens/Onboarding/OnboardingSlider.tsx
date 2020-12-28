@@ -15,7 +15,7 @@ const Indicators: React.FunctionComponent<{
   const items = useMemo(() => [...Array(length).keys()], [length]);
   return (
     <Frame alignItems="center" justifyContent="center" flexDirection="row">
-      {items.map((item) => (
+      {items.map(item => (
         <Frame
           key={item}
           marginLeft="small"
@@ -28,7 +28,7 @@ const Indicators: React.FunctionComponent<{
               : theme.colors.foregroundPrimary
           }
           style={{
-            borderRadius: theme.constants.absoluteRadius,
+            borderRadius: theme.constants.absoluteRadius
           }}
         />
       ))}
@@ -39,36 +39,36 @@ const Indicators: React.FunctionComponent<{
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
   const spacing = useEdgeSpacing();
-  const styles = useStyles((theme) => ({
+  const styles = useStyles(theme => ({
     slider: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
       paddingLeft: theme.units[spacing.horizontal],
-      paddingRight: theme.units[spacing.horizontal],
-    },
+      paddingRight: theme.units[spacing.horizontal]
+    }
   }));
   return (
     <>
       <ViewPager
         initialPage={0}
-        onPageSelected={(event) => setPage(event.nativeEvent.position)}
+        onPageSelected={event => setPage(event.nativeEvent.position)}
         style={{
           flex: 1,
           justifyContent: "center",
-          height: "100%",
+          height: "100%"
         }}
       >
         <View key="1" style={styles.slider}>
           <Picture
             style={{
               width: 300,
+              backgroundColor: "transparent"
             }}
-            aspectRatio="classic"
-            resizeMode="cover"
+            resizeMode="contain"
             lazyload={false}
             source={{
-              uri: "https://i.imgur.com/a8r5TI3.gif",
+              uri: "https://i.imgur.com/a8r5TI3.gif"
             }}
           />
           <Font variant="display">👋 👋 👋</Font>
