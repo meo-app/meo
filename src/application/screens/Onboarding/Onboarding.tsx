@@ -13,7 +13,7 @@ import {
 import { OnboardingAvatarSelection } from "./OnboardingAvatarSelection";
 import {
   OnboardingNavigationProvider,
-  RouteNames,
+  RootStackRoutes,
   useOnboardingContext,
 } from "./OnboardingContext";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
@@ -87,7 +87,7 @@ function Onboarding() {
         }}
       />
       <Stack.Navigator
-        initialRouteName={RouteNames.OnboardingSlider}
+        initialRouteName={RootStackRoutes.OnboardingSlider}
         screenOptions={{
           header: () => null,
           gestureEnabled: false,
@@ -95,15 +95,15 @@ function Onboarding() {
       >
         <Stack.Screen
           component={OnboardingSliderScreen}
-          name={RouteNames.OnboardingSlider}
+          name={RootStackRoutes.OnboardingSlider}
         />
         <Stack.Screen
           component={OnboardingInsertNameScreen}
-          name={RouteNames.InsertName}
+          name={RootStackRoutes.InsertName}
         />
         <Stack.Screen
           component={OnboardingAvatarSelectionScreen}
-          name={RouteNames.AvatarSelection}
+          name={RootStackRoutes.AvatarSelection}
         />
       </Stack.Navigator>
       <Frame

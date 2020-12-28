@@ -6,15 +6,13 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
-import { RouteNames } from "../../route-names";
+import { RootStackRoutes } from "../../root-stack-routes";
 import { useTheme } from "../providers/Theming";
 
 const Stack = createStackNavigator();
-
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
-
   return (
     <View
       style={{
@@ -35,7 +33,7 @@ function Home() {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {!Boolean(data?.length) && (
+      {!data?.length && (
         <View
           style={{
             flex: 1,
@@ -62,7 +60,7 @@ function Root() {
       }}
     >
       <Stack.Screen
-        name={RouteNames.Home}
+        name={RootStackRoutes.Home}
         component={Home}
         options={{
           animationEnabled: false,

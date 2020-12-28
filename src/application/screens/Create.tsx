@@ -10,7 +10,7 @@ import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { Picture } from "../../components/Picture";
 import { PostTextContent } from "../../components/PostTextContent";
-import { RouteNames } from "../../route-names";
+import { RootStackRoutes } from "../../root-stack-routes";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 const Stack = createStackNavigator();
@@ -25,7 +25,7 @@ const CreateProvider: React.FunctionComponent = ({ children }) => {
   const [text, setText] = useState("");
   const navigation = useNavigation();
   const { status, mutate: createPost } = useCreatePost({
-    onSuccess: () => navigation.navigate(RouteNames.Home),
+    onSuccess: () => navigation.navigate(RootStackRoutes.Home),
   });
 
   return (
@@ -120,7 +120,7 @@ function Create() {
           <Frame justifyContent="flex-end" flex={1} flexDirection="row">
             <Pressable
               onPress={() => {
-                navigation.navigate(RouteNames.Settings);
+                navigation.navigate(RootStackRoutes.Settings);
               }}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
@@ -215,7 +215,7 @@ function Screens() {
         ),
       }}
     >
-      <Stack.Screen name={RouteNames.Create} component={Create} />
+      <Stack.Screen name={RootStackRoutes.Create} component={Create} />
     </Stack.Navigator>
   );
 }

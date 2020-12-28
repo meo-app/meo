@@ -9,7 +9,7 @@ import React, { useContext, useRef, useState, useEffect } from "react";
 import { useQueryClient } from "react-query";
 import { QueryIds } from "../../../api/QueryIds";
 
-export enum RouteNames {
+export enum RootStackRoutes {
   OnboardingSlider = "OnboardingSlider",
   InsertName = "InsertName",
   AvatarSelection = "AvatarSelection",
@@ -32,9 +32,9 @@ function useOnboardingContext() {
 }
 
 const routes = [
-  RouteNames.OnboardingSlider,
-  RouteNames.InsertName,
-  RouteNames.AvatarSelection,
+  RootStackRoutes.OnboardingSlider,
+  RootStackRoutes.InsertName,
+  RootStackRoutes.AvatarSelection,
 ];
 
 const OnboardingNavigationProvider: React.FunctionComponent = function OnboardingNavigationProvider({

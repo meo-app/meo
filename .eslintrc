@@ -1,5 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
+  "extends": "@react-native-community/eslint-config",
   "parserOptions": {
     "ecmaVersion": 6,
     "project": "./tsconfig.json",
@@ -19,7 +20,8 @@
     "prefer-const": "error",
     "no-console": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "react-native/no-inline-styles": "off"
   },
   "overrides": [
     {

@@ -12,13 +12,15 @@ import { HashtagCard } from "../../components/HashtagCard";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
 import { SearchTextInput } from "../../components/SearchTextInput";
-import { RouteNames } from "../../route-names";
+import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 import { useNavigation } from "@react-navigation/native";
+import { OpenDrawerButton } from "../../components/OpenDrawerButton";
 
 const Stack = createStackNavigator();
 type Modes = "search" | "explore";
+
 const Context = createContext<
   | ({
       term: string;
@@ -95,7 +97,7 @@ function Search() {
               <Pressable
                 key={String(item.value + item.total)}
                 onPress={() => {
-                  navigation.navigate(RouteNames.HashtagViewer, {
+                  navigation.navigate(RootStackRoutes.HashtagViewer, {
                     hashtag: item.value,
                   });
                 }}
@@ -130,7 +132,12 @@ function Screen() {
                   width: "100%",
                 }}
               >
-                {mode === "explore" && <Font variant="display">Explore</Font>}
+                {mode === "explore" && (
+                  <Frame flexDirection="row">
+                    <OpenDrawerButton />
+                    <Font variant="display">Explore</Font>
+                  </Frame>
+                )}
                 <Frame
                   marginTop={mode === "explore" ? "medium" : "none"}
                   style={{
@@ -147,7 +154,7 @@ function Screen() {
       }}
     >
       <Stack.Screen
-        name={RouteNames.Search}
+        name={RootStackRoutes.Search}
         component={Search}
         options={{
           animationEnabled: false,

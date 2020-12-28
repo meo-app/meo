@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { RouteNames } from "../route-names";
+import { RootStackRoutes } from "../root-stack-routes";
 import { HASHTAG_REGEX } from "../utils/hashtag-regex";
 import { Font } from "./Font";
 
@@ -15,7 +15,7 @@ function PostTextContent({ value }: { value: string }) {
               color="primary"
               key={`hashtag-${index}-${item}`}
               onPress={() =>
-                navigation.navigate(RouteNames.HashtagViewer, {
+                navigation.navigate(RootStackRoutes.HashtagViewer, {
                   hashtag: item,
                 })
               }
