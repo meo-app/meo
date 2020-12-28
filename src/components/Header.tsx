@@ -1,6 +1,6 @@
 import { StackHeaderProps } from "@react-navigation/stack";
 import { rgba } from "polished";
-import React, { useCallback } from "react";
+import React from "react";
 import { ImageBackground } from "react-native";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
@@ -41,25 +41,14 @@ const Header: React.FunctionComponent<Props> = function Header({
       paddingTop: theme.units.medium,
     },
   }));
-  const Wrapper = useCallback<React.FunctionComponent>(
-    ({ children: node }) => {
-      if (hideBackground) {
-        return <Frame style={styles.backgrond}>{children}</Frame>;
-      }
 
-      return (
-        <ImageBackground
-          source={require("../assets/bg-pattern-grayscale.png")}
-          style={styles.backgrond}
-        >
-          {node}
-        </ImageBackground>
-      );
-    },
-    [children, hideBackground, styles.backgrond]
-  );
   return (
-    <Wrapper>
+    <ImageBackground
+      style={styles.backgrond}
+      source={
+        hideBackground ? "" : require("../assets/bg-pattern-grayscale.png")
+      }
+    >
       <Frame style={styles.spacer} />
       <Frame style={styles.root}>
         {!children && (
@@ -70,7 +59,7 @@ const Header: React.FunctionComponent<Props> = function Header({
         )}
         {children}
       </Frame>
-    </Wrapper>
+    </ImageBackground>
   );
 };
 
