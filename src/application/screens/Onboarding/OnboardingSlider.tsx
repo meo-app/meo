@@ -6,6 +6,7 @@ import { Frame } from "../../../components/Frame";
 import { useTheme } from "../../providers/Theming";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
 
+
 const OnboardingFrame: React.FunctionComponent = function OnboardingFrame({
   children,
 }) {
@@ -17,6 +18,7 @@ const OnboardingFrame: React.FunctionComponent = function OnboardingFrame({
         justifyContent: "flex-end",
         flex: 1,
         alignItems: "center",
+        padding: 10,
       }}
     >
       {children}
@@ -67,6 +69,7 @@ function OnboardingSlider() {
         <OnboardingFrame key="1">
           <Font variant="display">👋 👋 👋</Font>
           <Font variant="display">Welcome to Meo</Font>
+          <Font variant="body">Your private feed of thoughts. Locally saved private by default.</Font>
         </OnboardingFrame>
         <OnboardingFrame key="2">
           <Font variant="display">📝 📝 📝</Font>
@@ -78,7 +81,7 @@ function OnboardingSlider() {
         </OnboardingFrame>
       </ViewPager>
       <Indicators length={3} active={page} />
-    </>
+    </> 
   );
 }
 
