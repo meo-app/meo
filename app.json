@@ -8,6 +8,7 @@
     "platforms": ["ios", "android", "web"],
     "assetBundlePatterns": ["**/*"],
     "userInterfaceStyle": "automatic",
+    "ïcon": "./src/assets/icon.png",
     "splash": {
       "image": "./src/assets/splash.png",
       "backgroundColor": "#1D222D"
