@@ -1,26 +1,20 @@
-import React from "react";
-import { Font } from "../../components/Font";
-import { useTheme } from "../providers/Theming";
-import { View, Pressable } from "react-native";
-import { useSafeAreaInsets, useSafeArea } from "react-native-safe-area-context";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { RootStackRoutes } from "../../root-stack-routes";
-import { Header } from "../../components/Header";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Icon } from "../../components/Icon/Icon";
-import { useStyles } from "../../hooks/use-styles";
-import { PostsList } from "../../components/PostsList";
-import { useTransaction } from "../../api/useTransaction";
+import React from "react";
+import { Pressable, View } from "react-native";
 import { QueryIds } from "../../api/QueryIds";
+import { useTransaction } from "../../api/useTransaction";
+import { Font } from "../../components/Font";
+import { Header } from "../../components/Header";
+import { Icon } from "../../components/Icon/Icon";
+import { PostsList } from "../../components/PostsList";
+import { RootStackRoutes } from "../../root-stack-routes";
+import { useTheme } from "../providers/Theming";
 
 const Stack = createStackNavigator();
 
 function HashtagViewer(props: { route: RouteProp<{}, ""> }) {
   const theme = useTheme();
-  const safeArea = useSafeArea();
-  const navigation = useNavigation();
-  const route = useRoute();
-  console.log("hashtag");
   const { data } = useTransaction<{ total: string; value: string }>(
     QueryIds.hashtagViewer,
     `select * from posts where id in (select post_id from hashtags where value like "%${props.route.params.hashtag}%")`

@@ -4,7 +4,6 @@ import { FlatList } from "react-native-gesture-handler";
 import { useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 import { Spacing } from "./Frame";
-import { Font } from "./Font";
 
 function useGapValues({ gap }: { gap: Spacing }) {
   const theme = useTheme();
@@ -52,7 +51,7 @@ const Grid: React.FunctionComponent<Props> = function Grid({
   const itemWidth = Math.floor(
     (width - ((numColumns - 1) * verticalGap + 2 * margin)) / numColumns
   );
-  const styles = useStyles((theme) => ({
+  const styles = useStyles(() => ({
     container: {
       marginLeft: margin,
       marginRight: margin,
