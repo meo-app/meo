@@ -31,6 +31,7 @@ function TabsNavigator() {
   return (
     <>
       <Tab.Navigator
+        lazy={false}
         screenOptions={{
           unmountOnBlur: false,
         }}
@@ -149,7 +150,10 @@ function Root() {
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name={RootStackRoutes.Placeholder} component={RootScreens} />
+      <Drawer.Screen
+        name={RootStackRoutes.Placeholder}
+        component={RootScreens}
+      />
     </Drawer.Navigator>
   );
 }

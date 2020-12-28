@@ -24,7 +24,7 @@ const Context = React.createContext<{
 const CreateProvider: React.FunctionComponent = ({ children }) => {
   const [text, setText] = useState("");
   const navigation = useNavigation();
-  const { status, mutate: createPost } = useCreatePost({
+  const { mutate: createPost } = useCreatePost({
     onSuccess: () => navigation.navigate(RootStackRoutes.Home),
   });
 
