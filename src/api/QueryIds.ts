@@ -4,7 +4,8 @@ enum QueryIds {
   hasSeenOnboarding = "hasSeenOnboarding",
   topHashtags = "topHashtags",
   hashtagViewer = "hashtagViewer",
-  flushDatabase = "flushDatabase",
+  flushPosts = "flushPosts",
+  flushHashtags = "flushHashtags",
 }
 
 export { QueryIds };

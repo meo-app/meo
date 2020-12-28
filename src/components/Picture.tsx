@@ -1,5 +1,11 @@
 import React, { useMemo, useState, useCallback } from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ViewStyle,
+  ImageStyle,
+  StyleProp,
+} from "react-native";
 import FastImage, { Source } from "react-native-fast-image";
 import { AspectRatio, useAspectRatio } from "../hooks/use-aspect-ratio";
 import { useLinkProps } from "@react-navigation/native";
@@ -58,8 +64,6 @@ const defaultProps: DefaultProps = {
   lazyload: true,
 };
 
-const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
-
 const Picture = React.memo(function Picture(props: Props) {
   const {
     width,
@@ -107,7 +111,7 @@ const Picture = React.memo(function Picture(props: Props) {
     }
   }, [onImageLoaded, setImageAlreadyLoaded]);
 
-  const styles: ViewStyle = {
+  const styles: Object = {
     position: "relative",
     width: sanitizedWidth,
     height,
