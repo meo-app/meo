@@ -1,12 +1,10 @@
 import React from "react";
-import { View } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { Avatar01 } from "../../components/Avatars/Avatar01";
 import { Avatar02 } from "../../components/Avatars/Avatar02";
 import { Avatar03 } from "../../components/Avatars/Avatar03";
 import { Avatar04 } from "../../components/Avatars/Avatar04";
 import { Frame } from "../../components/Frame";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming";
 
 function UploadButton() {
   const theme = useTheme();
@@ -24,10 +22,12 @@ function UploadButton() {
 }
 
 function AvatarSelection() {
+  const theme = useTheme();
   return (
     <Frame
       style={{
         flex: 1,
+        backgroundColor: theme.colors.background,
         justifyContent: "center",
         alignItems: "center",
       }}

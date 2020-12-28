@@ -5,6 +5,7 @@ enum RouteNames {
   Search = "Explore",
   Placeholder = "Placeholder",
   Settings = "Settings",
+  HashtagViewer = "HashtagViewer",
 }
 
 export { RouteNames };

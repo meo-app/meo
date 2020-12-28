@@ -1,5 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
 import React from "react";
@@ -7,14 +10,15 @@ import { View } from "react-native";
 import { useHasSeenOnboarding } from "./api/onboarding";
 import { usePostsFlatList } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
+import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
+import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 import { Search } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings";
 import { FloatingActions } from "./components/FloatingActions";
 import { RouteNames } from "./route-names";
-import { usePosts } from "./api/usePosts";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -63,8 +67,9 @@ function TabsNavigator() {
 }
 
 function Root() {
+  // TODO: pre fetch stuff
   const { data, isLoading } = useHasSeenOnboarding();
-  usePosts();
+  const theme = useTheme();
   if (isLoading) {
     return null;
   }
@@ -74,7 +79,6 @@ function Root() {
 
   return (
     <RootStack.Navigator
-      headerMode="none"
       mode="modal"
       screenOptions={{
         headerTitle: () => null,
@@ -84,13 +88,15 @@ function Root() {
         name={RouteNames.Tabs}
         component={TabsNavigator}
         options={{
-          animationEnabled: false,
+          animationEnabled: true,
+          headerShown: false,
         }}
       />
       <RootStack.Screen
         name={RouteNames.Create}
         component={Create}
         options={{
+          headerShown: false,
           animationEnabled: true,
           gestureEnabled: false,
           transitionSpec: {
@@ -112,7 +118,27 @@ function Root() {
       <RootStack.Screen
         name={RouteNames.Settings}
         component={Settings}
-        options={{ animationEnabled: false }}
+        options={{
+          animationEnabled: true,
+          gestureEnabled: true,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      />
+      <RootStack.Screen
+        name={RouteNames.HashtagViewer}
+        component={HashtagViewer}
+        options={{
+          animationEnabled: true,
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          cardStyle: {
+            borderWidth: 1,
+            borderColor: theme.colors.backgroundAccent,
+            ...theme.constants.shadow,
+          },
+        }}
       />
     </RootStack.Navigator>
   );

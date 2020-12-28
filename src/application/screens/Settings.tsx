@@ -4,7 +4,11 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { AvatarSelection } from "./AvatarSelection";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Pressable } from "react-native";
+import { useTheme, useEdgeSpacing } from "../providers/Theming";
+import { useFlushOnboarding } from "../../api/onboarding";
+import { useStyles } from "../../hooks/use-styles";
+import { useFlushDatabase } from "../../api/useFlushDatabase";
 
 const Stack = createStackNavigator();
 
@@ -15,13 +19,37 @@ enum SettingsRouteNames {
 
 function Settings() {
   const navigation = useNavigation();
+  const theme = useTheme();
+  const { mutate: flushOnboarding } = useFlushOnboarding();
+  const flushDatabase = useFlushDatabase();
+  const edges = useEdgeSpacing();
+  const styles = useStyles(() => ({
+    pressable: {
+      paddingTop: theme.units.medium,
+      paddingBottom: theme.units.medium,
+      paddingLeft: theme.units[edges.vertical],
+      paddingRight: theme.units[edges.vertical],
+    },
+  }));
   return (
-    <Frame>
-      <TouchableOpacity
+    <Frame
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <Pressable
+        style={styles.pressable}
         onPress={() => navigation.navigate(SettingsRouteNames.AvatarSelection)}
       >
-        <Font>Select avatar</Font>
-      </TouchableOpacity>
+        <Font color="primary">Select avatar</Font>
+      </Pressable>
+      <Pressable onPress={() => flushOnboarding()} style={styles.pressable}>
+        <Font color="primary">Flush onboarding</Font>
+      </Pressable>
+      <Pressable onPress={() => flushDatabase()} style={styles.pressable}>
+        <Font color="primary">Flush database</Font>
+      </Pressable>
     </Frame>
   );
 }
