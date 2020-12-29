@@ -87,7 +87,6 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
       <Frame
         alignItems="flex-end"
         paddingTop="small"
-        paddingRight={spacing.horizontal}
         paddingLeft={spacing.horizontal}
       >
         <Font variant="caption" color="foregroundSecondary">

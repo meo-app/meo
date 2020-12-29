@@ -94,20 +94,6 @@ function MainScreens() {
           headerShown: false,
           animationEnabled: true,
           gestureEnabled: false,
-          transitionSpec: {
-            close: {
-              animation: "spring",
-              config: {
-                speed: 200,
-              },
-            },
-            open: {
-              animation: "spring",
-              config: {
-                speed: 100,
-              },
-            },
-          },
         }}
       />
       <RootStack.Screen
