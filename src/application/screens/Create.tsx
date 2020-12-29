@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useContext, useState } from "react";
-import { Pressable, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Pressable, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useCreatePost } from "../../api/useCreatePost";
 import { Font } from "../../components/Font";
@@ -22,18 +22,44 @@ const Context = React.createContext<{
 } | null>(null);
 
 const CreateProvider: React.FunctionComponent = ({ children }) => {
-  const [text, setText] = useState("");
+  const [text, onChangeText] = useState("");
   const navigation = useNavigation();
   const { mutate: createPost } = useCreatePost({
     onSuccess: () => navigation.navigate(RootStackRoutes.Home),
   });
 
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (!text) {
+          return;
+        }
+
+        e.preventDefault();
+
+        Alert.alert(
+          "Discard changes?",
+          "You have unsaved changes. Are you sure to leave?",
+          [
+            { text: "Don't leave", style: "cancel", onPress: () => {} },
+            {
+              text: "Discard",
+              style: "destructive",
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]
+        );
+      }),
+    [navigation, text]
+  );
+
   return (
     <Context.Provider
       value={{
         text,
-        onChangeText: setText,
+        onChangeText,
         createPost,
+        hasUnsavedChanges: Boolean(text),
       }}
     >
       {children}
@@ -102,7 +128,7 @@ function Create() {
             <TextInput
               autoFocus
               placeholder="Write something"
-              placeholderTextColor={theme.colors.foregroundPrimary}
+              placeholderTextColor={theme.colors.foregroundSecondary}
               onChangeText={onChangeText}
               multiline
               style={{
