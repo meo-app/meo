@@ -9,13 +9,13 @@ enum RootStackRoutes {
 }
 
 type RootStackParamList = {
-  Tabs: undefined,
-  Home: undefined,
-  Create: undefined,
-  Search: undefined,
-  Placeholder: undefined,
-  Settings: undefined,
-  HashtagViewer: { hashtag: string },
+  Tabs: undefined;
+  Home: undefined;
+  Create: undefined;
+  Search: undefined;
+  Placeholder: undefined;
+  Settings: undefined;
+  HashtagViewer: { hashtag: string };
 };
 
 export { RootStackRoutes, RootStackParamList };

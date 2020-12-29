@@ -36,6 +36,18 @@ interface Props {
    */
   virtualized?: boolean;
 }
+function useGridUnitWidth({
+  gap,
+  margin,
+  numColumns,
+}: Pick<Props, "gap" | "margin" | "numColumns">) {
+  const { width } = useWindowDimensions();
+  const { verticalGap } = useGapValues({
+    gap,
+  });
+
+  return (width - ((numColumns - 1) * verticalGap + 2 * margin)) / numColumns;
+}
 
 const Grid: React.FunctionComponent<Props> = function Grid({
   children,
@@ -44,13 +56,16 @@ const Grid: React.FunctionComponent<Props> = function Grid({
   margin,
   virtualized,
 }) {
-  const { width } = useWindowDimensions();
   const { horizontalGap, verticalGap } = useGapValues({
     gap,
   });
-  const itemWidth = Math.floor(
-    (width - ((numColumns - 1) * verticalGap + 2 * margin)) / numColumns
-  );
+
+  const itemWidth = useGridUnitWidth({
+    gap,
+    margin,
+    numColumns,
+  });
+
   const styles = useStyles(() => ({
     container: {
       marginLeft: margin,
@@ -91,14 +106,19 @@ const Grid: React.FunctionComponent<Props> = function Grid({
       <FlatList
         data={data}
         numColumns={numColumns}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[
+          styles.container,
+          {
+            flexWrap: "wrap",
+          },
+        ]}
         keyExtractor={(item) => item.key}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View
             style={[
               styles.item,
               {
-                marginRight: verticalGap,
+                marginRight: (index + 1) % numColumns === 0 ? 0 : verticalGap,
               },
             ]}
           >
@@ -117,7 +137,7 @@ const Grid: React.FunctionComponent<Props> = function Grid({
           style={[
             styles.item,
             {
-              marginRight: index % numColumns === 0 ? verticalGap : 0,
+              marginRight: (index + 1) % numColumns === 0 ? 0 : verticalGap,
             },
           ]}
         >
@@ -128,4 +148,4 @@ const Grid: React.FunctionComponent<Props> = function Grid({
   );
 };
 
-export { Grid };
+export { Grid, useGridUnitWidth };

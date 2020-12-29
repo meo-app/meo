@@ -2,20 +2,17 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable } from "react-native";
-import { useFlushOnboarding } from "../../api/onboarding";
-import { useFlushDatabase } from "../../api/useFlushDatabase";
-import { Font } from "../../components/Font";
-import { Frame } from "../../components/Frame";
-import { useStyles } from "../../hooks/use-styles";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { AvatarSelection } from "./AvatarSelection";
+import { useFlushOnboarding } from "../../../api/onboarding";
+import { useFlushDatabase } from "../../../api/useFlushDatabase";
+import { Font } from "../../../components/Font";
+import { Frame } from "../../../components/Frame";
+import { Header } from "../../../components/Header";
+import { useStyles } from "../../../hooks/use-styles";
+import { useEdgeSpacing, useTheme } from "../../providers/Theming";
+import { AvatarSelection } from "../AvatarSelection";
+import { SettingsStackRoutes } from "./settings-stack-routes";
 
 const Stack = createStackNavigator();
-
-enum SettingsRootStackRoutes {
-  Settings = "Settings",
-  AvatarSelection = "AvatarSelection",
-}
 
 function Settings() {
   const navigation = useNavigation();
@@ -40,9 +37,7 @@ function Settings() {
     >
       <Pressable
         style={styles.pressable}
-        onPress={() =>
-          navigation.navigate(SettingsRootStackRoutes.AvatarSelection)
-        }
+        onPress={() => navigation.navigate(SettingsStackRoutes.AvatarSelection)}
       >
         <Font color="primary">Select avatar</Font>
       </Pressable>
@@ -60,11 +55,32 @@ function Root() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name={SettingsRootStackRoutes.Settings}
+        name={SettingsStackRoutes.Settings}
         component={Settings}
+        options={{
+          header: (props) => (
+            <Header {...props} hideBackground>
+              <Frame
+                justifyContent="center"
+                style={{
+                  width: "100%",
+                }}
+              >
+                <Font
+                  variant="subtitle"
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  Settings
+                </Font>
+              </Frame>
+            </Header>
+          ),
+        }}
       />
       <Stack.Screen
-        name={SettingsRootStackRoutes.AvatarSelection}
+        name={SettingsStackRoutes.AvatarSelection}
         component={AvatarSelection}
       />
     </Stack.Navigator>
