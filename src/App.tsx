@@ -17,7 +17,7 @@ import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
 import { Search } from "./application/screens/Search";
-import { Settings } from "./application/screens/Settings";
+import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
@@ -72,6 +72,7 @@ function TabsNavigator() {
 
 function MainScreens() {
   const theme = useTheme();
+
   return (
     <RootStack.Navigator
       mode="modal"

@@ -6,6 +6,7 @@ enum QueryIds {
   hashtagViewer = "hashtagViewer",
   flushPosts = "flushPosts",
   flushHashtags = "flushHashtags",
+  getUserPhotos = "getUserPhotos",
 }
 
 export { QueryIds };

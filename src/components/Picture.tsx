@@ -92,7 +92,7 @@ const Picture = React.memo(function Picture(props: Props) {
 
   const sanitizedWidth = useMemo(() => {
     if (height && !width) {
-      if (typeof height == "number") {
+      if (typeof height === "number") {
         // we inverse portrait here to preserve expected layout behavior as we calculate width based on height
         const value =
           orientation === "portrait" ? aspectRatioValue : 1 / aspectRatioValue;
@@ -133,7 +133,6 @@ const Picture = React.memo(function Picture(props: Props) {
               ? {
                   uri: source,
                   priority: FastImage.priority.high,
-                  cache: "cacheOnly",
                 }
               : source
           }

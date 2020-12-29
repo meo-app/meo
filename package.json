@@ -10,6 +10,7 @@
   "dependencies": {
     "@expo-google-fonts/inter": "^0.1.0",
     "@react-native-async-storage/async-storage": "^1.13.2",
+    "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/viewpager": "^4.2.2",
     "@react-navigation/bottom-tabs": "^5.11.2",
@@ -29,6 +30,7 @@
     "react-native": "0.63.4",
     "react-native-appearance": "^0.3.4",
     "react-native-fast-image": "^8.3.4",
+    "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-reanimated": "1.13.2",
     "react-native-safe-area-context": "1.0.2",
