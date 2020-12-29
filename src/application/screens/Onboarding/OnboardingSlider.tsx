@@ -81,15 +81,25 @@ function OnboardingSlider() {
           <Font variant="display">📝 📝 📝</Font>
           <Font variant="display">A social feed-like experience</Font>
           <Font variant="body">
-            Write your thoughts, ideas and browse them in a timeline form
+            It is like a social network, but its just you, so it isn't a social
+            network.. hmm its more like a notes app, but social but just you...
+            you'll get it
           </Font>
         </View>
         <View key="3" style={styles.slider}>
-          <Font variant="display">#️⃣ #️⃣ #️⃣</Font>
+          <Picture
+            style={{
+              width: 500,
+              backgroundColor: "transparent"
+            }}
+            resizeMode="contain"
+            lazyload={false}
+            source={require("../../../assets/hashtag.png")}
+          />
           <Font variant="display">Easily orgnize things</Font>
           <Font variant="body">
-            No more folders or tabs, just add a hastagh to your post and find
-            them organized for you in the explore tab
+            No more folders, just add a hashtag to your post and find them
+            organized for you in the explore tab
           </Font>
         </View>
       </ViewPager>
