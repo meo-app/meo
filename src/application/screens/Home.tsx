@@ -41,7 +41,7 @@ function Home() {
             alignItems: "center",
           }}
         >
-          <Font variant="body">There is nothing here yet</Font>
+          <Font variant="body">Thought of something? Add it here :)</Font>
         </View>
       )}
       <Frame backgroundColor={theme.colors.background}>
