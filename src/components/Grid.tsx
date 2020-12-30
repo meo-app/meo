@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { useWindowDimensions, View } from "react-native";
+import React, { PropsWithChildren, useMemo } from "react";
+import { FlatListProps, useWindowDimensions, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
@@ -30,12 +30,8 @@ interface Props {
   numColumns: number;
   margin: number;
   gap: Spacing;
-  /**
-   * Will make use of FlatList instead so items are optmized by it.
-   * Note that parent component should be a virtualized list (Eg. ScrollView/FlatList)
-   */
-  virtualized?: boolean;
 }
+
 function useGridUnitWidth({
   gap,
   margin,
@@ -46,16 +42,15 @@ function useGridUnitWidth({
     gap,
   });
 
-  return (width - ((numColumns - 1) * verticalGap + 2 * margin)) / numColumns;
+  return (width - ((numColumns - 1) * verticalGap + margin * 2)) / numColumns;
 }
 
-const Grid: React.FunctionComponent<Props> = function Grid({
-  children,
+function useGrid({
   gap,
-  numColumns,
   margin,
-  virtualized,
-}) {
+  numColumns,
+  children,
+}: PropsWithChildren<Props>) {
   const { horizontalGap, verticalGap } = useGapValues({
     gap,
   });
@@ -71,8 +66,7 @@ const Grid: React.FunctionComponent<Props> = function Grid({
       marginLeft: margin,
       marginRight: margin,
       display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
+      flexDirection: "column",
     },
     item: {
       width: itemWidth,
@@ -81,13 +75,12 @@ const Grid: React.FunctionComponent<Props> = function Grid({
   }));
 
   const data = useMemo(() => {
-    const items: {
-      node: React.ReactNode | null;
-      key: string;
-    }[] = React.Children.toArray(children).map((node, index) => ({
-      key: `grid-node-${index}`,
-      node,
-    }));
+    const items: GridItem[] = React.Children.toArray(children).map(
+      (node, index) => ({
+        key: `grid-node-${index}`,
+        node,
+      })
+    );
     const rows = Math.floor(items.length / numColumns);
     if (items.length % rows !== 0) {
       const extraViews = items.length + 1 - rows * numColumns;
@@ -101,36 +94,33 @@ const Grid: React.FunctionComponent<Props> = function Grid({
     return items;
   }, [children, numColumns]);
 
-  if (virtualized) {
-    return (
-      <FlatList
-        data={data}
-        numColumns={numColumns}
-        contentContainerStyle={[
-          styles.container,
-          {
-            flexWrap: "wrap",
-          },
-        ]}
-        keyExtractor={(item) => item.key}
-        renderItem={({ item, index }) => (
-          <View
-            style={[
-              styles.item,
-              {
-                marginRight: (index + 1) % numColumns === 0 ? 0 : verticalGap,
-              },
-            ]}
-          >
-            {item.node}
-          </View>
-        )}
-      />
-    );
-  }
+  return {
+    data,
+    verticalGap,
+    horizontalGap,
+    styles,
+    itemWidth,
+  };
+}
 
+interface GridItem {
+  node: React.ReactNode | null;
+  key: string;
+}
+
+const Grid: React.FunctionComponent<Props> = function Grid(props) {
+  const { numColumns } = props;
+  const { styles, data, verticalGap } = useGrid(props);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          flexDirection: "row",
+          flexWrap: "wrap",
+        },
+      ]}
+    >
       {data.map((item, index) => (
         <View
           key={item.key}
@@ -148,4 +138,37 @@ const Grid: React.FunctionComponent<Props> = function Grid({
   );
 };
 
-export { Grid, useGridUnitWidth };
+function FlatListGrid<T>(
+  props: Props & Omit<FlatListProps<T>, "numColumns" | "contentContainerStyle">
+) {
+  const { numColumns, data, renderItem, ...rest } = props;
+  const { styles, verticalGap } = useGrid(props);
+  return (
+    <FlatList<T>
+      data={data}
+      numColumns={numColumns}
+      contentContainerStyle={[
+        styles.container,
+        {
+          marginLeft: 0,
+        },
+      ]}
+      renderItem={(...args) => (
+        <View
+          style={[
+            styles.item,
+            {
+              marginRight:
+                (args[0].index + 1) % numColumns === 0 ? 0 : verticalGap,
+            },
+          ]}
+        >
+          {renderItem?.call(null, ...args)}
+        </View>
+      )}
+      {...rest}
+    />
+  );
+}
+
+export { Grid, FlatListGrid, useGridUnitWidth };
