@@ -1,15 +1,9 @@
 import CameraRoll from "@react-native-community/cameraroll";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { opacify, transparentize } from "polished";
+import { transparentize } from "polished";
 import React, { useCallback, useRef, useState } from "react";
-import {
-  Image,
-  ImageBackground,
-  Pressable,
-  RefreshControl,
-  Text,
-} from "react-native";
+import { ImageBackground, Pressable, RefreshControl, Text } from "react-native";
 import { useQuery } from "react-query";
 import { QueryIds } from "../../api/QueryIds";
 import { Avatar01 } from "../../components/Avatars/Avatar01";
@@ -19,7 +13,7 @@ import { Avatar04 } from "../../components/Avatars/Avatar04";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { FlatListGrid, useGridUnitWidth } from "../../components/Grid";
-import { Header } from "../../components/Header";
+import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
 import { useTheme } from "../providers/Theming";
 
@@ -113,6 +107,7 @@ function ImageSelection() {
   const [selected, setSelected] = useState<CameraRoll.PhotoIdentifier | null>();
   return (
     <Frame flex={1}>
+      <SubtitleHeader title="Select your avatar" />
       {isLoading && <Font>TODO: loading state</Font>}
       {isError && <Font>TODO: error state</Font>}
       {Boolean(data?.edges && !data.edges.length) && (
@@ -125,6 +120,7 @@ function ImageSelection() {
           keyExtractor={(item) =>
             `${item.node.image.filename}-${item.node.image.uri}`
           }
+          refreshing={isFetching}
           refreshControl={
             <RefreshControl
               refreshing={isFetching}
@@ -177,13 +173,13 @@ function AvatarSelection() {
       style={{
         flex: 1,
         backgroundColor: theme.colors.background,
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
       }}
     >
+      <SubtitleHeader title="Select your avatar" />
       <Frame
         style={{
-          height: "80%",
           flexWrap: "wrap",
           flexDirection: "row",
           justifyContent: "space-between",
@@ -223,39 +219,13 @@ function Root() {
       mode="modal"
       screenOptions={{
         headerShown: false,
-        header: (props) => (
-          <Header {...props} hideBackground>
-            {/* TODO: HeaderSubtitle component */}
-            <Frame
-              justifyContent="center"
-              style={{
-                width: "100%",
-              }}
-            >
-              <Font
-                variant="subtitle"
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                Select a photo
-              </Font>
-            </Frame>
-          </Header>
-        ),
       }}
     >
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name={AvatarStackRoutes.AvatarSelection}
         component={AvatarSelection}
       />
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name={AvatarStackRoutes.ImageSelection}
         component={ImageSelection}
       />

@@ -1,4 +1,3 @@
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { View } from "react-native";
 import { usePosts } from "../../api/usePosts";
@@ -6,19 +5,14 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
-import { RootStackRoutes } from "../../root-stack-routes";
 import { useTheme } from "../providers/Theming";
 
-const Stack = createStackNavigator();
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View>
+      <Header title="Home" />
       {isFetching && (
         <View>
           <Font>TODO: loading state</Font>
@@ -51,23 +45,4 @@ function Home() {
   );
 }
 
-function Root() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        header: Header,
-        animationEnabled: false,
-      }}
-    >
-      <Stack.Screen
-        name={RootStackRoutes.Home}
-        component={Home}
-        options={{
-          animationEnabled: false,
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-export { Root as Home };
+export { Home };
