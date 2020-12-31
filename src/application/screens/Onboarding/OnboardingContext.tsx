@@ -4,6 +4,7 @@ import {
   NavigationState,
   NavigationContainer,
   DefaultTheme,
+  NavigationContainerEventMap,
 } from "@react-navigation/native";
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { useQueryClient } from "react-query";
@@ -46,9 +47,9 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
   useEffect(() => {
     const current = navigationRef.current;
     const listener: EventListenerCallback<
-      { state: { data: { state: NavigationState } } },
+      NavigationContainerEventMap,
       "state"
-    > = (state) => setIndex(state.data.state.index);
+    > = (event) => setIndex(event.data.state?.index || 0);
     current?.addListener("state", listener);
     return () => current?.removeListener("state", listener);
   }, []);

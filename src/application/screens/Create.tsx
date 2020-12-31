@@ -1,4 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
+import {
+  EventListenerCallback,
+  EventMapBase,
+  EventMapCore,
+  NavigationContainerEventMap,
+  NavigationState,
+  useNavigation,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Pressable, View } from "react-native";
@@ -28,30 +35,33 @@ const CreateProvider: React.FunctionComponent = ({ children }) => {
     onSuccess: () => navigation.navigate(RootStackRoutes.Home),
   });
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        if (!text) {
-          return;
-        }
+  useEffect(() => {
+    const listener: EventListenerCallback<
+      EventMapCore<NavigationState>,
+      "beforeRemove"
+    > = (event) => {
+      if (!text) {
+        return;
+      }
 
-        e.preventDefault();
+      event.preventDefault();
+      Alert.alert(
+        "Discard changes?",
+        "You have unsaved changes. Are you sure to leave?",
+        [
+          { text: "Don't leave", style: "cancel", onPress: () => {} },
+          {
+            text: "Discard",
+            style: "destructive",
+            onPress: () => navigation.dispatch(event.data.action),
+          },
+        ]
+      );
+    };
 
-        Alert.alert(
-          "Discard changes?",
-          "You have unsaved changes. Are you sure to leave?",
-          [
-            { text: "Don't leave", style: "cancel", onPress: () => {} },
-            {
-              text: "Discard",
-              style: "destructive",
-              onPress: () => navigation.dispatch(e.data.action),
-            },
-          ]
-        );
-      }),
-    [navigation, text]
-  );
+    navigation.addListener("beforeRemove", listener);
+    return () => navigation.removeListener("beforeRemove", listener);
+  }, [navigation, text]);
 
   return (
     <Context.Provider
@@ -59,7 +69,6 @@ const CreateProvider: React.FunctionComponent = ({ children }) => {
         text,
         onChangeText,
         createPost,
-        hasUnsavedChanges: Boolean(text),
       }}
     >
       {children}
@@ -155,16 +164,7 @@ function Screens() {
     <Stack.Navigator
       screenOptions={{
         header: (props) => (
-          <Header
-            {...props}
-            hideBackground
-            insets={{
-              ...props.insets,
-              top: props.insets.top - theme.units.medium,
-              left: props.insets.left - theme.units.medium,
-              bottom: props.insets.bottom - theme.units.medium,
-            }}
-          >
+          <Header {...props} hideBackground>
             <Frame
               flexDirection="row"
               justifyContent="space-between"

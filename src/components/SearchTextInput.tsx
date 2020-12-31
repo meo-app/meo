@@ -27,24 +27,21 @@ function SearchTextInput(
       backgroundColor: theme.colors.backgroundAccent,
       borderRadius: theme.constants.borderRadius,
       borderColor: theme.colors.backgroundAccent,
-      borderWidth: 1,
       height:
         Number(theme.typography.body.lineHeight || 0) + theme.units.medium * 2,
     },
   }));
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <TextInput
-        clearButtonMode="always"
-        placeholderTextColor={theme.colors.foregroundSecondary}
-        placeholder="thoughts or tags"
-        numberOfLines={2}
-        style={styles.root}
-        editable
-        {...props}
-      />
-    </TouchableWithoutFeedback>
+    <TextInput
+      clearButtonMode="while-editing"
+      placeholderTextColor={theme.colors.foregroundSecondary}
+      placeholder="thoughts or tags"
+      numberOfLines={2}
+      style={styles.root}
+      editable
+      {...props}
+    />
   );
 }
 

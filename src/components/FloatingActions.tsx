@@ -1,6 +1,7 @@
+import { ThemeProvider } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Pressable, PressableProps } from "react-native";
 import {
   FlipColorScheme,
@@ -21,11 +22,12 @@ interface Props {
 const Context = React.createContext<Partial<Props>>({});
 
 function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
-  const styles = useStyles(() => ({
+  const spacing = useEdgeSpacing();
+  const styles = useStyles((theme) => ({
     root: {
       position: "absolute",
-      left: 0,
-      right: 0,
+      left: theme.units[spacing.horizontal] / 2,
+      right: theme.units[spacing.horizontal] / 2,
       bottom: 0,
       height: 110,
     },
