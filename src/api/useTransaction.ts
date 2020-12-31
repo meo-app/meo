@@ -17,7 +17,6 @@ function useTransaction<T>(
         db.transaction(
           (tx) =>
             tx.executeSql(query, [], (_, { rows }) => {
-              console.log("transaction", { query });
               resolve(
                 [...Array(rows.length).keys()].map((index) => rows.item(index))
               );

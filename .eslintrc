@@ -20,6 +20,7 @@
     "prefer-const": "error",
     "no-shadow": "off",
     "no-console": "off",
+    "no-spaced-func": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react-native/no-inline-styles": "off"
