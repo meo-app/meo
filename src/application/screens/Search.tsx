@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Pressable, TextInputProps } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -18,7 +17,6 @@ import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
-const Stack = createStackNavigator();
 type Modes = "search" | "explore";
 
 const Context = createContext<
@@ -38,13 +36,12 @@ const SearchContext: React.FunctionComponent = function SearchContext({
   const [mode, setMode] = useState<Modes>("explore");
   const [isFocused, setIsFocused] = useState(false);
   useEffect(() => {
-    if (isFocused && mode === "explore") {
+    if ((term || isFocused) && mode === "explore") {
       setMode("search");
-      return;
-    } else if (!isFocused && mode === "search") {
+    } else if (!term && !isFocused && mode === "search") {
       setMode("explore");
     }
-  }, [mode, isFocused]);
+  }, [isFocused, mode, term]);
 
   return (
     <Context.Provider
@@ -70,7 +67,7 @@ function useSearchContext() {
 function Search() {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
-  const { term, mode } = useSearchContext();
+  const { term, mode, onChangeText, setIsFocused } = useSearchContext();
   const navigation = useNavigation();
   const { data } = useSearch(term);
   const { data: hashtags } = useTransaction<{ total: string; value: string }>(
@@ -84,6 +81,34 @@ function Search() {
       backgroundColor={theme.colors.background}
       flex={1}
     >
+      <Header title="Explore">
+        <Frame
+          flexDirection="column"
+          style={{
+            width: "100%",
+          }}
+        >
+          {mode === "explore" && (
+            <Frame flexDirection="row">
+              <OpenDrawerButton />
+              <Font variant="display">Explore</Font>
+            </Frame>
+          )}
+          <Frame
+            marginTop={mode === "explore" ? "medium" : "none"}
+            style={{
+              width: "100%",
+            }}
+          >
+            <SearchTextInput
+              value={term}
+              onChangeText={onChangeText}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+          </Frame>
+        </Frame>
+      </Header>
       {mode === "explore" && (
         // TODO: adds "safe" padding at bottom based on tabbar height
         <ScrollView
@@ -121,62 +146,10 @@ function Search() {
   );
 }
 
-function Screen() {
-  const { term, onChangeText, mode, setIsFocused } = useSearchContext();
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        // TODO: animate mode transitions
-        header: (props) => {
-          return (
-            <Header {...props}>
-              <Frame
-                flexDirection="column"
-                style={{
-                  width: "100%",
-                }}
-              >
-                {mode === "explore" && (
-                  <Frame flexDirection="row">
-                    <OpenDrawerButton />
-                    <Font variant="display">Explore</Font>
-                  </Frame>
-                )}
-                <Frame
-                  marginTop={mode === "explore" ? "medium" : "none"}
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  <SearchTextInput
-                    value={term}
-                    onChangeText={onChangeText}
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
-                  />
-                </Frame>
-              </Frame>
-            </Header>
-          );
-        },
-        animationEnabled: false,
-      }}
-    >
-      <Stack.Screen
-        name={RootStackRoutes.Search}
-        component={Search}
-        options={{
-          animationEnabled: false,
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
 const Root = React.memo(function Root() {
   return (
     <SearchContext>
-      <Screen />
+      <Search />
     </SearchContext>
   );
 });

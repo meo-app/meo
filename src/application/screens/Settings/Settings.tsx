@@ -6,7 +6,7 @@ import { useFlushOnboarding } from "../../../api/onboarding";
 import { useFlushDatabase } from "../../../api/useFlushDatabase";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
-import { Header } from "../../../components/Header";
+import { SubtitleHeader } from "../../../components/SubtitleHeader";
 import { useStyles } from "../../../hooks/use-styles";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { AvatarSelection } from "../AvatarSelection";
@@ -35,6 +35,7 @@ function Settings() {
         backgroundColor: theme.colors.background,
       }}
     >
+      <SubtitleHeader title="Settings" />
       <Pressable
         style={styles.pressable}
         onPress={() => navigation.navigate(SettingsStackRoutes.AvatarSelection)}
@@ -53,32 +54,12 @@ function Settings() {
 
 function Root() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={SettingsStackRoutes.Settings}
-        component={Settings}
-        options={{
-          header: (props) => (
-            <Header {...props} hideBackground>
-              <Frame
-                justifyContent="center"
-                style={{
-                  width: "100%",
-                }}
-              >
-                <Font
-                  variant="subtitle"
-                  style={{
-                    textAlign: "center",
-                  }}
-                >
-                  Settings
-                </Font>
-              </Frame>
-            </Header>
-          ),
-        }}
-      />
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name={SettingsStackRoutes.Settings} component={Settings} />
       <Stack.Screen
         name={SettingsStackRoutes.AvatarSelection}
         component={AvatarSelection}

@@ -1,7 +1,13 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, View } from "react-native";
+import { Post } from "../../api/Entities";
 import { QueryIds } from "../../api/QueryIds";
 import { useTransaction } from "../../api/useTransaction";
 import { Font } from "../../components/Font";
@@ -9,14 +15,16 @@ import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { PostsList } from "../../components/PostsList";
-import { RootStackRoutes } from "../../root-stack-routes";
+import { RootStackParamList, RootStackRoutes } from "../../root-stack-routes";
 import { useTheme } from "../providers/Theming";
 
 const Stack = createStackNavigator();
 
-function HashtagViewer(props: { route: RouteProp<{}, ""> }) {
+function HashtagViewer(props: {
+  route: RouteProp<RootStackParamList, "HashtagViewer">;
+}) {
   const theme = useTheme();
-  const { data } = useTransaction<{ total: string; value: string }>(
+  const { data, isFetching, isError } = useTransaction<Post>(
     QueryIds.hashtagViewer,
     `select * from posts where id in (select post_id from hashtags where value like "%${props.route.params.hashtag}%")`
   );
@@ -27,23 +35,36 @@ function HashtagViewer(props: { route: RouteProp<{}, ""> }) {
         backgroundColor: theme.colors.background,
       }}
     >
-      <PostsList data={data} />
-      {/* <Font>{route?.params?.hashtag}</Font> */}
+      {isFetching && (
+        <View>
+          <Font>TODO: loading state</Font>
+        </View>
+      )}
+      {isError && (
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          <Font variant="body">There was an error!</Font>
+        </View>
+      )}
+      {data?.length && <PostsList data={data} />}
     </View>
   );
 }
 
 function Screens() {
-  const route = useRoute();
   const theme = useTheme();
-  const navigation = useNavigation();
+  const route = useRoute<RouteProp<RootStackParamList, "HashtagViewer">>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Stack.Navigator
       screenOptions={{
         gestureEnabled: true,
         gestureDirection: "horizontal",
-        header: (props) => (
-          <Header {...props} hideBackground>
+        header: () => (
+          <Header hideBackground title={route.params.hashtag}>
             <Pressable
               onPress={() => {
                 if (navigation.canGoBack()) {
@@ -62,7 +83,7 @@ function Screens() {
             </Pressable>
             <Frame marginRight="medium" paddingRight="medium">
               <Font variant="display" numberOfLines={1}>
-                {route?.params?.hashtag}
+                {route.params.hashtag}
               </Font>
             </Frame>
           </Header>

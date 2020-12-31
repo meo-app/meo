@@ -4,20 +4,23 @@ import { Post } from "./Entities";
 import { QueryIds } from "./QueryIds";
 import { useTransaction } from "./useTransaction";
 
-function useSearch(text?: string) {
+function useSearch(term?: string) {
   const client = useQueryClient();
-  const ref = useRef(text);
+  const ref = useRef(term);
   const result = useTransaction<Post>(
     QueryIds.search,
-    `select * from posts where value like "%${text}%" collate nocase order by id desc`
+    `select * from posts where value like "%${term}%" collate nocase order by id desc`,
+    {
+      enabled: Boolean(term),
+    }
   );
 
   useEffect(() => {
-    if (ref.current !== text) {
-      ref.current = text;
+    if (ref.current !== term) {
+      ref.current = term;
       client.invalidateQueries([QueryIds.search]);
     }
-  }, [client, result, text]);
+  }, [client, result, term]);
 
   return result;
 }

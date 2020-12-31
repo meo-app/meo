@@ -1,29 +1,31 @@
-import { StackHeaderProps } from "@react-navigation/stack";
 import { rgba } from "polished";
 import React from "react";
 import { ImageBackground } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { OpenDrawerButton } from "./OpenDrawerButton";
 
-interface Props extends StackHeaderProps {
+interface Props {
   hideBackground?: boolean;
+  title?: string;
 }
 
 const Header: React.FunctionComponent<Props> = function Header({
-  insets,
-  scene,
+  title,
   children,
   hideBackground,
 }) {
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const styles = useStyles(() => ({
     backgrond: {
       display: "flex",
       backgroundColor: theme.colors.background,
+      zIndex: 2,
       ...theme.constants.shadow,
     },
     spacer: {
@@ -51,10 +53,10 @@ const Header: React.FunctionComponent<Props> = function Header({
     >
       <Frame style={styles.spacer} />
       <Frame style={styles.root}>
-        {!children && (
+        {!children && title && (
           <Frame flexDirection="row">
             <OpenDrawerButton />
-            <Font variant="display">{scene.route.name}</Font>
+            <Font variant="display">{title}</Font>
           </Frame>
         )}
         {children}
