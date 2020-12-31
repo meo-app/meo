@@ -1,15 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { Pressable } from "react-native";
 import { useSafeArea } from "react-native-safe-area-context";
+import { useCompleteOnboarding } from "../../../api/onboarding";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { Picture } from "../../../components/Picture";
-import {
-  ThemeProvider,
-  useEdgeSpacing,
-  useTheme,
-} from "../../providers/Theming";
+import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { OnboardingAvatarSelection } from "./OnboardingAvatarSelection";
 import {
   OnboardingNavigationProvider,
@@ -19,8 +16,6 @@ import {
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
 import { OnboardingInsertName } from "./OnboardingInsertName";
 import { OnboardingSlider } from "./OnboardingSlider";
-import { useCompleteOnboarding } from "../../../api/onboarding";
-import { Pressable, processColor } from "react-native";
 
 function OnboardingBackgroundImage() {
   const theme = useTheme();

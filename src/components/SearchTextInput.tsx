@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  TextInput,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
-import { useStyles } from "../hooks/use-styles";
+import { TextInput } from "react-native-gesture-handler";
 import { useTheme } from "../application/providers/Theming";
-import { Keyboard } from "react-native";
+import { useStyles } from "../hooks/use-styles";
 
 function SearchTextInput(
   props: Omit<
