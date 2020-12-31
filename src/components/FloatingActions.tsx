@@ -1,7 +1,6 @@
-import { ThemeProvider } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext } from "react";
 import { Pressable, PressableProps } from "react-native";
 import {
   FlipColorScheme,

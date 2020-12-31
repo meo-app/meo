@@ -1,9 +1,7 @@
 import {
   EventListenerCallback,
   EventMapCore,
-  NavigationContainer,
   NavigationContainerRef,
-  NavigationContext,
   NavigationState,
   useNavigation,
 } from "@react-navigation/native";
@@ -31,7 +29,6 @@ import { SearchTextInput } from "../../components/SearchTextInput";
 import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { HashtagViewer } from "./HashtagViewer";
 
 const Stack = createStackNavigator();
 

@@ -11,10 +11,11 @@ import { Header } from "./Header";
 import { Icon } from "./Icon/Icon";
 
 interface Props extends React.ComponentProps<typeof Header> {
-  title: string;
+  title?: string;
+  backContent?: React.ReactNode;
 }
 
-function SubtitleHeader({ title }: Props) {
+function SubtitleHeader({ title, backContent }: Props) {
   const navigation = useNavigation();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
@@ -44,21 +45,32 @@ function SubtitleHeader({ title }: Props) {
           width: "100%",
         }}
       >
-        {navigation.canGoBack() && (
-          <Pressable
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={({ pressed }) => ({
-              zIndex: 1,
-              marginRight: theme.units.medium,
-              opacity: pressed ? 0.5 : 1,
-              position: "absolute",
-            })}
-          >
-            <Icon type="Back" size="medium" />
-          </Pressable>
-        )}
+        {navigation.canGoBack() &&
+          (backContent ? (
+            <Frame
+              style={{
+                zIndex: 1,
+                marginRight: theme.units.medium,
+                position: "absolute",
+              }}
+            >
+              {backContent}
+            </Frame>
+          ) : (
+            <Pressable
+              onPress={() => {
+                navigation.goBack();
+              }}
+              style={({ pressed }) => ({
+                zIndex: 1,
+                marginRight: theme.units.medium,
+                opacity: pressed ? 0.5 : 1,
+                position: "absolute",
+              })}
+            >
+              <Icon type="Back" size="medium" />
+            </Pressable>
+          ))}
         <Font
           variant="subtitle"
           style={{

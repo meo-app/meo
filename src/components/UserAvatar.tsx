@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import FastImage from "react-native-fast-image";
+import { useAvatar } from "../api/avatar";
 import { useTheme } from "../application/providers/Theming";
+import { AVATARS } from "../application/screens/AvatarSelection";
 import { Scales } from "../foundations/Spacing";
+import { useStyles } from "../hooks/use-styles";
+import { Frame } from "./Frame";
 import { Picture } from "./Picture";
 
 // TODO: This component will either render the user selected avatar (svg)
@@ -26,9 +30,17 @@ const defaultProps: Required<Pick<Props, "size">> = {
 };
 
 function UserAvatar(props: Props) {
+  const { data } = useAvatar();
   const { size } = { ...defaultProps, ...props };
   const theme = useTheme();
   const width = theme.scales[SIZE_MAP[size]];
+  const styles = useStyles((theme) => ({
+    root: {
+      width,
+      height: width,
+      borderRadius: theme.constants.absoluteRadius,
+    },
+  }));
   const source = "https://i.pravatar.cc/150";
   // TODO: this preload should happen at a root app level where all queries or images will be preloaded at once
   useEffect(() => {
@@ -38,17 +50,21 @@ function UserAvatar(props: Props) {
       },
     ]);
   }, []);
+
+  if (data !== undefined) {
+    return <Frame style={styles.root}>{AVATARS[data]}</Frame>;
+  }
+
   return (
-    <Picture
-      style={{
-        borderRadius: theme.constants.absoluteRadius,
-      }}
-      lazyload={false}
-      width={width}
-      aspectRatio="square"
-      resizeMode="cover"
-      source={source}
-    />
+    <Frame style={styles.root}>
+      <Picture
+        style={styles.root}
+        lazyload={false}
+        aspectRatio="square"
+        resizeMode="cover"
+        source={source}
+      />
+    </Frame>
   );
 }
 
