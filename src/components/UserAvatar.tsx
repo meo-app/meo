@@ -4,7 +4,8 @@ import { useAvatar } from "../api/avatar";
 import { useTheme } from "../application/providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
-import { AVATARS_LIST } from "./Avatars/avatars-list";
+import { base64ToImageUrl } from "../utils/base64-to-image-url";
+import { AvatarIds, AVATARS_LIST } from "./Avatars/avatars-list";
 import { Frame } from "./Frame";
 import { Picture } from "./Picture";
 
@@ -51,22 +52,26 @@ function UserAvatar(props: Props) {
     ]);
   }, []);
 
-  if (data !== undefined) {
-    const node = AVATARS_LIST.find((item) => item.id === data)?.node;
-    return <Frame style={styles.root}>{node}</Frame>;
+  if (!data) {
+    return null;
   }
 
-  return (
-    <Frame style={styles.root}>
-      <Picture
-        style={styles.root}
-        lazyload={false}
-        aspectRatio="square"
-        resizeMode="cover"
-        source={source}
-      />
-    </Frame>
-  );
+  if (data.avatarId === AvatarIds.__USER_PHOTO__ && data.base64) {
+    return (
+      <Frame style={styles.root}>
+        <Picture
+          style={styles.root}
+          lazyload={false}
+          aspectRatio="square"
+          resizeMode="cover"
+          source={base64ToImageUrl(data.base64)}
+        />
+      </Frame>
+    );
+  } else {
+    const node = AVATARS_LIST.find((item) => item.id === data.avatarId)?.node;
+    return <Frame style={styles.root}>{node}</Frame>;
+  }
 }
 
 export { UserAvatar };

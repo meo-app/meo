@@ -10,38 +10,35 @@ import { QueryIds } from "./QueryIds";
 
 const key = "@@selected-avatar";
 
+interface Data {
+  avatarId: AvatarIds;
+  base64?: string;
+}
+
 const get = async () => {
   try {
     const value = await AsyncStorage.getItem(key);
-    return value as AvatarIds;
+    return value ? (JSON.parse(value) as Data) : null;
   } catch (e) {
     throw new Error(e);
   }
 };
 
-const set = async (id: AvatarIds) => {
+const set = async (data: Data) => {
   try {
-    await AsyncStorage.setItem(key, id);
+    await AsyncStorage.setItem(key, JSON.stringify(data));
   } catch (e) {
     throw new Error(e);
   }
 };
 
 function useAvatar() {
-  return useQuery<AvatarIds>(QueryIds.getUserAvatar, get);
+  return useQuery<Data | null>(QueryIds.getUserAvatar, get);
 }
 
-function useSelectAvatar(
-  options?: MutationOptions<
-    void,
-    "Error",
-    {
-      avatarId: AvatarIds;
-    }
-  >
-) {
+function useSelectAvatar(options?: MutationOptions<void, "Error", Data>) {
   const client = useQueryClient();
-  return useMutation(({ avatarId }) => set(avatarId), {
+  return useMutation((data) => set(data), {
     ...options,
     onSuccess: (...args) => {
       client.refetchQueries(QueryIds.getUserAvatar);
