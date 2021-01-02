@@ -2,6 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
 import React, { useCallback, useContext } from "react";
 import { Pressable, PressableProps } from "react-native";
+import { useHomeContext } from "../application/providers/HomeProvider";
 import {
   FlipColorScheme,
   useEdgeSpacing,
@@ -12,6 +13,9 @@ import { useStyles } from "../hooks/use-styles";
 import { Frame, useFrameStyles } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
+const CREATE_BUTTON_SIZE: keyof Units = "largest";
+const CREATE_BUTTON_DIMENSION = 1.3;
+
 interface Props {
   onHomePress: () => void;
   onCreatePress: () => void;
@@ -21,12 +25,13 @@ interface Props {
 const Context = React.createContext<Partial<Props>>({});
 
 function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
-  const spacing = useEdgeSpacing();
-  const styles = useStyles((theme) => ({
+  const theme = useTheme();
+  const { setTabBarHeight } = useHomeContext();
+  const styles = useStyles(() => ({
     root: {
       position: "absolute",
-      left: theme.units[spacing.horizontal] / 2,
-      right: theme.units[spacing.horizontal] / 2,
+      left: 0,
+      right: 0,
       bottom: 0,
       height: 110,
     },
@@ -34,6 +39,12 @@ function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
 
   return (
     <Frame
+      onLayout={(event) => {
+        setTabBarHeight(
+          event.nativeEvent.layout.height +
+            theme.units[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION / 2
+        );
+      }}
       alignItems="baseline"
       justifyContent="space-evenly"
       style={styles.root}
@@ -109,8 +120,8 @@ function Dock() {
   const styles = useStyles((theme) => ({
     root: {
       backgroundColor: theme.colors.background,
-      marginRight: theme.units[spacing.horizontal],
-      marginLeft: theme.units[spacing.horizontal],
+      marginRight: theme.units[spacing.horizontal] * 1.5,
+      marginLeft: theme.units[spacing.horizontal] * 1.5,
       height: theme.scales.largest,
       borderRadius: theme.constants.absoluteRadius,
       ...theme.constants.shadow,
@@ -138,20 +149,19 @@ function Dock() {
 }
 
 function CreateButton() {
-  const size: keyof Units = "largest";
   const theme = useTheme();
   const { onCreatePress } = useContext(Context);
   const styles = useStyles((theme) => ({
     root: {
-      top: -theme.scales[size] / 1.3,
+      top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
       zIndex: theme.constants.absoluteRadius,
       position: "absolute",
       width: "100%",
       ...theme.constants.shadow,
     },
     pressabe: {
-      width: theme.scales[size],
-      height: theme.scales[size],
+      width: theme.scales[CREATE_BUTTON_SIZE],
+      height: theme.scales[CREATE_BUTTON_SIZE],
       borderRadius: theme.constants.absoluteRadius,
       display: "flex",
       alignItems: "center",

@@ -1,9 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { FormattedDate } from "react-intl";
-import { ListRenderItem } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { ListRenderItem, FlatList } from "react-native";
 import { Post } from "../api/Entities";
-import { usePostsFlatList } from "../application/providers/HomeProvider";
+import { useHomeContext } from "../application/providers/HomeProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
@@ -11,9 +10,16 @@ import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
-function PostsList({ data }: { data?: Post[] }) {
+function PostsList({
+  data,
+  isBehindTabBar,
+}: {
+  data?: Post[];
+  isBehindTabBar?: boolean;
+}) {
   const theme = useTheme();
-  const { postsRef } = usePostsFlatList();
+  const { setPostRef, tabBarHeight } = useHomeContext();
+  const spacing = useEdgeSpacing();
   const keyExtractor = useCallback(
     ({ id }: { id: string }) => `list-item-${id}`,
     []
@@ -27,32 +33,40 @@ function PostsList({ data }: { data?: Post[] }) {
         return (
           <Frame
             style={{
-              paddingBottom: theme.units.largest * 3.5,
+              paddingBottom: isBehindTabBar ? tabBarHeight : 0,
             }}
           >
             <PostLine {...item} />
+            <Frame
+              style={{
+                height: isBehindTabBar ? tabBarHeight : 0,
+              }}
+            />
           </Frame>
         );
       }
 
       return <PostLine {...item} />;
     },
-    [data, theme.units.largest]
+    [data, isBehindTabBar, tabBarHeight]
   );
 
   if (!data?.length) {
     return null;
   }
+
   return (
     <FlatList<Post>
-      style={{
-        height: "100%",
-        backgroundColor: theme.colors.background,
-      }}
-      ref={postsRef}
+      ref={(ref) => setPostRef(ref)}
       keyExtractor={keyExtractor}
       data={data}
       renderItem={renderItem}
+      contentContainerStyle={{
+        paddingTop: theme.units[spacing.vertical],
+      }}
+      style={{
+        backgroundColor: theme.colors.background,
+      }}
     />
   );
 }
@@ -64,9 +78,9 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
       paddingBottom="smallest"
       paddingRight={spacing.horizontal}
       paddingLeft={spacing.horizontal}
+      flexGrow={0}
     >
       <Frame
-        marginTop={spacing.vertical}
         justifyContent="flex-start"
         alignItems="center"
         flexDirection="row"

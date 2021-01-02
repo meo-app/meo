@@ -9,27 +9,31 @@ import "intl/locale-data/jsonp/en";
 import React from "react";
 import { View } from "react-native";
 import { useHasSeenOnboarding } from "./api/onboarding";
-import { usePostsFlatList } from "./application/providers/HomeProvider";
+import { useHomeContext } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
+import { Explore } from "./application/screens/Explore";
 import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { Explore } from "./application/screens/Explore";
+import { SearchResults } from "./application/screens/SearchResults";
 import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
-import { SearchResults } from "./application/screens/SearchResults";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
+const EXPLORE_REGEX = new RegExp(RootStackRoutes.Explore);
+const HOME_REGEX = new RegExp(RootStackRoutes.Home);
+
 function TabsNavigator() {
-  const { postsRef } = usePostsFlatList();
+  const { postsRef } = useHomeContext();
+  const theme = useTheme();
   return (
     <Tab.Navigator
       lazy={false}
@@ -38,13 +42,20 @@ function TabsNavigator() {
       }}
       tabBar={({ navigation, state }) => (
         <FloatingActions
-          onSearchPress={() => navigation.navigate(RootStackRoutes.Explore)}
+          onSearchPress={() => {
+            if (EXPLORE_REGEX.test(state.history[1]?.key)) {
+              navigation.navigate(RootStackRoutes.SearchResutls);
+            } else {
+              navigation.navigate(RootStackRoutes.Explore);
+            }
+          }}
           onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
           onHomePress={() => {
-            if (/Home/.test(state.history[1]?.key)) {
-              postsRef?.current?.scrollToIndex({
+            if (HOME_REGEX.test(state.history[1]?.key)) {
+              postsRef?.scrollToIndex({
                 animated: true,
                 index: 0,
+                viewPosition: theme.units.largest,
               });
             } else {
               navigation.navigate(RootStackRoutes.Home);

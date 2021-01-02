@@ -11,7 +11,11 @@ function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <Header title="Home" />
       {isFetching && (
         <View>
@@ -38,8 +42,13 @@ function Home() {
           <Font variant="body">Thought of something? Add it here :)</Font>
         </View>
       )}
-      <Frame backgroundColor={theme.colors.background}>
-        <PostsList data={data} />
+      <Frame
+        backgroundColor={theme.colors.background}
+        style={{
+          height: "100%",
+        }}
+      >
+        <PostsList data={data} isBehindTabBar />
       </Frame>
     </View>
   );
