@@ -3,7 +3,6 @@ import { FlatListProps, useWindowDimensions, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
-import { useWhyDidYouUpdate } from "../hooks/use-why-did-you-update";
 import { Spacing } from "./Frame";
 
 function useGapValues({ gap }: { gap: Spacing }) {
@@ -112,12 +111,6 @@ interface GridItem {
 const Grid: React.FunctionComponent<Props> = React.memo(function Grid(props) {
   const { numColumns } = props;
   const { styles, data, verticalGap } = useGrid(props);
-  useWhyDidYouUpdate("grid", {
-    styles,
-    data,
-    verticalGap,
-    numColumns,
-  });
   return (
     <View
       style={[

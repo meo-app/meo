@@ -4,19 +4,20 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { transparentize } from "polished";
 import React, { useCallback, useContext, useRef, useState } from "react";
 import {
+  Alert,
   Image,
   ImageBackground,
   Pressable,
   RefreshControl,
   Text,
 } from "react-native";
-import { useQuery } from "react-query";
 import { useSelectAvatar } from "../../api/avatar";
-import { QueryIds } from "../../api/QueryIds";
+import { usePhotoGallery } from "../../api/photo-gallery";
 import { Avatar01 } from "../../components/Avatars/Avatar01";
 import { Avatar02 } from "../../components/Avatars/Avatar02";
 import { Avatar03 } from "../../components/Avatars/Avatar03";
 import { Avatar04 } from "../../components/Avatars/Avatar04";
+import { AvatarIds, AVATARS_LIST } from "../../components/Avatars/avatars-list";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { FlatListGrid, Grid, useGridUnitWidth } from "../../components/Grid";
@@ -26,16 +27,7 @@ import { useStyles } from "../../hooks/use-styles";
 import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-
-// TODO: better data structure for avatars with id's etc. support n avatars
-export const AVATARS = [
-  <Avatar01 />,
-  <Avatar02 />,
-  <Avatar03 />,
-  <Avatar04 />,
-  <Avatar01 />,
-  <UploadButton />,
-];
+import { ImageSelection } from "./ImageSelection";
 
 enum AvatarStackRoutes {
   AvatarSelection = "AvatarSelection",
@@ -49,8 +41,8 @@ type AvatarStackParamsList = {
 
 const Stack = createStackNavigator();
 const Context = React.createContext<{
-  selectedIndex: number;
-  setSelectedIndex: (value: number) => void;
+  avatarId: AvatarIds;
+  setAvatarId: (id: AvatarIds) => void;
   setSelectedPhoto: (photo: CameraRoll.PhotoIdentifier) => void;
   photo: CameraRoll.PhotoIdentifier | null;
   onSave: () => void;
@@ -69,30 +61,32 @@ const AvatarContextProvider: React.FunctionComponent = function AvatarContextPro
   const [photo, setSelectedPhoto] = useState<CameraRoll.PhotoIdentifier | null>(
     null
   );
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [avatarId, setAvatarId] = useState<AvatarIds>(AvatarIds.Wynonna);
   const navigation = useNavigation();
   const { mutate } = useSelectAvatar({
     onSuccess: () => {
       navigation.navigate(RootStackRoutes.Home);
     },
   });
+
   const onSave = useCallback(() => {
-    if (selectedIndex === 5 && photo) {
-      // upload photo
+    if (avatarId === AvatarIds.__USER_PHOTO__ && photo) {
+      Alert.alert("TODO: store photo on device");
       return;
     }
     mutate({
-      index: selectedIndex,
+      avatarId,
     });
-  }, [mutate, photo, selectedIndex]);
+  }, [avatarId, mutate, photo]);
+
   return (
     <Context.Provider
       value={{
-        onSave,
         photo,
         setSelectedPhoto,
-        selectedIndex,
-        setSelectedIndex,
+        onSave,
+        avatarId,
+        setAvatarId,
       }}
     >
       {children}
@@ -103,9 +97,19 @@ const AvatarContextProvider: React.FunctionComponent = function AvatarContextPro
 function UploadButton() {
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp<AvatarStackParamsList>>();
-  const { photo, setSelectedIndex } = useAvatarContext();
+  const { photo, setAvatarId } = useAvatarContext();
   const styles = useStyles((theme) => ({
-    watermark: {
+    root: {
+      width: "100%",
+      height: "100%",
+      borderRadius: theme.constants.absoluteRadius,
+      backgroundColor: theme.colors.backgroundAccent,
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "hidden",
+      position: "relative",
+    },
+    overlay: {
       backgroundColor: transparentize(0.4, theme.colors.absoluteDark),
       position: "absolute",
       width: "100%",
@@ -114,22 +118,23 @@ function UploadButton() {
       top: 0,
       zIndex: 1,
     },
+    icon: {
+      position: "absolute",
+      zIndex: 2,
+      left: 0,
+      top: 0,
+      bottom: 0,
+      right: 0,
+      justifyContent: "center",
+      alignItems: "center",
+    },
   }));
   return (
     <Pressable
+      style={styles.root}
       onPress={() => {
-        setSelectedIndex(5);
+        setAvatarId(AvatarIds.__USER_PHOTO__);
         navigation.navigate(AvatarStackRoutes.ImageSelection);
-      }}
-      style={{
-        width: "100%",
-        height: "100%",
-        borderRadius: theme.constants.absoluteRadius,
-        backgroundColor: theme.colors.backgroundAccent,
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        position: "relative",
       }}
     >
       {!photo && (
@@ -152,20 +157,9 @@ function UploadButton() {
               borderRadius: theme.constants.absoluteRadius,
             }}
           >
-            <Frame style={styles.watermark} />
-            <Frame
-              style={{
-                position: "absolute",
-                zIndex: 2,
-                left: 0,
-                top: 0,
-                bottom: 0,
-                right: 0,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon type="Edit" size="larger" color="absoluteLight" />
+            <Frame style={styles.overlay} />
+            <Frame style={styles.icon}>
+              <Icon type="Edit" size="medium" color="absoluteLight" />
             </Frame>
           </ImageBackground>
         </>
@@ -174,117 +168,9 @@ function UploadButton() {
   );
 }
 
-function usePhotoGallery() {
-  const [page, setPage] = React.useState(0);
-  const next = useCallback(() => {
-    setPage((p) => p + 1);
-  }, []);
-
-  const result = useQuery(
-    [QueryIds.getUserPhotos, page],
-    () =>
-      CameraRoll.getPhotos({
-        first: (page + 1) * 100,
-        assetType: "Photos",
-      }),
-    { keepPreviousData: true, staleTime: 5000 }
-  );
-
-  return {
-    ...result,
-    next,
-  };
-}
-
-function ImageSelection() {
-  const {
-    data,
-    isLoading,
-    isError,
-    next,
-    isFetching,
-    refetch,
-  } = usePhotoGallery();
-  const navigation = useNavigation();
-  const momentumRef = useRef(false);
-  const theme = useTheme();
-  const gridConfig: Parameters<typeof useGridUnitWidth>[0] = {
-    gap: "smallest",
-    numColumns: 3,
-    margin: theme.units.smallest,
-  };
-  const width = useGridUnitWidth(gridConfig);
-  const { setSelectedPhoto } = useAvatarContext();
-
-  return (
-    <Frame flex={1}>
-      <SubtitleHeader
-        backContent={
-          <Pressable onPress={() => navigation.goBack()}>
-            <Font variant="body" color="primary">
-              Cancel
-            </Font>
-          </Pressable>
-        }
-      />
-      {isLoading && <Font>TODO: loading state</Font>}
-      {isError && <Font>TODO: error state</Font>}
-      {Boolean(data?.edges && !data.edges.length) && (
-        <Font>There are no images in your phone gallery</Font>
-      )}
-      {data?.edges.length && (
-        <FlatListGrid<CameraRoll.PhotoIdentifier>
-          {...gridConfig}
-          data={data.edges}
-          keyExtractor={(item) =>
-            `${item.node.image.filename}-${item.node.image.uri}`
-          }
-          refreshing={isFetching}
-          refreshControl={
-            <RefreshControl
-              refreshing={isFetching}
-              onRefresh={() => refetch()}
-            />
-          }
-          onEndReachedThreshold={0.5}
-          onMomentumScrollBegin={() => {
-            momentumRef.current = true;
-          }}
-          onEndReached={() => {
-            if (momentumRef.current) {
-              momentumRef.current = false;
-              next();
-            }
-          }}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() => {
-                setSelectedPhoto(item);
-                navigation.goBack();
-              }}
-            >
-              {/**
-               * Picture uses FastImage underneath and it doesnt support images loaded from device url.
-               * Instead we are using react-native's Image component here
-               **/}
-              <Image
-                source={{ uri: item.node.image.uri, cache: "force-cache" }}
-                resizeMode="cover"
-                style={{
-                  height: width,
-                }}
-              />
-            </Pressable>
-          )}
-        />
-      )}
-    </Frame>
-  );
-}
-
 function AvatarSelection() {
   const theme = useTheme();
-  const { selectedIndex, setSelectedIndex, onSave } = useAvatarContext();
+  const { setAvatarId, avatarId, onSave } = useAvatarContext();
   const spacing = useEdgeSpacing();
   const gridConfig: Parameters<typeof useGridUnitWidth>[0] = {
     gap: "medium",
@@ -316,31 +202,50 @@ function AvatarSelection() {
           margin={theme.units[spacing.vertical]}
           gap="medium"
         >
-          {AVATARS.map((content, index) => {
-            return (
-              <Frame
-                key={`avatar-${index}`}
+          {AVATARS_LIST.map(({ node, id }) => (
+            <Frame
+              key={`avatar-${id}`}
+              style={{
+                width: width,
+                height: width,
+              }}
+            >
+              <Pressable
+                onPress={() => setAvatarId(id)}
                 style={{
-                  width: width,
-                  height: width,
+                  flex: 1,
+                  borderRadius: theme.constants.absoluteRadius,
+                  ...(avatarId === id && {
+                    borderWidth: theme.units.small,
+                    borderColor: theme.colors.primary,
+                  }),
                 }}
               >
-                <Pressable
-                  onPress={() => setSelectedIndex(index)}
-                  style={{
-                    flex: 1,
-                    borderRadius: theme.constants.absoluteRadius,
-                    ...(index === selectedIndex && {
-                      borderWidth: theme.units.small,
-                      borderColor: theme.colors.primary,
-                    }),
-                  }}
-                >
-                  {content}
-                </Pressable>
-              </Frame>
-            );
-          })}
+                {node}
+              </Pressable>
+            </Frame>
+          ))}
+          <Frame
+            key={`avatar-${AvatarIds.__USER_PHOTO__}`}
+            style={{
+              width: width,
+              height: width,
+            }}
+          >
+            <Pressable
+              onPress={() => setAvatarId(AvatarIds.__USER_PHOTO__)}
+              style={{
+                flex: 1,
+                borderRadius: theme.constants.absoluteRadius,
+                ...(avatarId === AvatarIds.__USER_PHOTO__ && {
+                  borderWidth: theme.units.small,
+                  borderColor: theme.colors.primary,
+                }),
+              }}
+            >
+              <UploadButton />
+            </Pressable>
+          </Frame>
         </Grid>
       </Frame>
       <Frame flex={0.5}>
@@ -366,24 +271,32 @@ function AvatarSelection() {
   );
 }
 
+function Screens() {
+  const { setSelectedPhoto } = useAvatarContext();
+  return (
+    <Stack.Navigator
+      mode="modal"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name={AvatarStackRoutes.AvatarSelection}
+        component={AvatarSelection}
+      />
+      <Stack.Screen name={AvatarStackRoutes.ImageSelection}>
+        {(props) => (
+          <ImageSelection {...props} onSelectPhoto={setSelectedPhoto} />
+        )}
+      </Stack.Screen>
+    </Stack.Navigator>
+  );
+}
+
 function Root() {
   return (
     <AvatarContextProvider>
-      <Stack.Navigator
-        mode="modal"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen
-          name={AvatarStackRoutes.AvatarSelection}
-          component={AvatarSelection}
-        />
-        <Stack.Screen
-          name={AvatarStackRoutes.ImageSelection}
-          component={ImageSelection}
-        />
-      </Stack.Navigator>
+      <Screens />
     </AvatarContextProvider>
   );
 }
