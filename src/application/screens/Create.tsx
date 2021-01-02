@@ -17,6 +17,7 @@ import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
 import { Picture } from "../../components/Picture";
 import { PostTextContent } from "../../components/PostTextContent";
+import { UserAvatar } from "../../components/UserAvatar";
 import { RootStackRoutes } from "../../root-stack-routes";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
@@ -123,16 +124,7 @@ function Create() {
             }}
           >
             <Frame height="largest" alignItems="flex-end">
-              <Picture
-                style={{
-                  borderRadius: theme.constants.absoluteRadius,
-                }}
-                width={theme.scales.larger}
-                aspectRatio="square"
-                resizeMode="cover"
-                source="https://i.pravatar.cc/150"
-                lazyload={false}
-              />
+              <UserAvatar />
             </Frame>
             <TextInput
               autoFocus
