@@ -1,11 +1,10 @@
 // TODO: remove react-native fs
-import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
 import React, { useCallback, useContext, useState } from "react";
 import { ImageBackground, Pressable, Text } from "react-native";
 import { useQuery, UseQueryOptions } from "react-query";
-import { useSelectAvatar } from "../../api/avatar";
+import { useAvatar, useSelectAvatar } from "../../api/avatar";
 import { QueryIds } from "../../api/QueryIds";
 import { AvatarIds, AVATARS_LIST } from "../../components/Avatars/avatars-list";
 import { Font } from "../../components/Font";
@@ -14,7 +13,6 @@ import { Grid, useGridUnitWidth } from "../../components/Grid";
 import { Icon } from "../../components/Icon/Icon";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
-import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
@@ -66,28 +64,28 @@ function useAvatarContext() {
   return context;
 }
 
-const AvatarContextProvider: React.FunctionComponent = function AvatarContextProvider({
-  children,
-}) {
-  // TODO: load selected index  ||  image
-  const [photo, setSelectedPhoto] = useState<string | null>(null);
+const AvatarContextProvider: React.FunctionComponent<{
+  onSuccess?: () => void;
+}> = function AvatarContextProvider({ children, onSuccess }) {
+  const { data } = useAvatar();
+  const [photo, setSelectedPhoto] = useState<string | null>(
+    data?.avatarId === AvatarIds.__USER_PHOTO__ ? String(data.base64) : null
+  );
   const [avatarId, setAvatarId] = useState<AvatarIds>(AvatarIds.Wynonna);
-  const navigation = useNavigation();
   const { mutate } = useSelectAvatar({
     onSuccess: () => {
-      navigation.navigate(RootStackRoutes.Home);
+      onSuccess?.();
     },
   });
 
   const onSave = useCallback(() => {
     if (avatarId === AvatarIds.__USER_PHOTO__ && photo) {
-      mutate({
+      return mutate({
         avatarId,
         base64: photo,
       });
-      return;
     }
-    mutate({
+    return mutate({
       avatarId,
     });
   }, [avatarId, mutate, photo]);
@@ -204,7 +202,18 @@ function UploadButton() {
   );
 }
 
-function AvatarSelection() {
+interface Props {
+  mode?: "onboarding" | "default";
+}
+
+interface DefaultProps extends Required<Pick<Props, "mode">> {}
+
+const defaultProps: DefaultProps = {
+  mode: "default",
+};
+
+function AvatarSelection(props: Props) {
+  const { mode } = { ...defaultProps, ...props };
   const theme = useTheme();
   const { setAvatarId, avatarId, onSave, disabled } = useAvatarContext();
   const spacing = useEdgeSpacing();
@@ -228,10 +237,12 @@ function AvatarSelection() {
     <Frame
       flex={1}
       justifyContent="flex-start"
-      backgroundColor={theme.colors.background}
+      backgroundColor={
+        mode === "default" ? theme.colors.background : "transparent"
+      }
       alignItems="center"
     >
-      <SubtitleHeader title="Select your avatar" />
+      {mode === "default" && <SubtitleHeader title="Select your avatar" />}
       <Frame
         paddingTop="large"
         flex={1 / 0.5}
@@ -279,37 +290,31 @@ function AvatarSelection() {
           </Frame>
         </Grid>
       </Frame>
-      <Frame flex={0.5}>
-        {/* TODO: redesign buttons/actions etc */}
-        <Pressable
-          disabled={disabled}
-          onPress={() => onSave()}
-          style={({ pressed }) => ({
-            backgroundColor: disabled
-              ? theme.colors.foregroundSecondary
-              : theme.colors.primary,
-            opacity: pressed ? 0.5 : 1,
-            paddingTop: theme.units.small,
-            paddingBottom: theme.units.small,
-            paddingLeft: theme.units.large,
-            paddingRight: theme.units.large,
-            borderRadius: theme.constants.absoluteRadius,
-            alignItems: "center",
-          })}
-        >
-          <Font color="absoluteLight">Save</Font>
-        </Pressable>
-      </Frame>
+      {mode === "default" && (
+        <Frame flex={0.5}>
+          {/* TODO: redesign buttons/actions etc */}
+          <Pressable
+            disabled={disabled}
+            onPress={() => onSave()}
+            style={({ pressed }) => ({
+              backgroundColor: disabled
+                ? theme.colors.foregroundSecondary
+                : theme.colors.primary,
+              opacity: pressed ? 0.5 : 1,
+              paddingTop: theme.units.small,
+              paddingBottom: theme.units.small,
+              paddingLeft: theme.units.large,
+              paddingRight: theme.units.large,
+              borderRadius: theme.constants.absoluteRadius,
+              alignItems: "center",
+            })}
+          >
+            <Font color="absoluteLight">Save</Font>
+          </Pressable>
+        </Frame>
+      )}
     </Frame>
   );
 }
 
-function Root() {
-  return (
-    <AvatarContextProvider>
-      <AvatarSelection />
-    </AvatarContextProvider>
-  );
-}
-
-export { Root as AvatarSelection };
+export { AvatarSelection, AvatarContextProvider, useAvatarContext };

@@ -10,6 +10,7 @@ import { useTheme } from "../providers/Theming";
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
+  console.log({ data });
   return (
     <View
       style={{
@@ -31,10 +32,10 @@ function Home() {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {!data?.length && (
+      {data && !data?.length && (
         <View
           style={{
-            flex: 1,
+            height: "100%",
             justifyContent: "center",
             alignItems: "center",
           }}

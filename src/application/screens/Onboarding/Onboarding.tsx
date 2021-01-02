@@ -1,13 +1,13 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable } from "react-native";
-import { useSafeArea } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCompleteOnboarding } from "../../../api/onboarding";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { Picture } from "../../../components/Picture";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
-import { OnboardingAvatarSelection } from "./OnboardingAvatarSelection";
+import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import {
   OnboardingNavigationProvider,
   RootStackRoutes,
@@ -52,16 +52,16 @@ const OnboardingInsertNameScreen = () => (
 );
 
 const OnboardingAvatarSelectionScreen = () => (
-  <OnboardingFadeInView screenIndex={2}>
-    <OnboardingAvatarSelection />
+  <OnboardingFadeInView screenIndex={2} bleed>
+    <AvatarSelection mode="onboarding" />
   </OnboardingFadeInView>
 );
 
 function Onboarding() {
-  const safeArea = useSafeArea();
+  const safeArea = useSafeAreaInsets();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
-  const { back, next, finalize } = useOnboardingContext();
+  const { back, next, finalize, disabled } = useOnboardingContext();
   const { mutate: completeOnboarding, status } = useCompleteOnboarding({
     onSuccess: finalize,
   });
@@ -143,7 +143,7 @@ function Onboarding() {
           {!next && (
             <Pressable
               // TODO: handle error
-              disabled={status !== "idle"}
+              disabled={status !== "idle" || disabled}
               onPress={() => completeOnboarding()}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
@@ -160,10 +160,12 @@ function Onboarding() {
 
 function Root() {
   return (
-    <OnboardingNavigationProvider>
-      <Onboarding />
-      <OnboardingBackgroundImage />
-    </OnboardingNavigationProvider>
+    <AvatarContextProvider>
+      <OnboardingNavigationProvider>
+        <Onboarding />
+        <OnboardingBackgroundImage />
+      </OnboardingNavigationProvider>
+    </AvatarContextProvider>
   );
 }
 

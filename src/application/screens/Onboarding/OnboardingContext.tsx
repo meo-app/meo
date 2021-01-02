@@ -1,14 +1,14 @@
 import {
-  NavigationContainerRef,
-  EventListenerCallback,
-  NavigationState,
-  NavigationContainer,
   DefaultTheme,
+  EventListenerCallback,
+  NavigationContainer,
   NavigationContainerEventMap,
+  NavigationContainerRef,
 } from "@react-navigation/native";
-import React, { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { QueryIds } from "../../../api/QueryIds";
+import { useAvatarContext } from "../AvatarSelection";
 
 export enum RootStackRoutes {
   OnboardingSlider = "OnboardingSlider",
@@ -21,6 +21,7 @@ const Context = React.createContext<{
   next?: () => void;
   back?: () => void;
   finalize: () => void;
+  disabled: boolean;
 } | null>(null);
 
 function useOnboardingContext() {
@@ -41,6 +42,7 @@ const routes = [
 const OnboardingNavigationProvider: React.FunctionComponent = function OnboardingNavigationProvider({
   children,
 }) {
+  const { disabled, onSave } = useAvatarContext();
   const navigationRef = useRef<NavigationContainerRef>(null);
   const [index, setIndex] = useState(0);
   const client = useQueryClient();
@@ -58,7 +60,10 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
     <Context.Provider
       value={{
         index,
+        disabled,
         finalize: () => {
+          // TODO: onSave is async, should look into a loading state for onboarding
+          onSave();
           client.refetchQueries([QueryIds.hasSeenOnboarding]);
         },
         ...(index + 1 <= routes.length - 1 && {
