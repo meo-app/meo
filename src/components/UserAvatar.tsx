@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import FastImage from "react-native-fast-image";
 import { useAvatar } from "../api/avatar";
 import { useTheme } from "../application/providers/Theming";
-import { AVATARS } from "../application/screens/AvatarSelection";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
+import { AVATARS_LIST } from "./Avatars/avatars-list";
 import { Frame } from "./Frame";
 import { Picture } from "./Picture";
 
@@ -52,7 +52,8 @@ function UserAvatar(props: Props) {
   }, []);
 
   if (data !== undefined) {
-    return <Frame style={styles.root}>{AVATARS[data]}</Frame>;
+    const node = AVATARS_LIST.find((item) => item.id === data)?.node;
+    return <Frame style={styles.root}>{node}</Frame>;
   }
 
   return (

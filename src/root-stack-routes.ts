@@ -2,7 +2,7 @@ enum RootStackRoutes {
   Tabs = "Tabs",
   Home = "Home",
   Create = "Create",
-  Search = "Search",
+  Explore = "Explore",
   SearchResutls = "SearchResults",
   Placeholder = "Placeholder",
   Settings = "Settings",
@@ -13,7 +13,7 @@ type RootStackParamList = {
   Tabs: undefined;
   Home: undefined;
   Create: undefined;
-  Search: undefined;
+  Explore: undefined;
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };

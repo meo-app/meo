@@ -16,11 +16,12 @@ import { Create } from "./application/screens/Create";
 import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { Search, SearchResults } from "./application/screens/Search";
+import { Explore } from "./application/screens/Explore";
 import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
+import { SearchResults } from "./application/screens/SearchResults";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -30,43 +31,41 @@ const Drawer = createDrawerNavigator();
 function TabsNavigator() {
   const { postsRef } = usePostsFlatList();
   return (
-    <>
-      <Tab.Navigator
-        lazy={false}
-        screenOptions={{
-          unmountOnBlur: false,
-        }}
-        tabBar={({ navigation, state }) => (
-          <FloatingActions
-            onSearchPress={() => navigation.navigate(RootStackRoutes.Search)}
-            onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
-            onHomePress={() => {
-              if (/Home/.test(state.history[1]?.key)) {
-                postsRef?.current?.scrollToIndex({
-                  animated: true,
-                  index: 0,
-                });
-              } else {
-                navigation.navigate(RootStackRoutes.Home);
-              }
-            }}
-          />
-        )}
-      >
-        <Tab.Screen name={RootStackRoutes.Home} component={Home} />
-        <Tab.Screen name={RootStackRoutes.Search} component={Search} />
-        <Tab.Screen
-          name={RootStackRoutes.Placeholder}
-          component={Placeholder}
-          listeners={({ navigation }) => ({
-            tabPress: (e) => {
-              e.preventDefault();
-              navigation.navigate(RootStackRoutes.Create);
-            },
-          })}
+    <Tab.Navigator
+      lazy={false}
+      screenOptions={{
+        unmountOnBlur: false,
+      }}
+      tabBar={({ navigation, state }) => (
+        <FloatingActions
+          onSearchPress={() => navigation.navigate(RootStackRoutes.Explore)}
+          onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
+          onHomePress={() => {
+            if (/Home/.test(state.history[1]?.key)) {
+              postsRef?.current?.scrollToIndex({
+                animated: true,
+                index: 0,
+              });
+            } else {
+              navigation.navigate(RootStackRoutes.Home);
+            }
+          }}
         />
-      </Tab.Navigator>
-    </>
+      )}
+    >
+      <Tab.Screen name={RootStackRoutes.Home} component={Home} />
+      <Tab.Screen name={RootStackRoutes.Explore} component={Explore} />
+      <Tab.Screen
+        name={RootStackRoutes.Placeholder}
+        component={Placeholder}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate(RootStackRoutes.Create);
+          },
+        })}
+      />
+    </Tab.Navigator>
   );
 }
 

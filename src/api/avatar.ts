@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
+import { AvatarIds } from "../components/Avatars/avatars-list";
 import { QueryIds } from "./QueryIds";
 
 const key = "@@selected-avatar";
@@ -12,30 +13,22 @@ const key = "@@selected-avatar";
 const get = async () => {
   try {
     const value = await AsyncStorage.getItem(key);
-    return value ? Number(value) : 0;
+    return value as AvatarIds;
   } catch (e) {
     throw new Error(e);
   }
 };
 
-const set = async (index: number) => {
+const set = async (id: AvatarIds) => {
   try {
-    await AsyncStorage.setItem(key, String(index));
-  } catch (e) {
-    throw new Error(e);
-  }
-};
-
-const clear = async () => {
-  try {
-    await AsyncStorage.removeItem(key);
+    await AsyncStorage.setItem(key, id);
   } catch (e) {
     throw new Error(e);
   }
 };
 
 function useAvatar() {
-  return useQuery<number>(QueryIds.getUserAvatar, get);
+  return useQuery<AvatarIds>(QueryIds.getUserAvatar, get);
 }
 
 function useSelectAvatar(
@@ -43,12 +36,12 @@ function useSelectAvatar(
     void,
     "Error",
     {
-      index: number;
+      avatarId: AvatarIds;
     }
   >
 ) {
   const client = useQueryClient();
-  return useMutation(({ index }) => set(index), {
+  return useMutation(({ avatarId }) => set(avatarId), {
     ...options,
     onSuccess: (...args) => {
       client.refetchQueries(QueryIds.getUserAvatar);
