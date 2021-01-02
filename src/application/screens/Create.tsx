@@ -1,8 +1,6 @@
 import {
   EventListenerCallback,
-  EventMapBase,
   EventMapCore,
-  NavigationContainerEventMap,
   NavigationState,
   useNavigation,
 } from "@react-navigation/native";
@@ -15,7 +13,6 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
 import { Icon } from "../../components/Icon/Icon";
-import { Picture } from "../../components/Picture";
 import { PostTextContent } from "../../components/PostTextContent";
 import { UserAvatar } from "../../components/UserAvatar";
 import { RootStackRoutes } from "../../root-stack-routes";
@@ -130,6 +127,10 @@ function Create() {
               autoFocus
               placeholder="Write something"
               placeholderTextColor={theme.colors.foregroundSecondary}
+              // TODO: select hashtags available on the app
+              // onSelectionChange={(event) => {
+              //   console.log(text[event.nativeEvent.selection.start]);
+              // }}
               onChangeText={onChangeText}
               multiline
               style={{
