@@ -8,8 +8,9 @@ import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { SubtitleHeader } from "../../../components/SubtitleHeader";
 import { useStyles } from "../../../hooks/use-styles";
+import { RootStackRoutes } from "../../../root-stack-routes";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
-import { AvatarSelection } from "../AvatarSelection";
+import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import { SettingsStackRoutes } from "./settings-stack-routes";
 
 const Stack = createStackNavigator();
@@ -53,18 +54,28 @@ function Settings() {
 }
 
 function Root() {
+  const navigation = useNavigation();
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
+    <AvatarContextProvider
+      onSuccess={() => {
+        navigation.navigate(RootStackRoutes.Home);
       }}
     >
-      <Stack.Screen name={SettingsStackRoutes.Settings} component={Settings} />
-      <Stack.Screen
-        name={SettingsStackRoutes.AvatarSelection}
-        component={AvatarSelection}
-      />
-    </Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen
+          name={SettingsStackRoutes.Settings}
+          component={Settings}
+        />
+        <Stack.Screen
+          name={SettingsStackRoutes.AvatarSelection}
+          component={AvatarSelection}
+        />
+      </Stack.Navigator>
+    </AvatarContextProvider>
   );
 }
 

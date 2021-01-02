@@ -1,6 +1,6 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
-import { ListRenderItem, FlatList } from "react-native";
+import { FlatList, ListRenderItem } from "react-native";
 import { Post } from "../api/Entities";
 import { useHomeContext } from "../application/providers/HomeProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
