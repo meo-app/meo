@@ -4,4 +4,11 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application android:usesCleartextTraffic="true" tools:targetApi="28" tools:ignore="GoogleAppIndexingWarning" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <activity
+  android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+  android:theme="@style/Base.Theme.AppCompat">
+</activity>
 </manifest>
