@@ -27,6 +27,7 @@ import { RootStackRoutes } from "../../root-stack-routes";
 import { assert } from "../../utils/assert";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
+// TODO: better data structure for avatars with id's etc. support n avatars
 export const AVATARS = [
   <Avatar01 />,
   <Avatar02 />,

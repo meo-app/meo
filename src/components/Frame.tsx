@@ -130,4 +130,4 @@ function useFrameStyles({
   };
 }
 
-export { Frame, useFrameStyles, Spacing };
+export { Frame, useFrameStyles, Spacing, Props as FrameProps };

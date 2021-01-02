@@ -16,7 +16,7 @@ import { Create } from "./application/screens/Create";
 import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { Search } from "./application/screens/Search";
+import { Search, SearchResults } from "./application/screens/Search";
 import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
@@ -108,8 +108,24 @@ function MainScreens() {
         }}
       />
       <RootStack.Screen
-        name={RootStackRoutes.HashtagViewer}
+        name={RootStackRoutes.SearchResutls}
+        component={SearchResults}
+        options={{
+          animationEnabled: true,
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          cardStyle: {
+            borderWidth: 1,
+            borderColor: theme.colors.backgroundAccent,
+            ...theme.constants.shadow,
+          },
+        }}
+      />
+      <RootStack.Screen
         component={HashtagViewer}
+        name={RootStackRoutes.HashtagViewer}
         options={{
           animationEnabled: true,
           gestureEnabled: true,

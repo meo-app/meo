@@ -71,7 +71,13 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
         alignItems="center"
         flexDirection="row"
       >
-        <Frame flexDirection="row" alignItems="baseline">
+        <Frame
+          flexDirection="row"
+          alignItems="flex-start"
+          style={{
+            height: "100%",
+          }}
+        >
           <UserAvatar />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="small">

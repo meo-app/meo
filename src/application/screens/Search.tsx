@@ -1,19 +1,6 @@
-import {
-  EventListenerCallback,
-  EventMapCore,
-  NavigationContainerRef,
-  NavigationState,
-  useNavigation,
-} from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Pressable, TextInputProps } from "react-native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React from "react";
+import { Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { QueryIds } from "../../api/QueryIds";
 import { useSearch } from "../../api/useSearch";
@@ -26,62 +13,15 @@ import { Header } from "../../components/Header";
 import { OpenDrawerButton } from "../../components/OpenDrawerButton";
 import { PostsList } from "../../components/PostsList";
 import { SearchTextInput } from "../../components/SearchTextInput";
-import { RootStackRoutes } from "../../root-stack-routes";
-import { assert } from "../../utils/assert";
+import { RootStackParamList, RootStackRoutes } from "../../root-stack-routes";
+import { useSearchContext } from "../providers/SearchProvider";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
-
-const Stack = createStackNavigator();
-
-enum SearchStackRoutes {
-  Search = "Search",
-  SearchResults = "SearchResults",
-}
-
-type SearchStackParamsList = {
-  Search: undefined;
-  SearchResults: undefined;
-};
-
-const Context = createContext<
-  | ({
-      isFocused: boolean;
-      setIsFocused: (value: boolean) => void;
-      term: string;
-    } & Required<Pick<TextInputProps, "onChangeText">>)
-  | null
->(null);
-
-const SearchContext: React.FunctionComponent = function SearchContext({
-  children,
-}) {
-  const [term, onChangeText] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
-  return (
-    <Context.Provider
-      value={{
-        term,
-        onChangeText: onChangeText,
-        isFocused,
-        setIsFocused,
-      }}
-    >
-      {children}
-    </Context.Provider>
-  );
-};
-
-function useSearchContext() {
-  const context = useContext(Context);
-  assert(context, "Could not find search context");
-  return context;
-}
 
 function Search() {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   const { term, onChangeText, setIsFocused } = useSearchContext();
-  // TODO: type with combine
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { data: hashtags } = useTransaction<{ total: string; value: string }>(
     QueryIds.topHashtags,
     "select count(value) as total, value from hashtags group by value order by total desc limit 4"
@@ -114,7 +54,7 @@ function Search() {
               value={term}
               onChangeText={onChangeText}
               onFocus={() => {
-                navigation.navigate(SearchStackRoutes.SearchResults);
+                navigation.navigate(RootStackRoutes.SearchResutls);
                 setIsFocused(true);
               }}
             />
@@ -154,7 +94,7 @@ function SearchResults() {
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const theme = useTheme();
   const navigation = useNavigation();
-  const { data } = useSearch(term);
+  const { data, isFetched } = useSearch(term);
   return (
     <Frame flex={1}>
       <Header title="Explore">
@@ -183,13 +123,13 @@ function SearchResults() {
                 }
 
                 if (!term) {
-                  navigation.navigate(SearchStackRoutes.Search);
+                  navigation.navigate(RootStackRoutes.Search);
                 }
               }}
             />
           </Frame>
           <Pressable
-            onPress={() => navigation.navigate(SearchStackRoutes.Search)}
+            onPress={() => navigation.navigate(RootStackRoutes.Search)}
             style={({ pressed }) => ({
               opacity: pressed ? 0.5 : 1,
               flexDirection: "row",
@@ -203,50 +143,41 @@ function SearchResults() {
           </Pressable>
         </Frame>
       </Header>
-      <Frame flex={1} backgroundColor={theme.colors.background}>
-        <PostsList data={data} />
-      </Frame>
+      {Boolean(data?.length) && (
+        <Frame flex={1} backgroundColor={theme.colors.background}>
+          <PostsList data={data} />
+        </Frame>
+      )}
+      {!term && Boolean(!data?.length) && (
+        <Frame
+          justifyContent="center"
+          alignItems="center"
+          style={{
+            flex: 1 / 2,
+          }}
+        >
+          <Font variant="subtitle">Find your stuff</Font>
+          <Frame marginTop="small">
+            <Font>Thougts, tags, anything</Font>
+          </Frame>
+        </Frame>
+      )}
+      {isFetched && !data?.length && Boolean(term) && (
+        <Frame
+          justifyContent="center"
+          alignItems="center"
+          style={{
+            flex: 1 / 2,
+          }}
+        >
+          <Font variant="subtitle">Ops can't find that</Font>
+          <Frame marginTop="small">
+            <Font>Try something else maybe?</Font>
+          </Frame>
+        </Frame>
+      )}
     </Frame>
   );
 }
 
-function Screens() {
-  const navigation = useNavigation();
-  const { term } = useSearchContext();
-  const searchNavigationRef = useRef<NavigationContainerRef | null>(null);
-  useEffect(() => {
-    const listener: EventListenerCallback<
-      EventMapCore<NavigationState>,
-      "blur"
-    > = () => {
-      if (!term) {
-        searchNavigationRef.current?.navigate(SearchStackRoutes.Search);
-      }
-    };
-    navigation.addListener("blur", listener);
-    return () => navigation.removeListener("blur", listener);
-  }, [navigation, term]);
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name={SearchStackRoutes.Search} component={Search} />
-      <Stack.Screen
-        name={SearchStackRoutes.SearchResults}
-        component={SearchResults}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function Root() {
-  return (
-    <SearchContext>
-      <Screens />
-    </SearchContext>
-  );
-}
-
-export { Root as Search };
+export { Search, SearchResults };
