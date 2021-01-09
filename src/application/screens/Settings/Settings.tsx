@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React, { useCallback } from "react";
 import { Pressable } from "react-native";
 import { useFlushOnboarding } from "../../../api/onboarding";
+import { useCreatePost } from "../../../api/useCreatePost";
 import { useFlushDatabase } from "../../../api/useFlushDatabase";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
@@ -12,8 +13,36 @@ import { RootStackRoutes } from "../../../root-stack-routes";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import { SettingsStackRoutes } from "./settings-stack-routes";
+import { LoremIpsum } from "lorem-ipsum";
+import { useMutation } from "react-query";
 
 const Stack = createStackNavigator();
+
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4,
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4,
+  },
+});
+
+function useCreatDummyPosts(times: number = 100) {
+  const { mutateAsync } = useCreatePost();
+  return useMutation(() =>
+    Promise.all(
+      [...Array(times)]
+        .map(() => lorem.generateParagraphs(1))
+        .map((text) =>
+          mutateAsync({
+            text,
+          })
+        )
+    )
+  );
+}
 
 function Settings() {
   const navigation = useNavigation();
@@ -29,6 +58,8 @@ function Settings() {
       paddingRight: theme.units[edges.vertical],
     },
   }));
+
+  const { mutate, isLoading } = useCreatDummyPosts();
   return (
     <Frame
       style={{
@@ -48,6 +79,9 @@ function Settings() {
       </Pressable>
       <Pressable onPress={() => flushDatabase()} style={styles.pressable}>
         <Font color="primary">Flush database</Font>
+      </Pressable>
+      <Pressable onPress={() => mutate()} style={styles.pressable}>
+        <Font color="primary">Add 100 posts {isLoading && "loading..."}</Font>
       </Pressable>
     </Frame>
   );

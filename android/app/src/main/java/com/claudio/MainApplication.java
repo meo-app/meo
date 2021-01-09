@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactInstanceManager;
 import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.rnfs.RNFSPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
@@ -32,6 +33,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 public class MainApplication extends Application implements ReactApplication {
+
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()
   );

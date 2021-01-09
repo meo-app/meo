@@ -4,7 +4,7 @@ import { HASHTAG_REGEX } from "../utils/hashtag-regex";
 import { QueryIds } from "./QueryIds";
 
 function useCreatePost(
-  options: MutationOptions<void, unknown, { text: string }>
+  options?: MutationOptions<void, unknown, { text: string }>
 ) {
   const db = useDB();
   const client = useQueryClient();

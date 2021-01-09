@@ -10,7 +10,6 @@ import { useTheme } from "../providers/Theming";
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
-  console.log({ data });
   return (
     <View
       style={{

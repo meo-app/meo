@@ -160,9 +160,9 @@ function Root() {
   if (isLoading) {
     return null;
   }
-  if (!data) {
-    return <Onboarding />;
-  }
+  // if (!data) {
+  //   return <Onboarding />;
+  // }
 
   return (
     <Drawer.Navigator

@@ -121,6 +121,13 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
+
+   packagingOptions {
+       pickFirst '**/libjsc.so'
+       pickFirst '**/libc++_shared.so'
+       pickFirst '**/libgnustl_shared.so'
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -130,6 +137,7 @@ android {
 
     defaultConfig {
         applicationId "com.claudio"
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -180,11 +188,15 @@ android {
 }
 
 dependencies {
+    //  implementation "org.webkit:android-jsc-intl:r241213"
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':@react-native-community_viewpager')
     implementation project(':react-native-fast-image')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     addUnimodulesDependencies()
+
+   implementation 'org.webkit:android-jsc-cppruntime:+'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

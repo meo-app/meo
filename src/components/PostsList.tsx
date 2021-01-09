@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
-import { FlatList, ListRenderItem } from "react-native";
+import { FlatList, FlatListProps, ListRenderItem } from "react-native";
 import { Post } from "../api/Entities";
 import { useHomeContext } from "../application/providers/HomeProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
@@ -10,7 +10,7 @@ import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
-function PostsList({
+const PostsList = React.memo(function PostsList({
   data,
   isBehindTabBar,
 }: {
@@ -20,10 +20,7 @@ function PostsList({
   const theme = useTheme();
   const { setPostRef, tabBarHeight } = useHomeContext();
   const spacing = useEdgeSpacing();
-  const keyExtractor = useCallback(
-    ({ id }: { id: string }) => `list-item-${id}`,
-    []
-  );
+  const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
 
   const renderItem = useCallback<ListRenderItem<Post>>(
     ({ item, index }) => {
@@ -51,6 +48,17 @@ function PostsList({
     [data, isBehindTabBar, tabBarHeight]
   );
 
+  // const getItemLayout = useCallback<FlatListProps<Post>["getItemLayout"]>(
+  //   (data, index) => {
+  //     return {
+  //       index,
+  //       length: 200,
+  //       offset: 200 * index,
+  //     };
+  //   },
+  //   []
+  // );
+
   if (!data?.length) {
     return null;
   }
@@ -58,9 +66,13 @@ function PostsList({
   return (
     <FlatList<Post>
       ref={(ref) => setPostRef(ref)}
+      windowSize={14}
+      maxToRenderPerBatch={18}
+      // removeClippedSubviews
       keyExtractor={keyExtractor}
       data={data}
       renderItem={renderItem}
+      // getItemLayout={getItemLayout}
       contentContainerStyle={{
         paddingTop: theme.units[spacing.vertical],
       }}
@@ -69,7 +81,7 @@ function PostsList({
       }}
     />
   );
-}
+});
 
 const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
@@ -95,7 +107,7 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
           <UserAvatar />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="small">
-          <PostTextContent value={value} />
+          <PostTextContent value={value} numberOfLines={5} />
         </Frame>
       </Frame>
       <Frame

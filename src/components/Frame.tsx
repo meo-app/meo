@@ -40,7 +40,7 @@ interface Props
 
 const Frame: React.FunctionComponent<
   Props & React.ComponentProps<typeof View>
-> = function Frame({ children, ...props }) {
+> = React.memo(function Frame({ children, ...props }) {
   const viewStyle = useFrameStyles(props);
   const {
     justifyContent,
@@ -73,7 +73,7 @@ const Frame: React.FunctionComponent<
       {children}
     </View>
   );
-};
+});
 
 function useFrameStyles({
   justifyContent,
