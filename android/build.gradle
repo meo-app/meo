@@ -7,6 +7,7 @@
 * Note that this variant is about 6MiB larger per architecture than the default.
 */
 def useIntlJsc = true
+// def jscFlavor = 'org.webkit:android-jsc-intl:+'
 
 buildscript {
     ext {
@@ -20,8 +21,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        // Make sure to put android-jsc at the the first
-        implementation "org.webkit:android-jsc-intl:r241213"
         classpath("com.android.tools.build:gradle:3.5.3")
 
         // NOTE: Do not place your application dependencies here; they belong

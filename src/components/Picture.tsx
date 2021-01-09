@@ -81,12 +81,12 @@ const Picture = React.memo(function Picture(props: Props) {
 
   const theme = useTheme();
   const [isImageAlreadyLoaded, setImageAlreadyLoaded] = useState(false);
-  const [ref, isVisible] = useIsInView<View>({
-    triggerOnce: true,
-    delay: lazyload && !isImageAlreadyLoaded ? 1000 : undefined,
-    mode: "partially-visible",
-    screenExtraMargin: 10,
-  });
+  // const [ref, isVisible] = useIsInView<View>({
+  //   triggerOnce: true,
+  //   delay: lazyload && !isImageAlreadyLoaded ? 1000 : undefined,
+  //   mode: "partially-visible",
+  //   screenExtraMargin: 10,
+  // });
 
   const aspectRatioValue = useAspectRatio(aspectRatio);
 
@@ -121,11 +121,16 @@ const Picture = React.memo(function Picture(props: Props) {
     ...overrideStyle,
   };
 
-  const shouldRenderImage =
-    !lazyload || isImageAlreadyLoaded || (lazyload && isVisible);
+  // const shouldRenderImage =
+  //   !lazyload || isImageAlreadyLoaded || (lazyload && isVisible);
+
+  const shouldRenderImage = !lazyload || isImageAlreadyLoaded || lazyload;
 
   return (
-    <View ref={ref} style={styles}>
+    <View
+      // ref={!lazyload ? undefined : ref}
+      style={styles}
+    >
       {shouldRenderImage && (
         <FastImage
           source={
