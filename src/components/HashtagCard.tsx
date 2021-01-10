@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useStyles } from "../hooks/use-styles";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Font } from "./Font";
 import { StyleSheet } from "react-native";
 import { opacify } from "polished";
@@ -25,12 +25,17 @@ function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
       ...theme.constants.shadow,
     },
     decoration: {
-      ...theme.constants.shadow,
+      ...(Platform.OS === "ios" && {
+        ...theme.constants.shadow,
+      }),
       position: "absolute",
       borderRadius: theme.constants.borderRadius,
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: theme.colors.backgroundAccent,
-      backgroundColor: theme.colors.background,
+      backgroundColor:
+        Platform.OS === "android"
+          ? theme.colors.backgroundAccent
+          : theme.colors.background,
       bottom: -10,
       width: "100%",
       height: 100,

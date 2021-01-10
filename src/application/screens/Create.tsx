@@ -114,13 +114,13 @@ function Create() {
         >
           <Frame
             flexDirection="row"
-            paddingTop={spacing.horizontal}
+            alignItems="center"
             flex={1}
             style={{
               width: "100%",
             }}
           >
-            <Frame height="largest" alignItems="flex-end">
+            <Frame height="largest" alignItems="flex-end" marginTop="small">
               <UserAvatar />
             </Frame>
             <TextInput

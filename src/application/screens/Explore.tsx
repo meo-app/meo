@@ -1,7 +1,10 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Pressable } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Keyboard, Pressable } from "react-native";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { QueryIds } from "../../api/QueryIds";
 import { useTransaction } from "../../api/useTransaction";
 import { Font } from "../../components/Font";
@@ -42,21 +45,24 @@ function Explore() {
             <OpenDrawerButton />
             <Font variant="display">Explore</Font>
           </Frame>
-          <Frame
-            marginTop="medium"
+          <TouchableWithoutFeedback
+            onPressIn={() => {
+              navigation.navigate(RootStackRoutes.SearchResutls);
+              setIsFocused(true);
+            }}
             style={{
+              zIndex: 1,
+              marginTop: theme.units.medium,
               width: "100%",
             }}
           >
             <SearchTextInput
               value={term}
               onChangeText={onChangeText}
-              onFocus={() => {
-                navigation.navigate(RootStackRoutes.SearchResutls);
-                setIsFocused(true);
-              }}
+              editable={false}
+              pointerEvents="box-none"
             />
-          </Frame>
+          </TouchableWithoutFeedback>
         </Frame>
       </Header>
       <ScrollView

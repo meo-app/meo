@@ -7,7 +7,7 @@ import {
 import "intl";
 import "intl/locale-data/jsonp/en";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { useHasSeenOnboarding } from "./api/onboarding";
 import { useHomeContext } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
@@ -88,6 +88,7 @@ function MainScreens() {
       mode="modal"
       screenOptions={{
         headerTitle: () => null,
+        headerTransparent: true,
       }}
     >
       <RootStack.Screen
@@ -138,10 +139,12 @@ function MainScreens() {
         name={RootStackRoutes.HashtagViewer}
         options={{
           animationEnabled: true,
-          gestureEnabled: true,
+          gestureEnabled: Platform.OS === "ios",
           gestureDirection: "horizontal",
           headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          ...(Platform.OS === "ios" && {
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          }),
           cardStyle: {
             borderWidth: 1,
             borderColor: theme.colors.backgroundAccent,
@@ -160,9 +163,9 @@ function Root() {
   if (isLoading) {
     return null;
   }
-  // if (!data) {
-  //   return <Onboarding />;
-  // }
+  if (!data) {
+    return <Onboarding />;
+  }
 
   return (
     <Drawer.Navigator

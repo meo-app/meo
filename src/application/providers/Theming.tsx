@@ -142,7 +142,8 @@ const ThemeProvider: React.FunctionComponent<{
     >
       <StatusBar
         barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme]}
-        backgroundColor={colors[systemColorScheme].background}
+        backgroundColor="transparent"
+        translucent
       />
       {children}
     </Context.Provider>

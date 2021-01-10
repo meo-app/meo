@@ -48,17 +48,6 @@ const PostsList = React.memo(function PostsList({
     [data, isBehindTabBar, tabBarHeight]
   );
 
-  // const getItemLayout = useCallback<FlatListProps<Post>["getItemLayout"]>(
-  //   (data, index) => {
-  //     return {
-  //       index,
-  //       length: 200,
-  //       offset: 200 * index,
-  //     };
-  //   },
-  //   []
-  // );
-
   if (!data?.length) {
     return null;
   }
@@ -66,13 +55,9 @@ const PostsList = React.memo(function PostsList({
   return (
     <FlatList<Post>
       ref={(ref) => setPostRef(ref)}
-      windowSize={14}
-      maxToRenderPerBatch={18}
-      // removeClippedSubviews
       keyExtractor={keyExtractor}
       data={data}
       renderItem={renderItem}
-      // getItemLayout={getItemLayout}
       contentContainerStyle={{
         paddingTop: theme.units[spacing.vertical],
       }}
