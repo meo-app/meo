@@ -9,6 +9,11 @@ import { ColorSchemeName, useColorScheme } from "react-native-appearance";
 import { Units } from "../../foundations/Spacing";
 import { Theme } from "../../foundations/Theme";
 
+const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
+
+StatusBar.setBackgroundColor(STATUSBAR_BACKGROUND_COLOR);
+StatusBar.setTranslucent(true);
+
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
 const primary = "#2D9CDB";
@@ -142,7 +147,7 @@ const ThemeProvider: React.FunctionComponent<{
     >
       <StatusBar
         barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme]}
-        backgroundColor="transparent"
+        backgroundColor={STATUSBAR_BACKGROUND_COLOR}
         translucent
       />
       {children}

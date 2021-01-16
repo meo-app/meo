@@ -22,7 +22,7 @@ function SubtitleHeader({ title, backContent }: Props) {
   const insets = useSafeAreaInsets();
   const styles = useStyles(() => ({
     spacer: {
-      height: insets.top,
+      height: insets.top + theme.units[spacing.horizontal],
       width: "100%",
       backgroundColor: rgba(255, 255, 255, 0),
     },

@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
-import { FlatList, FlatListProps, ListRenderItem } from "react-native";
+import { FlatList, ListRenderItem, Platform } from "react-native";
 import { Post } from "../api/Entities";
-import { useHomeContext } from "../application/providers/HomeProvider";
+import { useHomeContext } from "../application/providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
@@ -18,7 +18,7 @@ const PostsList = React.memo(function PostsList({
   isBehindTabBar?: boolean;
 }) {
   const theme = useTheme();
-  const { setPostRef, tabBarHeight } = useHomeContext();
+  const { tabBarHeight } = useHomeContext();
   const spacing = useEdgeSpacing();
   const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
 
@@ -54,7 +54,7 @@ const PostsList = React.memo(function PostsList({
 
   return (
     <FlatList<Post>
-      ref={(ref) => setPostRef(ref)}
+      removeClippedSubviews={Platform.OS === "ios"}
       keyExtractor={keyExtractor}
       data={data}
       renderItem={renderItem}

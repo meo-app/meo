@@ -3,7 +3,7 @@ import React from "react";
 import { IntlProvider } from "react-intl";
 import { AppearanceProvider } from "react-native-appearance";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { HomeProvider } from "./HomeProvider";
+import { AppProvider } from "./AppProvider";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import { SearchProvider } from "./SearchProvider";
 import { SQLiteProvider } from "./SQLiteProvider";
@@ -13,7 +13,7 @@ const Providers: React.FunctionComponent = function Providers({ children }) {
   // TODO: retrieve user locale?
   return (
     <IntlProvider locale="en">
-      <HomeProvider>
+      <AppProvider>
         <SearchProvider>
           <SQLiteProvider>
             <ReactQueryProvider>
@@ -29,7 +29,7 @@ const Providers: React.FunctionComponent = function Providers({ children }) {
             </ReactQueryProvider>
           </SQLiteProvider>
         </SearchProvider>
-      </HomeProvider>
+      </AppProvider>
     </IntlProvider>
   );
 };

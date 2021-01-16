@@ -17,13 +17,15 @@ import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
+// TODO: remove  grid and user flatlist
+
 async function getImage(): Promise<{ base64?: string } | null> {
   try {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.7,
+      quality: 0.4,
       base64: true,
     });
     if (result.cancelled) {

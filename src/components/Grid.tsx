@@ -63,12 +63,16 @@ function useGrid({
 
   const styles = useStyles(() => ({
     container: {
+      borderWidth: 1,
+      borderColor: "red",
       marginLeft: margin,
       marginRight: margin,
       display: "flex",
       flexDirection: "column",
     },
     item: {
+      position: "relative",
+      overflow: "hidden",
       width: itemWidth,
       marginBottom: horizontalGap,
     },
