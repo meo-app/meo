@@ -37,7 +37,10 @@ function useCreatDummyPosts(times: number = 100) {
         .map(() => lorem.generateParagraphs(1))
         .map((text) =>
           mutateAsync({
-            text,
+            text: text
+              .split(" ")
+              .map((word) => (Math.random() <= 0.5 ? `#${word}` : word))
+              .join(" "),
           })
         )
     )

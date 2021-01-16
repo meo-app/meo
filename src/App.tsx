@@ -9,7 +9,6 @@ import "intl/locale-data/jsonp/en";
 import React from "react";
 import { Platform, View } from "react-native";
 import { useHasSeenOnboarding } from "./api/onboarding";
-import { useHomeContext } from "./application/providers/HomeProvider";
 import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
@@ -29,11 +28,8 @@ const RootStack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
 const EXPLORE_REGEX = new RegExp(RootStackRoutes.Explore);
-const HOME_REGEX = new RegExp(RootStackRoutes.Home);
 
 function TabsNavigator() {
-  const { postsRef } = useHomeContext();
-  const theme = useTheme();
   return (
     <Tab.Navigator
       lazy={false}
@@ -42,23 +38,13 @@ function TabsNavigator() {
       }}
       tabBar={({ navigation, state }) => (
         <FloatingActions
+          onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
+          onHomePress={() => navigation.navigate(RootStackRoutes.Home)}
           onSearchPress={() => {
             if (EXPLORE_REGEX.test(state.history[1]?.key)) {
               navigation.navigate(RootStackRoutes.SearchResutls);
             } else {
               navigation.navigate(RootStackRoutes.Explore);
-            }
-          }}
-          onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
-          onHomePress={() => {
-            if (HOME_REGEX.test(state.history[1]?.key)) {
-              postsRef?.scrollToIndex({
-                animated: true,
-                index: 0,
-                viewPosition: theme.units.largest,
-              });
-            } else {
-              navigation.navigate(RootStackRoutes.Home);
             }
           }}
         />
