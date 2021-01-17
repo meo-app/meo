@@ -17,22 +17,22 @@ import { RootStackParamList, RootStackRoutes } from "../../root-stack-routes";
 import { useSearchContext } from "../providers/SearchProvider";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
+interface HashtagCount {
+  total: string;
+  value: string;
+}
+
 function Explore() {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { data: hashtags } = useTransaction<{ total: string; value: string }>(
+  const { data: hashtags } = useTransaction<HashtagCount>(
     QueryIds.topHashtags,
     "select count(value) as total, value from hashtags group by value order by total desc"
   );
 
-  const renderItem = useCallback<
-    ListRenderItem<{
-      total: string;
-      value: string;
-    }>
-  >(
+  const renderItem = useCallback<ListRenderItem<HashtagCount>>(
     ({ item, index }) => (
       <Pressable
         style={{
@@ -55,6 +55,8 @@ function Explore() {
     ),
     [navigation, spacing.horizontal, theme.units]
   );
+
+  const keyExtractor = useCallback(({ value }: HashtagCount) => value, []);
 
   return (
     <Frame
@@ -95,6 +97,7 @@ function Explore() {
       </Header>
       <Frame>
         <FlatList
+          keyExtractor={keyExtractor}
           columnWrapperStyle={{
             flex: 1,
           }}
