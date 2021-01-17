@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
 import React, { useCallback, useContext } from "react";
 import { Pressable, PressableProps } from "react-native";
-import { useHomeContext } from "../application/providers/AppProvider";
+import { useAppContext } from "../application/providers/AppProvider";
 import {
   FlipColorScheme,
   useEdgeSpacing,
@@ -26,7 +26,7 @@ const Context = React.createContext<Partial<Props>>({});
 
 function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
   const theme = useTheme();
-  const { setTabBarHeight } = useHomeContext();
+  const { setTabBarHeight } = useAppContext();
   const styles = useStyles(() => ({
     root: {
       position: "absolute",

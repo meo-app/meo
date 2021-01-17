@@ -1,50 +1,42 @@
 import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
-import { FlatList, ListRenderItem, Platform } from "react-native";
+import { StyleSheet, FlatList, ListRenderItem, Platform } from "react-native";
 import { Post } from "../api/Entities";
-import { useHomeContext } from "../application/providers/AppProvider";
+import { useAppContext } from "../application/providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
+import { ConditionalWrap } from "./ConditionalWrap";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
-const PostsList = React.memo(function PostsList({
-  data,
-  isBehindTabBar,
-}: {
-  data?: Post[];
-  isBehindTabBar?: boolean;
-}) {
+const PostsList = React.forwardRef<
+  FlatList<Post>,
+  { data?: Post[]; isBehindTabBar?: boolean }
+>(({ data, isBehindTabBar }, ref) => {
   const theme = useTheme();
-  const { tabBarHeight } = useHomeContext();
+  const { tabBarHeight } = useAppContext();
   const spacing = useEdgeSpacing();
   const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
-
   const renderItem = useCallback<ListRenderItem<Post>>(
-    ({ item, index }) => {
-      // TODO: conditional wrap
-      // TODO: fix this in search and home
-      if (data && index === data.length - 1) {
-        return (
+    ({ item, index }) => (
+      <ConditionalWrap
+        condition={Boolean(data && index === data.length - 1)}
+        wrap={({ children }) => (
           <Frame
+            key={String(item.id)}
             style={{
               paddingBottom: isBehindTabBar ? tabBarHeight : 0,
             }}
           >
-            <PostLine {...item} />
-            <Frame
-              style={{
-                height: isBehindTabBar ? tabBarHeight : 0,
-              }}
-            />
+            {children}
           </Frame>
-        );
-      }
-
-      return <PostLine {...item} />;
-    },
+        )}
+      >
+        <PostLine {...item} key={String(item.id)} />
+      </ConditionalWrap>
+    ),
     [data, isBehindTabBar, tabBarHeight]
   );
 
@@ -54,7 +46,10 @@ const PostsList = React.memo(function PostsList({
 
   return (
     <FlatList<Post>
+      ref={ref}
       removeClippedSubviews={Platform.OS === "ios"}
+      ItemSeparatorComponent={null}
+      scrollIndicatorInsets={{ right: 1 }}
       keyExtractor={keyExtractor}
       data={data}
       renderItem={renderItem}
@@ -70,12 +65,19 @@ const PostsList = React.memo(function PostsList({
 
 const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
+  const theme = useTheme();
   return (
     <Frame
       paddingBottom="smallest"
       paddingRight={spacing.horizontal}
       paddingLeft={spacing.horizontal}
       flexGrow={0}
+      style={{
+        paddingBottom: theme.units.medium,
+        paddingTop: theme.units.medium,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: theme.colors.backgroundAccent,
+      }}
     >
       <Frame
         justifyContent="flex-start"
@@ -92,7 +94,7 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
           <UserAvatar />
         </Frame>
         <Frame flexGrow={1} flex={1} paddingLeft="small">
-          <PostTextContent value={value} numberOfLines={5} />
+          <PostTextContent value={value} numberOfLines={3} />
         </Frame>
       </Frame>
       <Frame

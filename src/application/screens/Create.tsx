@@ -120,7 +120,14 @@ function Create() {
               width: "100%",
             }}
           >
-            <Frame height="largest" alignItems="flex-end" marginTop="small">
+            <Frame
+              height="largest"
+              alignItems="flex-end"
+              marginTop="small"
+              style={{
+                alignSelf: "flex-start",
+              }}
+            >
               <UserAvatar />
             </Frame>
             <TextInput

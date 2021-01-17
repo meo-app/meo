@@ -1,4 +1,5 @@
-import React from "react";
+import { useScrollToTop } from "@react-navigation/native";
+import React, { useRef } from "react";
 import { View } from "react-native";
 import { usePosts } from "../../api/usePosts";
 import { Font } from "../../components/Font";
@@ -10,6 +11,9 @@ import { useTheme } from "../providers/Theming";
 function Home() {
   const { data, error, isFetching } = usePosts();
   const theme = useTheme();
+  const ref = useRef(null);
+  useScrollToTop(ref);
+
   return (
     <View
       style={{
@@ -48,7 +52,7 @@ function Home() {
           height: "100%",
         }}
       >
-        <PostsList data={data} isBehindTabBar />
+        <PostsList data={data} isBehindTabBar ref={ref} />
       </Frame>
     </View>
   );

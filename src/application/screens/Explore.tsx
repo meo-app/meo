@@ -22,10 +22,9 @@ function Explore() {
   const theme = useTheme();
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  // TODO: entity!
   const { data: hashtags } = useTransaction<{ total: string; value: string }>(
     QueryIds.topHashtags,
-    "select count(value) as total, value from hashtags group by value order by total"
+    "select count(value) as total, value from hashtags group by value order by total desc"
   );
 
   const renderItem = useCallback<

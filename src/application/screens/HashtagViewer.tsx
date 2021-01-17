@@ -7,9 +7,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { Post } from "../../api/Entities";
-import { QueryIds } from "../../api/QueryIds";
-import { useTransaction } from "../../api/useTransaction";
+import { useHashtagPosts } from "../../api/useHashtagPosts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -24,10 +22,10 @@ function HashtagViewer(props: {
   route: RouteProp<RootStackParamList, "HashtagViewer">;
 }) {
   const theme = useTheme();
-  const { data, isFetching, isError } = useTransaction<Post>(
-    QueryIds.hashtagViewer,
-    `select * from posts where id in (select post_id from hashtags where value like "%${props.route.params.hashtag}%")`
-  );
+  const { data, isFetching, isError } = useHashtagPosts({
+    hashtag: props.route.params.hashtag,
+  });
+
   return (
     <View
       style={{

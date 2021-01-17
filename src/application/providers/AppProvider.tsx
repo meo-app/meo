@@ -6,7 +6,7 @@ const Context = React.createContext<{
   setTabBarHeight: (value: number) => void;
 } | null>(null);
 
-function useHomeContext() {
+function useAppContext() {
   const context = useContext(Context);
   assert(context, "Home context not found");
   return context;
@@ -23,4 +23,4 @@ const AppProvider: React.FunctionComponent = function AppProvider({
   );
 };
 
-export { AppProvider, useHomeContext };
+export { AppProvider, useAppContext };

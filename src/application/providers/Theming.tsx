@@ -4,15 +4,22 @@ import {
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext } from "react";
-import { StatusBar, StatusBarStyle } from "react-native";
-import { ColorSchemeName, useColorScheme } from "react-native-appearance";
+import {
+  ColorSchemeName,
+  Platform,
+  StatusBar,
+  StatusBarStyle,
+  useColorScheme,
+} from "react-native";
 import { Units } from "../../foundations/Spacing";
 import { Theme } from "../../foundations/Theme";
 
 const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
 
-StatusBar.setBackgroundColor(STATUSBAR_BACKGROUND_COLOR);
-StatusBar.setTranslucent(true);
+if (Platform.OS === "android") {
+  StatusBar.setBackgroundColor(STATUSBAR_BACKGROUND_COLOR);
+  StatusBar.setTranslucent(true);
+}
 
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
@@ -95,14 +102,12 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   },
 };
 
-const colors: { [key in ColorSchemeName]: Theme["colors"] } = {
-  "no-preference": light,
+const colors: { [key in "light" | "dark"]: Theme["colors"] } = {
   light,
   dark,
 };
 
-const STATUS_BAR_SCHEME_MAP: { [key in ColorSchemeName]: StatusBarStyle } = {
-  "no-preference": "default",
+const STATUS_BAR_SCHEME_MAP: { [key in "light" | "dark"]: StatusBarStyle } = {
   dark: "light-content",
   light: "dark-content",
 };
@@ -112,7 +117,7 @@ const ThemeProvider: React.FunctionComponent<{
   forceColorSchemeTo?: ColorSchemeName;
 }> = function ThemeProvider({ children, forceColorSchemeTo }) {
   const systemColorScheme = useColorScheme();
-  const scheme = forceColorSchemeTo || systemColorScheme;
+  const scheme = forceColorSchemeTo || (systemColorScheme ?? "light");
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_400Regular,
@@ -146,7 +151,7 @@ const ThemeProvider: React.FunctionComponent<{
       }}
     >
       <StatusBar
-        barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme]}
+        barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme ?? "light"]}
         backgroundColor={STATUSBAR_BACKGROUND_COLOR}
         translucent
       />

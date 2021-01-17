@@ -1,23 +1,25 @@
 // TODO: remove react-native fs
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
-import React, { useCallback, useContext, useState } from "react";
-import { ImageBackground, Pressable, Text } from "react-native";
+import React, { useCallback, useContext, useMemo, useState } from "react";
+import { ImageBackground, ListRenderItem, Pressable, Text } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { useQuery, UseQueryOptions } from "react-query";
 import { useAvatar, useSelectAvatar } from "../../api/avatar";
 import { QueryIds } from "../../api/QueryIds";
-import { AvatarIds, AVATARS_LIST } from "../../components/Avatars/avatars-list";
+import {
+  AvatarIds,
+  AVATARS_LIST,
+  DefaultAvatar,
+} from "../../components/Avatars/avatars-list";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
-import { Grid, useGridUnitWidth } from "../../components/Grid";
 import { Icon } from "../../components/Icon/Icon";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
 import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
-
-// TODO: remove  grid and user flatlist
+import { useTheme } from "../providers/Theming";
 
 async function getImage(): Promise<{ base64?: string } | null> {
   try {
@@ -165,7 +167,7 @@ function UploadButton() {
   return (
     <Pressable
       style={styles.root}
-      onPress={async () => {
+      onPress={() => {
         setAvatarId(AvatarIds.__USER_PHOTO__);
         setImagePickerOpen(true);
       }}
@@ -218,13 +220,6 @@ function AvatarSelection(props: Props) {
   const { mode } = { ...defaultProps, ...props };
   const theme = useTheme();
   const { setAvatarId, avatarId, onSave, disabled } = useAvatarContext();
-  const spacing = useEdgeSpacing();
-  const gridConfig: Parameters<typeof useGridUnitWidth>[0] = {
-    gap: "medium",
-    margin: theme.units[spacing.vertical],
-    numColumns: 2,
-  };
-  const width = useGridUnitWidth(gridConfig);
   const styles = useStyles(() => ({
     avatar: {
       flex: 1,
@@ -235,6 +230,40 @@ function AvatarSelection(props: Props) {
       borderColor: theme.colors.primary,
     },
   }));
+
+  const renderItem = useCallback<ListRenderItem<DefaultAvatar>>(
+    ({ item: { node, id } }) => {
+      return (
+        <Frame
+          key={`avatar-${id}`}
+          style={{
+            height: 100,
+            flex: 1 / 2,
+          }}
+        >
+          <Pressable
+            onPress={() => setAvatarId(id)}
+            style={[styles.avatar, avatarId === id && styles.selected]}
+          >
+            {node}
+          </Pressable>
+        </Frame>
+      );
+    },
+    [avatarId, setAvatarId, styles.avatar, styles.selected]
+  );
+
+  const data = useMemo(
+    () => [
+      ...AVATARS_LIST,
+      {
+        id: AvatarIds.__USER_PHOTO__,
+        node: <UploadButton />,
+      },
+    ],
+    []
+  );
+
   return (
     <Frame
       flex={1}
@@ -252,45 +281,7 @@ function AvatarSelection(props: Props) {
         flexDirection="row"
         justifyContent="space-between"
       >
-        <Grid
-          numColumns={2}
-          margin={theme.units[spacing.vertical]}
-          gap="medium"
-        >
-          {AVATARS_LIST.map(({ node, id }) => (
-            <Frame
-              key={`avatar-${id}`}
-              style={{
-                width: width,
-                height: width,
-              }}
-            >
-              <Pressable
-                onPress={() => setAvatarId(id)}
-                style={[styles.avatar, avatarId === id && styles.selected]}
-              >
-                {node}
-              </Pressable>
-            </Frame>
-          ))}
-          <Frame
-            key={`avatar-${AvatarIds.__USER_PHOTO__}`}
-            style={{
-              width: width,
-              height: width,
-            }}
-          >
-            <Pressable
-              onPress={() => setAvatarId(AvatarIds.__USER_PHOTO__)}
-              style={[
-                styles.avatar,
-                avatarId === AvatarIds.__USER_PHOTO__ && styles.selected,
-              ]}
-            >
-              <UploadButton />
-            </Pressable>
-          </Frame>
-        </Grid>
+        <FlatList data={data} renderItem={renderItem} numColumns={2} />
       </Frame>
       {mode === "default" && (
         <Frame flex={0.5}>

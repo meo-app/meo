@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useMemo } from "react";
 import { RootStackRoutes } from "../root-stack-routes";
 import { HASHTAG_REGEX } from "../utils/hashtag-regex";
 import { Font } from "./Font";
 
-function PostTextContent({
+const PostTextContent = React.memo(function PostTextContent({
   value,
   numberOfLines,
 }: {
@@ -12,9 +12,10 @@ function PostTextContent({
   numberOfLines?: number;
 }) {
   const navigation = useNavigation();
+  const content = useMemo(() => value.split(HASHTAG_REGEX), [value]);
   return (
     <Font numberOfLines={numberOfLines}>
-      {value.split(HASHTAG_REGEX).map((item, index) => {
+      {content.map((item, index) => {
         if (item[0] === "#") {
           return (
             <Font
@@ -35,6 +36,6 @@ function PostTextContent({
       })}
     </Font>
   );
-}
+});
 
 export { PostTextContent };
