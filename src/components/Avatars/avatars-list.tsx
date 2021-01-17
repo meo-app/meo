@@ -21,12 +21,12 @@ enum AvatarIds {
   // Reah = "Reah"
 }
 
-interface DefaultAvatarsList {
+interface DefaultAvatar {
   id: AvatarIds;
   node: React.ReactNode;
 }
 
-const AVATARS_LIST: DefaultAvatarsList[] = [
+const AVATARS_LIST: DefaultAvatar[] = [
   {
     id: AvatarIds.Wynonna,
     node: <Avatar01 />,
@@ -58,4 +58,4 @@ const AVATARS_LIST: DefaultAvatarsList[] = [
   return true;
 });
 
-export { AVATARS_LIST, AvatarIds };
+export { AVATARS_LIST, AvatarIds, DefaultAvatar };
