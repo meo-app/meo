@@ -5,6 +5,8 @@ import { Font } from "./Font";
 import { StyleSheet } from "react-native";
 import { opacify } from "polished";
 
+const HEIGHT = 160;
+
 function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
   const styles = useStyles((theme) => ({
     root: {
@@ -15,7 +17,7 @@ function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
       zIndex: 1,
       width: "100%",
       justifyContent: "flex-end",
-      height: 160,
+      height: HEIGHT,
       borderRadius: theme.constants.borderRadius,
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: theme.colors.backgroundAccent,
@@ -103,5 +105,7 @@ const HashTagDisplay: React.FunctionComponent = function HashTagDisplay({
     </Font>
   );
 };
+
+HashtagCard.HEIGHT = HEIGHT;
 
 export { HashtagCard };

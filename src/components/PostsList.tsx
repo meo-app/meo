@@ -1,68 +1,52 @@
 import React, { useCallback } from "react";
 import { FormattedDate } from "react-intl";
-import { StyleSheet, FlatList, ListRenderItem, Platform } from "react-native";
+import { FlatList, ListRenderItem, Platform, StyleSheet } from "react-native";
 import { Post } from "../api/Entities";
-import { useAppContext } from "../application/providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
-import { ConditionalWrap } from "./ConditionalWrap";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
-const PostsList = React.forwardRef<
-  FlatList<Post>,
-  { data?: Post[]; isBehindTabBar?: boolean }
->(({ data, isBehindTabBar }, ref) => {
-  const theme = useTheme();
-  const { tabBarHeight } = useAppContext();
-  const spacing = useEdgeSpacing();
-  const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
-  const renderItem = useCallback<ListRenderItem<Post>>(
-    ({ item, index }) => (
-      <ConditionalWrap
-        condition={Boolean(data && index === data.length - 1)}
-        wrap={({ children }) => (
-          <Frame
-            key={String(item.id)}
-            style={{
-              paddingBottom: isBehindTabBar ? tabBarHeight : 0,
-            }}
-          >
-            {children}
-          </Frame>
-        )}
-      >
-        <PostLine {...item} key={String(item.id)} />
-      </ConditionalWrap>
-    ),
-    [data, isBehindTabBar, tabBarHeight]
-  );
+const PostsList = React.forwardRef<FlatList<Post>, { data?: Post[] }>(
+  ({ data }, ref) => {
+    const theme = useTheme();
+    const spacing = useEdgeSpacing();
+    const keyExtractor = useCallback(
+      ({ id }: { id: string }) => String(id),
+      []
+    );
+    const renderItem = useCallback<ListRenderItem<Post>>(
+      ({ item }) => <PostLine {...item} key={String(item.id)} />,
+      []
+    );
 
-  if (!data?.length) {
-    return null;
+    if (!data?.length) {
+      return null;
+    }
+
+    return (
+      <FlatList<Post>
+        ref={ref}
+        removeClippedSubviews={Platform.OS === "ios"}
+        ItemSeparatorComponent={null}
+        scrollIndicatorInsets={{ right: 1 }}
+        keyExtractor={keyExtractor}
+        data={data}
+        renderItem={renderItem}
+        contentContainerStyle={{
+          paddingTop: theme.units[spacing.vertical],
+        }}
+        style={{
+          backgroundColor: theme.colors.background,
+        }}
+      />
+    );
   }
+);
 
-  return (
-    <FlatList<Post>
-      ref={ref}
-      removeClippedSubviews={Platform.OS === "ios"}
-      ItemSeparatorComponent={null}
-      scrollIndicatorInsets={{ right: 1 }}
-      keyExtractor={keyExtractor}
-      data={data}
-      renderItem={renderItem}
-      contentContainerStyle={{
-        paddingTop: theme.units[spacing.vertical],
-      }}
-      style={{
-        backgroundColor: theme.colors.background,
-      }}
-    />
-  );
-});
-
+const POST_ITEM_ITEM = 100;
 const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
@@ -77,6 +61,7 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
         paddingTop: theme.units.medium,
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: theme.colors.backgroundAccent,
+        height: POST_ITEM_ITEM,
       }}
     >
       <Frame
@@ -115,4 +100,4 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   );
 });
 
-export { PostsList };
+export { PostsList, POST_ITEM_ITEM };

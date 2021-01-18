@@ -14,6 +14,7 @@ import { Header } from "../../components/Header";
 import { OpenDrawerButton } from "../../components/OpenDrawerButton";
 import { SearchTextInput } from "../../components/SearchTextInput";
 import { RootStackParamList, RootStackRoutes } from "../../root-stack-routes";
+import { useAppContext } from "../providers/AppProvider";
 import { useSearchContext } from "../providers/SearchProvider";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
@@ -25,6 +26,7 @@ interface HashtagCount {
 function Explore() {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
+  const { tabBarHeight } = useAppContext();
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { data: hashtags } = useTransaction<HashtagCount>(
@@ -97,13 +99,16 @@ function Explore() {
       </Header>
       <Frame>
         <FlatList
-          keyExtractor={keyExtractor}
-          columnWrapperStyle={{
-            flex: 1,
+          contentContainerStyle={{
+            paddingBottom: tabBarHeight + HashtagCard.HEIGHT,
           }}
+          keyExtractor={keyExtractor}
           data={hashtags}
           renderItem={renderItem}
           numColumns={2}
+          columnWrapperStyle={{
+            flex: 1,
+          }}
         />
       </Frame>
     </Frame>

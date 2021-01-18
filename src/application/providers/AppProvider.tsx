@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { assert } from "../../utils/assert";
 
 const Context = React.createContext<{
-  tabBarHeight?: number;
+  tabBarHeight: number;
   setTabBarHeight: (value: number) => void;
 } | null>(null);
 
