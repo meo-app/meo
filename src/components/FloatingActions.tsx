@@ -41,8 +41,7 @@ function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
     <Frame
       onLayout={(event) => {
         setTabBarHeight(
-          event.nativeEvent.layout.height +
-            theme.units[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION / 2
+          event.nativeEvent.layout.height + theme.scales[CREATE_BUTTON_SIZE]
         );
       }}
       alignItems="baseline"

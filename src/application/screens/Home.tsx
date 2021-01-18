@@ -5,7 +5,8 @@ import { usePosts } from "../../api/usePosts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
-import { PostsList } from "../../components/PostsList";
+import { PostsList, POST_ITEM_HEIGHT } from "../../components/PostsList";
+import { useAppContext } from "../providers/AppProvider";
 import { useTheme } from "../providers/Theming";
 
 function Home() {
@@ -13,6 +14,7 @@ function Home() {
   const theme = useTheme();
   const ref = useRef(null);
   useScrollToTop(ref);
+  const { tabBarHeight } = useAppContext();
 
   return (
     <View
@@ -50,9 +52,10 @@ function Home() {
         backgroundColor={theme.colors.background}
         style={{
           height: "100%",
+          paddingBottom: POST_ITEM_HEIGHT + tabBarHeight,
         }}
       >
-        <PostsList data={data} isBehindTabBar ref={ref} />
+        <PostsList data={data} ref={ref} />
       </Frame>
     </View>
   );
