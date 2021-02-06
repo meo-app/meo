@@ -5,8 +5,8 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { QueryIds } from "../../api/QueryIds";
-import { useTransaction } from "../../api/use-transaction";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { useTransaction } from "../../sqlite/use-transaction";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { HashtagCard } from "../../components/HashtagCard";

@@ -1,24 +1,23 @@
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useRef } from "react";
 import { View } from "react-native";
-import { QueryIds } from "../../api/QueryIds";
-import { usePaginatedPosts } from "../../api/use-paginated-posts";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Header } from "../../components/Header";
-import { PostsList } from "../../components/PostsList";
+import { PostsList, POST_ITEM_HEIGHT } from "../../components/PostsList";
+import { useAppContext } from "../providers/AppProvider";
 
 function Home() {
-  const {
-    data,
-    error,
-    isFetching,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = usePaginatedPosts(QueryIds.posts, {
-    queryFn: ({ limit, offset }) =>
-      `select * from posts order by id desc limit ${limit}, ${offset}`,
-  });
+  const { data, error, isFetching, fetchNextPage } = usePaginatedPosts(
+    QueryIds.posts,
+    {
+      queryFn: ({ limit, offset }) =>
+        `select * from posts order by id desc limit ${limit}, ${offset}`,
+    }
+  );
 
+  const { tabBarHeight } = useAppContext();
   const ref = useRef(null);
   useScrollToTop(ref);
   return (
@@ -56,8 +55,8 @@ function Home() {
       <PostsList
         data={data}
         ref={ref}
-        refreshing={isFetchingNextPage}
         onEndReached={() => fetchNextPage()}
+        bottomSpacing={tabBarHeight}
       />
     </View>
   );

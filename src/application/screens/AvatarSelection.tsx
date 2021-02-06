@@ -5,8 +5,8 @@ import React, { useCallback, useContext, useMemo, useState } from "react";
 import { ImageBackground, ListRenderItem, Pressable, Text } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useQuery, UseQueryOptions } from "react-query";
-import { useAvatar, useSelectAvatar } from "../../api/avatar";
-import { QueryIds } from "../../api/QueryIds";
+import { useAvatar, useSelectAvatar } from "../../storage/avatar";
+import { QueryIds } from "../../sqlite/QueryIds";
 import {
   AvatarIds,
   AVATARS_LIST,

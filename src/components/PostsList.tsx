@@ -5,10 +5,11 @@ import {
   FlatListProps,
   ListRenderItem,
   StyleSheet,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
-import { Post } from "../api/Entities";
+import { Post } from "../sqlite/Entities";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
@@ -18,22 +19,33 @@ import { UserAvatar } from "./UserAvatar";
 
 const PostsList = React.forwardRef<
   FlatList<Post>,
-  { data?: InfiniteData<Post[]> } & Pick<
+  { data?: InfiniteData<Post[]>; bottomSpacing?: number } & Pick<
     FlatListProps<Post>,
     "refreshing" | "onEndReached"
   >
->(({ data, refreshing, onEndReached }, ref) => {
+>(({ data, refreshing, onEndReached, bottomSpacing }, ref) => {
+  const posts = data?.pages?.flat(1);
   const momentumRef = useRef(false);
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
   const renderItem = useCallback<ListRenderItem<Post>>(
-    ({ item }) => <PostLine {...item} key={String(item.id)} />,
-    []
+    ({ item, index }) => (
+      <PostLine
+        {...item}
+        key={String(item.id)}
+        bottomSpacing={
+          index === (posts?.length ?? 0) - 1
+            ? bottomSpacing || insets.bottom
+            : 0
+        }
+      />
+    ),
+    [insets.bottom, bottomSpacing, posts?.length]
   );
 
-  if (!data?.pages?.length) {
+  if (posts && !posts.length) {
     return null;
   }
 
@@ -54,7 +66,7 @@ const PostsList = React.forwardRef<
       ItemSeparatorComponent={null}
       scrollIndicatorInsets={{ right: 1 }}
       keyExtractor={keyExtractor}
-      data={data.pages.flat(1)}
+      data={posts as Post[]}
       renderItem={renderItem}
       contentContainerStyle={{
         paddingTop: theme.units[spacing.vertical],
@@ -67,22 +79,24 @@ const PostsList = React.forwardRef<
   );
 });
 
-const POST_ITEM_HEIGHT = 100;
-const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
+const POST_ITEM_HEIGHT = 130;
+const PostLine = React.memo(function PostLine({
+  value,
+  timestamp,
+  bottomSpacing,
+}: Post & {
+  bottomSpacing?: number;
+}) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   return (
     <Frame
-      paddingBottom="smallest"
       paddingRight={spacing.horizontal}
       paddingLeft={spacing.horizontal}
       flexGrow={0}
       style={{
-        paddingBottom: theme.units.medium,
-        paddingTop: theme.units.medium,
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: theme.colors.backgroundAccent,
-        height: POST_ITEM_HEIGHT,
+        paddingBottom: theme.units.small,
+        paddingTop: theme.units.small,
       }}
     >
       <Frame
@@ -111,12 +125,19 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
         <Font variant="caption" color="foregroundSecondary">
           <FormattedDate
             value={timestampToDate(timestamp)}
-            dateStyle="short"
+            dateStyle="medium"
             month="short"
             day="2-digit"
           />
         </Font>
       </Frame>
+      {Boolean(bottomSpacing) && (
+        <View
+          style={{
+            height: bottomSpacing,
+          }}
+        />
+      )}
     </Frame>
   );
 });

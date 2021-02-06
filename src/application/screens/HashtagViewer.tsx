@@ -7,8 +7,8 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { QueryIds } from "../../api/QueryIds";
-import { usePaginatedPosts } from "../../api/use-paginated-posts";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -24,7 +24,7 @@ function HashtagViewer(props: {
 }) {
   const theme = useTheme();
   const { hashtag } = props.route.params;
-  const { data, isFetching, isError } = usePaginatedPosts(
+  const { data, isLoading, isError, fetchNextPage } = usePaginatedPosts(
     [QueryIds.hashtagViewer, hashtag],
     {
       queryFn: ({ limit, offset }) =>
@@ -39,7 +39,7 @@ function HashtagViewer(props: {
         backgroundColor: theme.colors.background,
       }}
     >
-      {isFetching && (
+      {isLoading && (
         <View>
           <Font>TODO: loading state</Font>
         </View>
@@ -53,7 +53,9 @@ function HashtagViewer(props: {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {data?.pages.length && <PostsList data={data} />}
+      {data?.pages.length && (
+        <PostsList data={data} onEndReached={() => fetchNextPage()} />
+      )}
     </View>
   );
 }

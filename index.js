@@ -1,5 +1,8 @@
 import { registerRootComponent } from "expo";
 
+// Disable yellow boxes on the simulator
+console.disableYellowBox = true;
+
 import App from "./src/App";
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
