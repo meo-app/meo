@@ -1,19 +1,13 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Image, Platform, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useAvatar } from "../api/avatar";
+import { useAvatar } from "../sqlite/avatar";
 import { useTheme } from "../application/providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
 import { base64ToImageUrl } from "../utils/base64-to-image-url";
 import { AvatarIds, AVATARS_LIST } from "./Avatars/avatars-list";
 import { Frame } from "./Frame";
-
-// TODO: This component will either render the user selected avatar (svg)
-// or custom image uploaded by the user
-
-// const source = "https://i.pravatar.cc/150";
-// TODO: this preload should happen at a root app level where all queries or images will be preloaded at once
 
 interface Props {
   size?: "default" | "large";
@@ -82,9 +76,9 @@ const UserAvatar = React.memo(function UserAvatar(props: Props) {
         )}
       </View>
     );
-  } else {
-    return <Frame style={styles.root}>{node}</Frame>;
   }
+
+  return <Frame style={styles.root}>{node}</Frame>;
 });
 
 export { UserAvatar };

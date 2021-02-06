@@ -8,7 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { useCreatePost } from "../../api/useCreatePost";
+import { useCreatePost } from "../../api/use-create-post";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";

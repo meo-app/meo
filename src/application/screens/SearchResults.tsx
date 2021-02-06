@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Pressable } from "react-native";
-import { useSearch } from "../../api/useSearch";
+import { QueryIds } from "../../api/QueryIds";
+import { usePaginatedPosts } from "../../api/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -15,7 +16,10 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const theme = useTheme();
   const navigation = useNavigation();
-  const { data, isFetched } = useSearch(term);
+  const { data, isFetched } = usePaginatedPosts([QueryIds.search, term], {
+    queryFn: ({ limit, offset }) =>
+      `select * from posts where value like "%${term}%" collate nocase order by id desc limit ${limit}, ${offset}`,
+  });
   return (
     <Frame flex={1}>
       <Header title="Explore">
@@ -39,7 +43,7 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
               onFocus={() => setIsFocused(true)}
               onBlur={() => {
                 setIsFocused(false);
-                if (data && data.length) {
+                if (data && data.pages.length) {
                   return;
                 }
 
@@ -64,12 +68,12 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
           </Pressable>
         </Frame>
       </Header>
-      {Boolean(data?.length) && (
+      {Boolean(data?.pages.length) && (
         <Frame flex={1} backgroundColor={theme.colors.background}>
           <PostsList data={data} />
         </Frame>
       )}
-      {!term && Boolean(!data?.length) && (
+      {!term && Boolean(!data?.pages.length) && (
         <Frame
           justifyContent="center"
           alignItems="center"
@@ -83,7 +87,7 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
           </Frame>
         </Frame>
       )}
-      {isFetched && !data?.length && Boolean(term) && (
+      {isFetched && !data?.pages.length && Boolean(term) && (
         <Frame
           justifyContent="center"
           alignItems="center"

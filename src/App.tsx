@@ -8,7 +8,7 @@ import "intl";
 import "intl/locale-data/jsonp/en";
 import React from "react";
 import { Platform, View } from "react-native";
-import { useHasSeenOnboarding } from "./api/onboarding";
+import { useHasSeenOnboarding } from "./storage/onboarding";
 import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";

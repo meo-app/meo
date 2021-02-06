@@ -1,10 +1,10 @@
-import { Plus } from "./icons/Plus";
-import { Home } from "./icons/Home";
-import { Search } from "./icons/Search";
-import { Close } from "./icons/Close";
-import { Back } from "./icons/Back";
-import { Hamburguer } from "./icons/Hamburguer";
-import { Edit } from "./icons/Edit";
+import { Plus } from "./components/Plus";
+import { Home } from "./components/Home";
+import { Search } from "./components/Search";
+import { Close } from "./components/Close";
+import { Back } from "./components/Back";
+import { Hamburguer } from "./components/Hamburguer";
+import { Edit } from "./components/Edit";
 
 export interface SVGIconProps {
   width: number;
