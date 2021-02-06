@@ -1,6 +1,14 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { FormattedDate } from "react-intl";
-import { FlatList, ListRenderItem, Platform, StyleSheet } from "react-native";
+import {
+  FlatList,
+  FlatListProps,
+  ListRenderItem,
+  Platform,
+  StyleSheet,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { InfiniteData } from "react-query";
 import { Post } from "../api/Entities";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { timestampToDate } from "../utils/timestamp-to-date";
@@ -9,44 +17,59 @@ import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
-const PostsList = React.forwardRef<FlatList<Post>, { data?: Post[] }>(
-  ({ data }, ref) => {
-    const theme = useTheme();
-    const spacing = useEdgeSpacing();
-    const keyExtractor = useCallback(
-      ({ id }: { id: string }) => String(id),
-      []
-    );
-    const renderItem = useCallback<ListRenderItem<Post>>(
-      ({ item }) => <PostLine {...item} key={String(item.id)} />,
-      []
-    );
+const PostsList = React.forwardRef<
+  FlatList<Post>,
+  { data?: InfiniteData<Post[]> } & Pick<
+    FlatListProps<Post>,
+    "refreshing" | "onEndReached"
+  >
+>(({ data, refreshing, onEndReached }, ref) => {
+  const momentumRef = useRef(false);
+  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+  const spacing = useEdgeSpacing();
+  const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
+  const renderItem = useCallback<ListRenderItem<Post>>(
+    ({ item }) => <PostLine {...item} key={String(item.id)} />,
+    []
+  );
 
-    if (!data?.length) {
-      return null;
-    }
-
-    return (
-      <FlatList<Post>
-        ref={ref}
-        removeClippedSubviews={Platform.OS === "ios"}
-        ItemSeparatorComponent={null}
-        scrollIndicatorInsets={{ right: 1 }}
-        keyExtractor={keyExtractor}
-        data={data}
-        renderItem={renderItem}
-        contentContainerStyle={{
-          paddingTop: theme.units[spacing.vertical],
-        }}
-        style={{
-          backgroundColor: theme.colors.background,
-        }}
-      />
-    );
+  if (!data?.pages?.length) {
+    return null;
   }
-);
 
-const POST_ITEM_ITEM = 100;
+  return (
+    <FlatList<Post>
+      refreshing={refreshing}
+      onEndReachedThreshold={0.5}
+      onMomentumScrollBegin={() => {
+        momentumRef.current = true;
+      }}
+      onEndReached={(...args) => {
+        if (momentumRef.current) {
+          momentumRef.current = false;
+          onEndReached?.call(null, ...args);
+        }
+      }}
+      ref={ref}
+      // removeClippedSubviews={Platform.OS === "ios"}
+      ItemSeparatorComponent={null}
+      scrollIndicatorInsets={{ right: 1 }}
+      keyExtractor={keyExtractor}
+      data={data.pages.flat(1)}
+      renderItem={renderItem}
+      contentContainerStyle={{
+        paddingTop: theme.units[spacing.vertical],
+        paddingBottom: insets.bottom,
+      }}
+      style={{
+        backgroundColor: theme.colors.background,
+      }}
+    />
+  );
+});
+
+const POST_ITEM_HEIGHT = 100;
 const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
@@ -61,7 +84,7 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
         paddingTop: theme.units.medium,
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: theme.colors.backgroundAccent,
-        height: POST_ITEM_ITEM,
+        height: POST_ITEM_HEIGHT,
       }}
     >
       <Frame
@@ -100,4 +123,4 @@ const PostLine = React.memo(function PostLine({ value, timestamp }: Post) {
   );
 });
 
-export { PostsList, POST_ITEM_ITEM };
+export { PostsList, POST_ITEM_HEIGHT };

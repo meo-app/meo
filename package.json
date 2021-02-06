@@ -4,7 +4,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "expo start --web",
-    "start": "react-native start --port=8999",
+    "start": "react-native start --port=8081",
     "test": "jest"
   },
   "dependencies": {
@@ -36,11 +36,11 @@
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-reanimated": "1.13.2",
-    "react-native-safe-area-context": "1.0.2",
+    "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "^2.16.1",
     "react-native-svg": "^12.1.0",
     "react-native-unimodules": "~0.9.0",
-    "react-query": "3.5.5",
+    "react-query": "3.7.1",
     "utility-types": "^3.10.0"
   },
   "devDependencies": {

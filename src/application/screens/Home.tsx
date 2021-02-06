@@ -10,12 +10,19 @@ import { useAppContext } from "../providers/AppProvider";
 import { useTheme } from "../providers/Theming";
 
 function Home() {
-  const { data, error, isFetching } = usePosts();
+  const {
+    data,
+    error,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = usePosts();
+  console.log({ hasNextPage });
   const theme = useTheme();
   const ref = useRef(null);
   useScrollToTop(ref);
   const { tabBarHeight } = useAppContext();
-
   return (
     <View
       style={{
@@ -37,7 +44,7 @@ function Home() {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {data && !data?.length && (
+      {/* {data && !data?.length && (
         <View
           style={{
             height: "100%",
@@ -47,7 +54,7 @@ function Home() {
         >
           <Font variant="body">Thought of something? Add it here :)</Font>
         </View>
-      )}
+      )} */}
       <Frame
         backgroundColor={theme.colors.background}
         style={{
@@ -55,7 +62,12 @@ function Home() {
           paddingBottom: POST_ITEM_HEIGHT + tabBarHeight,
         }}
       >
-        <PostsList data={data} ref={ref} />
+        <PostsList
+          data={data}
+          ref={ref}
+          refreshing={isFetchingNextPage}
+          onEndReached={() => fetchNextPage()}
+        />
       </Frame>
     </View>
   );
