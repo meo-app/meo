@@ -236,8 +236,8 @@ PODS:
     - React
   - react-native-cameraroll (4.0.1):
     - React
-  - react-native-safe-area-context (1.0.2):
-    - React
+  - react-native-safe-area-context (3.1.9):
+    - React-Core
   - react-native-viewpager (4.2.2):
     - React-Core
   - React-RCTActionSheet (0.63.4):
@@ -581,7 +581,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-appearance: 0f0e5fc2fcef70e03d48c8fe6b00b9158c2ba8aa
   react-native-cameraroll: 60ba0068826eab1c8d43146191bafd4363ea58a7
-  react-native-safe-area-context: 9d9640a9085014864052e38496fc1dfde0b93974
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-viewpager: ea945e2881ce9a4a8bcdc84de4ec65ff23c90f6e
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
@@ -620,4 +620,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: cc2366824161ecf347279036dbfd39489ba1a80b
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

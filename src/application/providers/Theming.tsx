@@ -187,7 +187,7 @@ const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
   const scheme = useColorScheme();
   return (
     <ThemeProvider
-      {...(scheme !== "no-preference" && {
+      {...(scheme && {
         forceColorSchemeTo: scheme === "dark" ? "light" : "dark",
       })}
     >
