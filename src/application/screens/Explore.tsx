@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { QueryIds } from "../../api/QueryIds";
-import { useTransaction } from "../../api/useTransaction";
+import { useTransaction } from "../../api/use-transaction";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { HashtagCard } from "../../components/HashtagCard";

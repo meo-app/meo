@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useCallback } from "react";
+import { LoremIpsum } from "lorem-ipsum";
+import React from "react";
 import { Pressable } from "react-native";
-import { useFlushOnboarding } from "../../../api/onboarding";
-import { useCreatePost } from "../../../api/useCreatePost";
-import { useFlushDatabase } from "../../../api/useFlushDatabase";
+import { useMutation } from "react-query";
+import { useFlushOnboarding } from "../../../storage/onboarding";
+import { useCreatePost } from "../../../sqlite/use-create-post";
+import { useFlushDatabase } from "../../../sqlite/use-flush-database";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { SubtitleHeader } from "../../../components/SubtitleHeader";
@@ -13,8 +15,6 @@ import { RootStackRoutes } from "../../../root-stack-routes";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import { SettingsStackRoutes } from "./settings-stack-routes";
-import { LoremIpsum } from "lorem-ipsum";
-import { useMutation } from "react-query";
 
 const Stack = createStackNavigator();
 

@@ -1,18 +1,8 @@
-import React, { useMemo, useState, useCallback } from "react";
-import {
-  StyleSheet,
-  View,
-  ViewStyle,
-  ImageStyle,
-  StyleProp,
-} from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { View, ViewStyle } from "react-native";
 import FastImage, { Source } from "react-native-fast-image";
-import { AspectRatio, useAspectRatio } from "../hooks/use-aspect-ratio";
-import { useLinkProps } from "@react-navigation/native";
-import { useIsInView } from "../hooks/use-is-in-view";
-import { useTransaction } from "../api/useTransaction";
 import { useTheme } from "../application/providers/Theming";
-import Animated from "react-native-reanimated";
+import { AspectRatio, useAspectRatio } from "../hooks/use-aspect-ratio";
 
 type ResizeMode = "cover" | "contain" | "stretch" | "center";
 type MediaOrientation = "portrait" | "landscape";
@@ -81,13 +71,6 @@ const Picture = React.memo(function Picture(props: Props) {
 
   const theme = useTheme();
   const [isImageAlreadyLoaded, setImageAlreadyLoaded] = useState(false);
-  // const [ref, isVisible] = useIsInView<View>({
-  //   triggerOnce: true,
-  //   delay: lazyload && !isImageAlreadyLoaded ? 1000 : undefined,
-  //   mode: "partially-visible",
-  //   screenExtraMargin: 10,
-  // });
-
   const aspectRatioValue = useAspectRatio(aspectRatio);
 
   const sanitizedWidth = useMemo(() => {
@@ -121,16 +104,10 @@ const Picture = React.memo(function Picture(props: Props) {
     ...overrideStyle,
   };
 
-  // const shouldRenderImage =
-  //   !lazyload || isImageAlreadyLoaded || (lazyload && isVisible);
-
   const shouldRenderImage = !lazyload || isImageAlreadyLoaded || lazyload;
 
   return (
-    <View
-      // ref={!lazyload ? undefined : ref}
-      style={styles}
-    >
+    <View style={styles}>
       {shouldRenderImage && (
         <FastImage
           source={

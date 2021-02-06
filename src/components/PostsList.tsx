@@ -4,7 +4,6 @@ import {
   FlatList,
   FlatListProps,
   ListRenderItem,
-  Platform,
   StyleSheet,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -52,7 +51,6 @@ const PostsList = React.forwardRef<
         }
       }}
       ref={ref}
-      // removeClippedSubviews={Platform.OS === "ios"}
       ItemSeparatorComponent={null}
       scrollIndicatorInsets={{ right: 1 }}
       keyExtractor={keyExtractor}

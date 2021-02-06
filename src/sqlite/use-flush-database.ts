@@ -1,7 +1,6 @@
-import { useTransaction } from "./useTransaction";
-import { Query } from "react-query";
-import { QueryIds } from "./QueryIds";
 import { useState } from "react";
+import { QueryIds } from "./QueryIds";
+import { useTransaction } from "./use-transaction";
 
 function useFlushDatabase() {
   const [enabled, setEnable] = useState(false);

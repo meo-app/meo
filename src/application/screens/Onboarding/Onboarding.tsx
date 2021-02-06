@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCompleteOnboarding } from "../../../api/onboarding";
+import { useCompleteOnboarding } from "../../../storage/onboarding";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { Picture } from "../../../components/Picture";

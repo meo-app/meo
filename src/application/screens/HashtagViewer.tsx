@@ -7,7 +7,8 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { useHashtagPosts } from "../../api/useHashtagPosts";
+import { QueryIds } from "../../api/QueryIds";
+import { usePaginatedPosts } from "../../api/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -22,9 +23,14 @@ function HashtagViewer(props: {
   route: RouteProp<RootStackParamList, "HashtagViewer">;
 }) {
   const theme = useTheme();
-  const { data, isFetching, isError } = useHashtagPosts({
-    hashtag: props.route.params.hashtag,
-  });
+  const { hashtag } = props.route.params;
+  const { data, isFetching, isError } = usePaginatedPosts(
+    [QueryIds.hashtagViewer, hashtag],
+    {
+      queryFn: ({ limit, offset }) =>
+        `select * from posts where id in (select post_id from hashtags where value like "%${hashtag}%") order by timestamp desc limit ${limit}, ${offset}`,
+    }
+  );
 
   return (
     <View
@@ -47,7 +53,7 @@ function HashtagViewer(props: {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {data?.length && <PostsList data={data} />}
+      {data?.pages.length && <PostsList data={data} />}
     </View>
   );
 }

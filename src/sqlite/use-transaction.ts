@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useQuery, UseQueryOptions } from "react-query";
+import { QueryKey, useQuery, UseQueryOptions } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 
 function useTransaction<T>(
-  id: string,
+  id: QueryKey,
   query: string,
   options?: UseQueryOptions<T[]>
 ) {
