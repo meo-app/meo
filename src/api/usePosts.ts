@@ -1,12 +1,12 @@
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, UseInfiniteQueryResult } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
 import { Post } from "./Entities";
 import { QueryIds } from "./QueryIds";
 
 const POSTS_PER_PAGE = 40;
-function usePosts() {
+function usePosts(): UseInfiniteQueryResult<Post[], {}> {
   const db = useDB();
-  const { data, ...result } = useInfiniteQuery(
+  const result = useInfiniteQuery<Post[], {}>(
     QueryIds.posts,
     ({ pageParam = 0 }) =>
       new Promise<Post[]>((resolve, reject) => {
@@ -15,17 +15,17 @@ function usePosts() {
             const query = `select * from posts order by id desc limit ${
               pageParam === 0 ? 0 : POSTS_PER_PAGE * pageParam
             }, ${POSTS_PER_PAGE + 1} `;
-            console.log({ query });
+
             tx.executeSql(query, [], (_, { rows }) => {
-              console.log({ rows });
               resolve(
                 [...Array(rows.length).keys()].map((index) => rows.item(index))
               );
             });
           },
           (err) => {
-            console.error();
-
+            if (__DEV__) {
+              console.error(err);
+            }
             reject(err);
           }
         );
@@ -44,15 +44,19 @@ function usePosts() {
     }
   );
 
+  if (!result.data) {
+    return result;
+  }
+  const { data } = result;
   const pages =
     data?.pages?.map((page) =>
       page.length <= POSTS_PER_PAGE ? page : page.slice(0, page.length - 1)
-    ) || [];
+    ) || ([] as Post[][]);
 
   return {
     ...result,
     data: {
-      ...data,
+      pageParams: data.pageParams,
       pages,
     },
   };
