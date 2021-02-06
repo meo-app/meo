@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { QueryIds } from "./QueryIds";
+import { QueryIds } from "../sqlite/QueryIds";
 
 const key = "@@has-seen-onboarding";
 

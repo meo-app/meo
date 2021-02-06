@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Image, Platform, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useAvatar } from "../sqlite/avatar";
+import { useAvatar } from "../storage/avatar";
 import { useTheme } from "../application/providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
@@ -37,6 +37,7 @@ const UserAvatar = React.memo(function UserAvatar(props: Props) {
       width,
       height: width,
       borderRadius: theme.constants.absoluteRadius,
+      overflow: "hidden",
     },
   }));
 

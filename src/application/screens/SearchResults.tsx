@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Pressable } from "react-native";
-import { QueryIds } from "../../api/QueryIds";
-import { usePaginatedPosts } from "../../api/use-paginated-posts";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -16,10 +16,13 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
   const { term, onChangeText, setIsFocused } = useSearchContext();
   const theme = useTheme();
   const navigation = useNavigation();
-  const { data, isFetched } = usePaginatedPosts([QueryIds.search, term], {
-    queryFn: ({ limit, offset }) =>
-      `select * from posts where value like "%${term}%" collate nocase order by id desc limit ${limit}, ${offset}`,
-  });
+  const { data, isFetched, fetchNextPage } = usePaginatedPosts(
+    [QueryIds.search, term],
+    {
+      queryFn: ({ limit, offset }) =>
+        `select * from posts where value like "%${term}%" collate nocase order by id desc limit ${limit}, ${offset}`,
+    }
+  );
   return (
     <Frame flex={1}>
       <Header title="Explore">
@@ -70,7 +73,7 @@ const SearchResults: React.VoidFunctionComponent = function SearchResults() {
       </Header>
       {Boolean(data?.pages.length) && (
         <Frame flex={1} backgroundColor={theme.colors.background}>
-          <PostsList data={data} />
+          <PostsList data={data} onEndReached={() => fetchNextPage()} />
         </Frame>
       )}
       {!term && Boolean(!data?.pages.length) && (

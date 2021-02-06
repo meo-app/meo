@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
-import { QueryIds } from "../../../api/QueryIds";
+import { QueryIds } from "../../../sqlite/QueryIds";
 import { useAvatarContext } from "../AvatarSelection";
 
 export enum RootStackRoutes {
