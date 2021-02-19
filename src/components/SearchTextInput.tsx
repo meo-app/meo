@@ -11,7 +11,7 @@ function SearchTextInput(
     | "placeholderTextColor"
     | "placeholder"
     | "numberOfLines"
-    | "style"
+    // | "style"
   >
 ) {
   const theme = useTheme();
@@ -34,9 +34,9 @@ function SearchTextInput(
       placeholderTextColor={theme.colors.foregroundSecondary}
       placeholder="thoughts or tags"
       numberOfLines={2}
-      style={styles.root}
       editable
       {...props}
+      style={[styles.root, props.style]}
     />
   );
 }
