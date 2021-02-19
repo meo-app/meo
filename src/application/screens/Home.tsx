@@ -1,11 +1,11 @@
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useRef } from "react";
 import { View } from "react-native";
-import { QueryIds } from "../../sqlite/QueryIds";
-import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Header } from "../../components/Header";
-import { PostsList, POST_ITEM_HEIGHT } from "../../components/PostsList";
+import { PostsList } from "../../components/PostsList";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
 import { useAppContext } from "../providers/AppProvider";
 
 function Home() {

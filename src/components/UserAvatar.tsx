@@ -1,13 +1,12 @@
 import React, { useMemo } from "react";
 import { Image, Platform, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useAvatar } from "../storage/avatar";
 import { useTheme } from "../application/providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
+import { useAvatar } from "../storage/avatar";
 import { base64ToImageUrl } from "../utils/base64-to-image-url";
-import { AvatarIds, AVATARS_LIST } from "./Avatars/avatars-list";
-import { Frame } from "./Frame";
+import { AVATARS_LIST } from "./Avatars/avatars-list";
 
 interface Props {
   size?: "default" | "large";
@@ -41,45 +40,43 @@ const UserAvatar = React.memo(function UserAvatar(props: Props) {
     },
   }));
 
-  const node = useMemo(
-    () => AVATARS_LIST.find((item) => item.id === data?.avatarId)?.node,
-    [data?.avatarId]
-  );
+  const uri = useMemo(() => {
+    const source = AVATARS_LIST.find(({ id }) => id === data?.avatarId)?.source;
+    if (source) {
+      return source;
+    }
 
-  const uri = useMemo(() => base64ToImageUrl(data?.base64 || ""), [
-    data?.base64,
-  ]);
+    if (data?.base64) {
+      return base64ToImageUrl(data?.base64 || "");
+    }
+  }, [data?.avatarId, data?.base64]);
 
-  if (!data) {
+  if (!data || !uri) {
     return null;
   }
 
-  if (data.avatarId === AvatarIds.__USER_PHOTO__ && uri) {
-    return (
-      <View style={styles.root}>
-        {Platform.OS === "ios" && (
-          <FastImage
-            style={styles.root}
-            resizeMode="cover"
-            source={{
-              uri,
-            }}
-          />
-        )}
-        {Platform.OS === "android" && (
-          <Image
-            style={styles.root}
-            resizeMode="cover"
-            source={{
-              uri,
-            }}
-          />
-        )}
-      </View>
-    );
-  }
-
-  return <Frame style={styles.root}>{node}</Frame>;
+  return (
+    <View style={styles.root}>
+      {Platform.OS === "ios" && (
+        <FastImage
+          style={styles.root}
+          resizeMode="cover"
+          source={{
+            uri,
+          }}
+        />
+      )}
+      {Platform.OS === "android" && (
+        <Image
+          style={styles.root}
+          resizeMode="cover"
+          source={{
+            uri,
+          }}
+        />
+      )}
+    </View>
+  );
 });
 
 export { UserAvatar };

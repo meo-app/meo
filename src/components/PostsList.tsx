@@ -1,16 +1,10 @@
 import React, { useCallback, useRef } from "react";
 import { FormattedDate } from "react-intl";
-import {
-  FlatList,
-  FlatListProps,
-  ListRenderItem,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, FlatListProps, ListRenderItem, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
-import { Post } from "../sqlite/Entities";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
+import { Post } from "../sqlite/Entities";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
