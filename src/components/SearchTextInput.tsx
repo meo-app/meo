@@ -3,17 +3,17 @@ import { TextInput } from "react-native-gesture-handler";
 import { useTheme } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 
-function SearchTextInput(
-  props: Omit<
+const SearchTextInput = React.forwardRef<
+  TextInput,
+  Omit<
     React.ComponentProps<typeof TextInput>,
     | "numberOfLines"
     | "clearButtonMode"
     | "placeholderTextColor"
     | "placeholder"
     | "numberOfLines"
-    // | "style"
   >
-) {
+>(function SearchTextInput(props, ref) {
   const theme = useTheme();
   const styles = useStyles((theme) => ({
     root: {
@@ -37,8 +37,9 @@ function SearchTextInput(
       editable
       {...props}
       style={[styles.root, props.style]}
+      ref={ref}
     />
   );
-}
+});
 
 export { SearchTextInput };
