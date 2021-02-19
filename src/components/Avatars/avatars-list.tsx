@@ -23,29 +23,29 @@ enum AvatarIds {
 
 interface DefaultAvatar {
   id: AvatarIds;
-  node: React.ReactNode;
+  source?: string;
 }
 
 const AVATARS_LIST: DefaultAvatar[] = [
   {
     id: AvatarIds.Wynonna,
-    node: <Avatar01 />,
+    source: "https://loremflickr.com/500/500/cat?lock=1",
   },
   {
     id: AvatarIds.Eidothea,
-    node: <Avatar02 />,
+    source: "https://loremflickr.com/500/500/cat?lock=2",
   },
   {
     id: AvatarIds.Korinna,
-    node: <Avatar03 />,
+    source: "https://loremflickr.com/500/500/cat?lock=3",
   },
   {
     id: AvatarIds.Jagoda,
-    node: <Avatar04 />,
+    source: "https://loremflickr.com/500/500/cat?lock=4",
   },
   {
     id: AvatarIds.Guistina,
-    node: <Avatar01 />,
+    source: "https://loremflickr.com/500/500/cat?lock=5",
   },
 ].filter((item, index, self) => {
   if (self.map((item) => item.id).indexOf(item.id) !== index) {

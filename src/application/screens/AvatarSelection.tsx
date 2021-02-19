@@ -2,11 +2,16 @@
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
 import React, { useCallback, useContext, useMemo, useState } from "react";
-import { ImageBackground, ListRenderItem, Pressable, Text } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  ListRenderItem,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useQuery, UseQueryOptions } from "react-query";
-import { useAvatar, useSelectAvatar } from "../../storage/avatar";
-import { QueryIds } from "../../sqlite/QueryIds";
+import { useQuery } from "react-query";
 import {
   AvatarIds,
   AVATARS_LIST,
@@ -16,9 +21,11 @@ import { Frame } from "../../components/Frame";
 import { Icon } from "../../components/Icon/Icon";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
+import { QueryIds } from "../../sqlite/QueryIds";
+import { useAvatar, useSelectAvatar } from "../../storage/avatar";
 import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
-import { ThemeProvider, useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming";
 
 async function getImage(): Promise<{ base64?: string } | null> {
   try {
@@ -38,18 +45,6 @@ async function getImage(): Promise<{ base64?: string } | null> {
   } catch (e) {
     throw new Error(e);
   }
-}
-
-function useImageSelector(
-  options?: UseQueryOptions<{ base64?: string } | null>
-) {
-  return useQuery<{
-    base64?: string;
-  } | null>(
-    QueryIds.pickAvatarPhoto,
-    () => (!options?.enabled ? Promise.resolve(null) : getImage()),
-    options
-  );
 }
 
 const Context = React.createContext<{
@@ -120,22 +115,29 @@ function UploadButton() {
   const theme = useTheme();
   const { photo, setAvatarId, setSelectedPhoto } = useAvatarContext();
   const [isImagePickerOpened, setImagePickerOpen] = useState(false);
-  useImageSelector({
-    enabled: isImagePickerOpened,
-    onSuccess: (data) => {
-      setImagePickerOpen(false);
-      if (data && data.base64) {
-        setSelectedPhoto(data.base64);
-      }
-    },
-  });
+
+  useQuery<{
+    base64?: string;
+  } | null>(
+    QueryIds.pickAvatarPhoto,
+    () => (!isImagePickerOpened ? Promise.resolve(null) : getImage()),
+    {
+      enabled: isImagePickerOpened,
+      onSuccess: (data) => {
+        setImagePickerOpen(false);
+        if (data && data.base64) {
+          setSelectedPhoto(data.base64);
+        }
+      },
+    }
+  );
 
   const styles = useStyles((theme) => ({
     root: {
-      width: "100%",
-      height: "100%",
-      borderRadius: theme.constants.absoluteRadius,
-      backgroundColor: theme.colors.backgroundAccent,
+      height: size,
+      width: size,
+      borderRadius: 46,
+      backgroundColor: theme.colors.absoluteDark,
       justifyContent: "center",
       alignItems: "center",
       overflow: "hidden",
@@ -160,7 +162,6 @@ function UploadButton() {
       justifyContent: "center",
       alignItems: "center",
     },
-    save: {},
   }));
 
   return (
@@ -171,35 +172,25 @@ function UploadButton() {
         setImagePickerOpen(true);
       }}
     >
-      {!photo && (
-        <Text
+      {!photo && <Icon type="Camera" color="absoluteLight" size="larger" />}
+      {photo && (
+        <ImageBackground
+          source={{
+            uri: base64ToImageUrl(photo),
+            cache: "force-cache",
+          }}
+          resizeMode="cover"
           style={{
-            fontSize: 45,
+            width: "100%",
+            height: "100%",
+            borderRadius: theme.constants.absoluteRadius,
           }}
         >
-          📸
-        </Text>
-      )}
-      {photo && (
-        <>
-          <ImageBackground
-            source={{
-              uri: base64ToImageUrl(photo),
-              cache: "force-cache",
-            }}
-            resizeMode="cover"
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: theme.constants.absoluteRadius,
-            }}
-          >
-            <Frame style={styles.overlay} />
-            <Frame style={styles.icon}>
-              <Icon type="Edit" size="medium" color="absoluteLight" />
-            </Frame>
-          </ImageBackground>
-        </>
+          <Frame style={styles.overlay} />
+          <Frame style={styles.icon}>
+            <Icon type="Edit" size="medium" color="absoluteLight" />
+          </Frame>
+        </ImageBackground>
       )}
     </Pressable>
   );
@@ -215,6 +206,8 @@ const defaultProps: DefaultProps = {
   mode: "default",
 };
 
+const size = 120;
+
 function AvatarSelection(props: Props) {
   const { mode } = { ...defaultProps, ...props };
   const theme = useTheme();
@@ -224,36 +217,58 @@ function AvatarSelection(props: Props) {
       flex: 1,
       borderRadius: theme.constants.absoluteRadius,
     },
-    selected: {
-      borderWidth: theme.units.small,
-      borderColor: theme.colors.primary,
-    },
   }));
 
   const renderItem = useCallback<ListRenderItem<DefaultAvatar>>(
-    ({ item: { node, id } }) => {
+    ({ item: { id, source } }) => {
       return (
         <Frame
           key={`avatar-${id}`}
           marginBottom="large"
           marginTop="large"
           style={{
-            height: 100,
-            width: 100,
+            height: size,
+            width: size,
             flex: 1 / 2,
-            overflow: "hidden",
+            alignItems: "center",
           }}
         >
-          <Pressable
-            onPress={() => setAvatarId(id)}
-            style={[styles.avatar, avatarId === id && styles.selected]}
-          >
-            {node}
+          <Pressable onPress={() => setAvatarId(id)} style={[styles.avatar]}>
+            {avatarId === id && (
+              <View
+                style={{
+                  position: "absolute",
+                  backgroundColor: theme.colors.primary,
+                  width: size,
+                  height: size,
+                  borderRadius: 46,
+                  transform: [
+                    {
+                      scale: 1.1,
+                    },
+                  ],
+                }}
+              />
+            )}
+            {source ? (
+              <Image
+                source={{ uri: source }}
+                resizeMode="cover"
+                style={{
+                  width: size,
+                  height: size,
+                  borderRadius: 46,
+                  overflow: "hidden",
+                }}
+              />
+            ) : (
+              <UploadButton />
+            )}
           </Pressable>
         </Frame>
       );
     },
-    [avatarId, setAvatarId, styles.avatar, styles.selected]
+    [avatarId, setAvatarId, styles.avatar, theme.colors.primary]
   );
 
   const data = useMemo(
@@ -261,25 +276,15 @@ function AvatarSelection(props: Props) {
       ...AVATARS_LIST,
       {
         id: AvatarIds.__USER_PHOTO__,
-        node: <UploadButton />,
       },
     ],
     []
   );
 
   return (
-    <Frame
-      flex={1}
-      justifyContent="flex-start"
-      backgroundColor={theme.colors.background}
-      alignItems="center"
-      style={{
-        borderWidth: 1,
-      }}
-    >
+    <Frame flex={1} justifyContent="flex-start" alignItems="center">
       {mode === "default" && <SubtitleHeader title="Select your avatar" />}
       <Frame
-        paddingTop="large"
         flexWrap="wrap"
         flexDirection="row"
         justifyContent="center"
@@ -292,7 +297,10 @@ function AvatarSelection(props: Props) {
           renderItem={renderItem}
           numColumns={2}
           contentContainerStyle={{
-            flexGrow: 1,
+            flexGrow: 1 / 2,
+            ...(mode === "onboarding" && {
+              flexGrow: 1,
+            }),
             paddingHorizontal: theme.units.large,
             justifyContent: "center",
           }}
