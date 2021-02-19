@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 import { useDebounce } from "../../../hooks/use-debounce";
 import { useOnboardingContext } from "./OnboardingContext";
@@ -15,7 +15,9 @@ const OnboardingFadeInView: React.FunctionComponent<{
 }> = function OnboardingFadeInView({ screenIndex, children, bleed }) {
   const opacity = useRef(new Animated.Value(0)).current;
   const { index: currentIndex } = useOnboardingContext();
-  const index = useDebounce(currentIndex, 80);
+  const index = useDebounce(currentIndex, {
+    delay: 80,
+  });
   const isCurrentScreen = index === screenIndex;
   const spacing = useEdgeSpacing();
   const theme = useTheme();

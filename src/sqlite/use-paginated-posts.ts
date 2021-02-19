@@ -14,7 +14,7 @@ function usePaginatedPosts(
     enabled,
   }: {
     queryFn: (args: { limit: number; offset: number }) => string;
-    enabled: boolean;
+    enabled?: boolean;
   }
 ): UseInfiniteQueryResult<Post[], {}> {
   const db = useDB();

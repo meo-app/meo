@@ -6,8 +6,19 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Animated, ListRenderItem, Pressable, View } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import {
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView as RNKeyboardAvoidingView,
+  ListRenderItem,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
+import {
+  FlatList,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { HashtagCard } from "../../../components/HashtagCard";
@@ -26,6 +37,10 @@ import { useTransaction } from "../../../sqlite/use-transaction";
 import { useAppContext } from "../../providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
+
+const KeyboardAvoidingView = Animated.createAnimatedComponent(
+  RNKeyboardAvoidingView
+);
 
 interface HashtagCount {
   total: string;
@@ -72,8 +87,6 @@ function Explore() {
     const results = data?.pages.flat(1).length;
     return mode === "search" && isFetched && Boolean(term) && !results;
   }, [data?.pages, isFetched, mode, term]);
-
-  console.log({ displayNoSearchResults });
 
   const renderItem = useCallback<ListRenderItem<HashtagCount>>(
     ({ item, index }) => (
@@ -156,6 +169,9 @@ function Explore() {
                   value={term}
                   onChangeText={onChangeText}
                   editable
+                  onTouchStart={() => {
+                    setMode("search");
+                  }}
                   onFocus={() => {
                     setMode("search");
                   }}
@@ -220,7 +236,8 @@ function Explore() {
         )}
       </Animated.View>
       {displayNoSearchResults && (
-        <Animated.View
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
             flex: 1,
             justifyContent: "center",
@@ -228,11 +245,13 @@ function Explore() {
             transform: [{ translateY }],
           }}
         >
-          <Font variant="subtitle">Ops can't find that</Font>
-          <Frame marginTop="small">
-            <Font>Try a new search.</Font>
-          </Frame>
-        </Animated.View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Font variant="subtitle">Ops can't find that</Font>
+            <Frame marginTop="small">
+              <Font>Try a new search.</Font>
+            </Frame>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       )}
     </Frame>
   );

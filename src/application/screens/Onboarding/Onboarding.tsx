@@ -1,12 +1,18 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { Pressable } from "react-native";
+import { Pressable, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCompleteOnboarding } from "../../../storage/onboarding";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { Picture } from "../../../components/Picture";
-import { useEdgeSpacing, useTheme } from "../../providers/Theming";
+import { useCompleteOnboarding } from "../../../storage/onboarding";
+import {
+  STATUSBAR_BACKGROUND_COLOR,
+  STATUS_BAR_SCHEME_MAP,
+  ThemeProvider,
+  useEdgeSpacing,
+  useTheme,
+} from "../../providers/Theming";
 import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import {
   OnboardingNavigationProvider,
@@ -14,7 +20,6 @@ import {
   useOnboardingContext,
 } from "./OnboardingContext";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
-import { OnboardingInsertName } from "./OnboardingInsertName";
 import { OnboardingSlider } from "./OnboardingSlider";
 
 function OnboardingBackgroundImage() {
@@ -40,19 +45,13 @@ function OnboardingBackgroundImage() {
 const Stack = createStackNavigator();
 
 const OnboardingSliderScreen = () => (
-  <OnboardingFadeInView screenIndex={0} bleed>
+  <OnboardingFadeInView screenIndex={0}>
     <OnboardingSlider />
   </OnboardingFadeInView>
 );
 
-const OnboardingInsertNameScreen = () => (
-  <OnboardingFadeInView screenIndex={1}>
-    <OnboardingInsertName />
-  </OnboardingFadeInView>
-);
-
 const OnboardingAvatarSelectionScreen = () => (
-  <OnboardingFadeInView screenIndex={2} bleed>
+  <OnboardingFadeInView screenIndex={1}>
     <AvatarSelection mode="onboarding" />
   </OnboardingFadeInView>
 );
@@ -93,10 +92,6 @@ function Onboarding() {
           name={RootStackRoutes.OnboardingSlider}
         />
         <Stack.Screen
-          component={OnboardingInsertNameScreen}
-          name={RootStackRoutes.InsertName}
-        />
-        <Stack.Screen
           component={OnboardingAvatarSelectionScreen}
           name={RootStackRoutes.AvatarSelection}
         />
@@ -114,7 +109,6 @@ function Onboarding() {
         <Frame>
           {back && (
             <Pressable
-              // TODO: handle error
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
@@ -142,7 +136,6 @@ function Onboarding() {
           )}
           {!next && (
             <Pressable
-              // TODO: handle error
               disabled={status !== "idle" || disabled}
               onPress={() => completeOnboarding()}
               style={({ pressed }) => ({
@@ -161,10 +154,17 @@ function Onboarding() {
 function Root() {
   return (
     <AvatarContextProvider>
-      <OnboardingNavigationProvider>
-        <Onboarding />
-        <OnboardingBackgroundImage />
-      </OnboardingNavigationProvider>
+      <ThemeProvider forceColorSchemeTo="dark">
+        <StatusBar
+          barStyle={STATUS_BAR_SCHEME_MAP.dark}
+          backgroundColor={STATUSBAR_BACKGROUND_COLOR}
+          translucent
+        />
+        <OnboardingNavigationProvider>
+          <Onboarding />
+          <OnboardingBackgroundImage />
+        </OnboardingNavigationProvider>
+      </ThemeProvider>
     </AvatarContextProvider>
   );
 }

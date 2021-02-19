@@ -12,14 +12,13 @@ import {
   AVATARS_LIST,
   DefaultAvatar,
 } from "../../components/Avatars/avatars-list";
-import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Icon } from "../../components/Icon/Icon";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
 import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
-import { useTheme } from "../providers/Theming";
+import { ThemeProvider, useTheme } from "../providers/Theming";
 
 async function getImage(): Promise<{ base64?: string } | null> {
   try {
@@ -219,7 +218,7 @@ const defaultProps: DefaultProps = {
 function AvatarSelection(props: Props) {
   const { mode } = { ...defaultProps, ...props };
   const theme = useTheme();
-  const { setAvatarId, avatarId, onSave, disabled } = useAvatarContext();
+  const { setAvatarId, avatarId } = useAvatarContext();
   const styles = useStyles(() => ({
     avatar: {
       flex: 1,
@@ -236,9 +235,13 @@ function AvatarSelection(props: Props) {
       return (
         <Frame
           key={`avatar-${id}`}
+          marginBottom="large"
+          marginTop="large"
           style={{
             height: 100,
+            width: 100,
             flex: 1 / 2,
+            overflow: "hidden",
           }}
         >
           <Pressable
@@ -268,44 +271,33 @@ function AvatarSelection(props: Props) {
     <Frame
       flex={1}
       justifyContent="flex-start"
-      backgroundColor={
-        mode === "default" ? theme.colors.background : "transparent"
-      }
+      backgroundColor={theme.colors.background}
       alignItems="center"
+      style={{
+        borderWidth: 1,
+      }}
     >
       {mode === "default" && <SubtitleHeader title="Select your avatar" />}
       <Frame
         paddingTop="large"
-        flex={1 / 0.5}
         flexWrap="wrap"
         flexDirection="row"
-        justifyContent="space-between"
+        justifyContent="center"
+        alignItems="center"
+        flex={1}
       >
-        <FlatList data={data} renderItem={renderItem} numColumns={2} />
+        <FlatList
+          scrollEnabled={false}
+          data={data}
+          renderItem={renderItem}
+          numColumns={2}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: theme.units.large,
+            justifyContent: "center",
+          }}
+        />
       </Frame>
-      {mode === "default" && (
-        <Frame flex={0.5}>
-          {/* TODO: redesign buttons/actions etc */}
-          <Pressable
-            disabled={disabled}
-            onPress={() => onSave()}
-            style={({ pressed }) => ({
-              backgroundColor: disabled
-                ? theme.colors.foregroundSecondary
-                : theme.colors.primary,
-              opacity: pressed ? 0.5 : 1,
-              paddingTop: theme.units.small,
-              paddingBottom: theme.units.small,
-              paddingLeft: theme.units.large,
-              paddingRight: theme.units.large,
-              borderRadius: theme.constants.absoluteRadius,
-              alignItems: "center",
-            })}
-          >
-            <Font color="absoluteLight">Save</Font>
-          </Pressable>
-        </Frame>
-      )}
     </Frame>
   );
 }
