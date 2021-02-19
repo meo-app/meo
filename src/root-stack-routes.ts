@@ -3,7 +3,6 @@ enum RootStackRoutes {
   Home = "Home",
   Create = "Create",
   Explore = "Explore",
-  SearchResutls = "SearchResults",
   Placeholder = "Placeholder",
   Settings = "Settings",
   HashtagViewer = "HashtagViewer",
@@ -17,7 +16,6 @@ type RootStackParamList = {
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };
-  SearchResults: undefined;
 };
 
 export { RootStackRoutes, RootStackParamList };

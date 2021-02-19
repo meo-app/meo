@@ -12,11 +12,10 @@ import { useHasSeenOnboarding } from "./storage/onboarding";
 import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
-import { Explore } from "./application/screens/Explore";
+import { Explore } from "./application/screens/Explore/Explore";
 import { HashtagViewer } from "./application/screens/HashtagViewer";
 import { Home } from "./application/screens/Home";
 import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { SearchResults } from "./application/screens/SearchResults";
 import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
@@ -42,7 +41,7 @@ function TabsNavigator() {
           onHomePress={() => navigation.navigate(RootStackRoutes.Home)}
           onSearchPress={() => {
             if (EXPLORE_REGEX.test(state.history[1]?.key)) {
-              navigation.navigate(RootStackRoutes.SearchResutls);
+              // navigation.navigate(RootStackRoutes.SearchResutls);
             } else {
               navigation.navigate(RootStackRoutes.Explore);
             }
@@ -102,22 +101,6 @@ function MainScreens() {
           gestureEnabled: true,
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}
-      />
-      <RootStack.Screen
-        name={RootStackRoutes.SearchResutls}
-        component={SearchResults}
-        options={{
-          animationEnabled: true,
-          gestureEnabled: true,
-          gestureDirection: "horizontal",
-          headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          cardStyle: {
-            borderWidth: 1,
-            borderColor: theme.colors.backgroundAccent,
-            ...theme.constants.shadow,
-          },
         }}
       />
       <RootStack.Screen

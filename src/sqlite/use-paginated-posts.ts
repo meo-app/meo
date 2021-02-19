@@ -11,8 +11,10 @@ function usePaginatedPosts(
   queryKey: QueryKey,
   {
     queryFn,
+    enabled,
   }: {
     queryFn: (args: { limit: number; offset: number }) => string;
+    enabled: boolean;
   }
 ): UseInfiniteQueryResult<Post[], {}> {
   const db = useDB();
@@ -41,6 +43,7 @@ function usePaginatedPosts(
         );
       }),
     {
+      enabled,
       getNextPageParam: (lastPage, allPages) => {
         if (allPages.length === 1) {
           return 1;

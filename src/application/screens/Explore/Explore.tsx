@@ -6,31 +6,26 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  Easing,
-  ListRenderItem,
-  Pressable as RNPressable,
-  View,
-} from "react-native";
+import { Animated, ListRenderItem, Pressable, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Font } from "../../components/Font";
-import { Frame } from "../../components/Frame";
-import { HashtagCard } from "../../components/HashtagCard";
-import { Header } from "../../components/Header";
-import { OpenDrawerButton } from "../../components/OpenDrawerButton";
-import { SearchTextInput } from "../../components/SearchTextInput";
-import { RootStackParamList, RootStackRoutes } from "../../root-stack-routes";
-import { QueryIds } from "../../sqlite/QueryIds";
-import { useTransaction } from "../../sqlite/use-transaction";
-import { useAppContext } from "../providers/AppProvider";
-import { useSearchContext } from "../providers/SearchProvider";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
-
-const Pressable = Animated.createAnimatedComponent(
-  RNPressable
-) as typeof RNPressable;
+import { Font } from "../../../components/Font";
+import { Frame } from "../../../components/Frame";
+import { HashtagCard } from "../../../components/HashtagCard";
+import { Header } from "../../../components/Header";
+import { OpenDrawerButton } from "../../../components/OpenDrawerButton";
+import { PostsList } from "../../../components/PostsList";
+import { SearchTextInput } from "../../../components/SearchTextInput";
+import { useDebounce } from "../../../hooks/use-debounce";
+import {
+  RootStackParamList,
+  RootStackRoutes,
+} from "../../../root-stack-routes";
+import { QueryIds } from "../../../sqlite/QueryIds";
+import { usePaginatedPosts } from "../../../sqlite/use-paginated-posts";
+import { useTransaction } from "../../../sqlite/use-transaction";
+import { useAppContext } from "../../providers/AppProvider";
+import { useEdgeSpacing, useTheme } from "../../providers/Theming";
+import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
 
 interface HashtagCount {
   total: string;
@@ -38,76 +33,47 @@ interface HashtagCount {
 }
 
 function Explore() {
-  const [mode, setMode] = useState<"search" | "explore">("explore");
+  const {
+    opacity,
+    setMode,
+    width,
+    translateX,
+    translateY,
+    scale,
+    mode,
+  } = useSearchInputAnimation();
   const spacing = useEdgeSpacing();
   const theme = useTheme();
   const { tabBarHeight } = useAppContext();
-  const { term, onChangeText, setIsFocused } = useSearchContext();
+  const [term, onChangeText] = useState("");
+  const searchInputRef = useRef(null);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const value = useDebounce(term, { delay: 300 });
+
+  useEffect(() => {
+    setMode("explore");
+  }, [setMode]);
+
   const { data: hashtags } = useTransaction<HashtagCount>(
     QueryIds.topHashtags,
     "select count(value) as total, value from hashtags group by value order by total desc"
   );
 
-  const opacity = useRef(new Animated.Value(1)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-  const width = useRef(new Animated.Value(0)).current;
-  const insets = useSafeAreaInsets();
-  const widthInterpolation = useMemo(
-    () =>
-      width.interpolate({ inputRange: [0, 1], outputRange: ["100%", "80%"] }),
-    [width]
-  );
-  const translateXInterpolation = useMemo(
-    () => width.interpolate({ inputRange: [0, 1], outputRange: [13, 0] }),
-    [width]
+  const { data, isFetched, fetchNextPage } = usePaginatedPosts(
+    [QueryIds.search, value],
+    {
+      queryFn: ({ limit, offset }) =>
+        `select * from posts where value like "%${value}%" collate nocase order by id desc limit ${limit}, ${offset}`,
+      enabled: mode === "search",
+    }
   );
 
-  useEffect(() => {
-    if (mode === "search") {
-      Animated.parallel([
-        Animated.timing(opacity, {
-          toValue: 0,
-          useNativeDriver: true,
-          duration: 140,
-          easing: Easing.bezier(0.23, 1.0, 0.32, 1.0),
-        }),
-        Animated.timing(translateY, {
-          toValue: -insets.top - 10,
-          useNativeDriver: true,
-          duration: 400,
-          easing: Easing.bezier(0.68, -0.55, 0.265, 1.55),
-        }),
-        Animated.timing(width, {
-          toValue: 1,
-          useNativeDriver: false,
-          duration: 400,
-          easing: Easing.bezier(0.68, -0.55, 0.265, 1.55),
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(opacity, {
-          toValue: 1,
-          useNativeDriver: true,
-          easing: Easing.bezier(0.23, 1.0, 0.32, 1.0),
-          duration: 180,
-        }),
-        Animated.timing(translateY, {
-          toValue: 0,
-          useNativeDriver: true,
-          duration: 250,
-          easing: Easing.bezier(0.42, 0.0, 0.58, 1.0),
-        }),
-        Animated.timing(width, {
-          toValue: 0,
-          useNativeDriver: false,
-          duration: 400,
-          easing: Easing.bezier(0.68, -0.55, 0.265, 1.55),
-        }),
-      ]).start();
-    }
-  }, [insets.top, mode, opacity, translateY, width]);
+  const displayNoSearchResults = useMemo(() => {
+    const results = data?.pages.flat(1).length;
+    return mode === "search" && isFetched && Boolean(term) && !results;
+  }, [data?.pages, isFetched, mode, term]);
+
+  console.log({ displayNoSearchResults });
 
   const renderItem = useCallback<ListRenderItem<HashtagCount>>(
     ({ item, index }) => (
@@ -177,49 +143,42 @@ function Explore() {
             >
               <Animated.View
                 style={{
-                  // flex: 1,
-                  width: widthInterpolation,
+                  width,
                   transform: [
                     {
-                      translateX: translateXInterpolation,
+                      translateX,
                     },
                   ],
                 }}
               >
                 <SearchTextInput
-                  style={{
-                    width: "100%",
-                  }}
+                  ref={searchInputRef}
                   value={term}
                   onChangeText={onChangeText}
                   editable
-                  // pointerEvents="box-none"
                   onFocus={() => {
                     setMode("search");
-                  }}
-                  onBlur={() => {
-                    // setMode("explore");
                   }}
                 />
               </Animated.View>
               <Animated.View
                 style={{
-                  // padding: theme.units.medium,
                   padding: 0,
-                  // width: 0,
                   alignItems: "center",
                   justifyContent: "center",
                   transform: [
                     {
-                      scale: width,
-                      // translateX: 1,
+                      scale,
                     },
                   ],
                 }}
               >
                 <Pressable
                   onPress={() => {
+                    // @ts-ignore rn refs doesnt export types
+                    searchInputRef.current?.blur();
                     setMode("explore");
+                    onChangeText("");
                   }}
                   style={({ pressed }) => ({
                     opacity: pressed ? 0.5 : 1,
@@ -238,22 +197,43 @@ function Explore() {
       </Animated.View>
       <Animated.View
         style={{
+          position: "relative",
           transform: [{ translateY }],
         }}
       >
-        <FlatList
-          contentContainerStyle={{
-            paddingBottom: tabBarHeight + HashtagCard.HEIGHT,
-          }}
-          keyExtractor={keyExtractor}
-          data={hashtags}
-          renderItem={renderItem}
-          numColumns={2}
-          columnWrapperStyle={{
-            flex: 1,
-          }}
-        />
+        {mode === "explore" && (
+          <FlatList
+            contentContainerStyle={{
+              paddingBottom: tabBarHeight + HashtagCard.HEIGHT,
+            }}
+            keyExtractor={keyExtractor}
+            data={hashtags}
+            renderItem={renderItem}
+            numColumns={2}
+            columnWrapperStyle={{
+              flex: 1,
+            }}
+          />
+        )}
+        {mode === "search" && (
+          <PostsList data={data} onEndReached={() => fetchNextPage()} />
+        )}
       </Animated.View>
+      {displayNoSearchResults && (
+        <Animated.View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            transform: [{ translateY }],
+          }}
+        >
+          <Font variant="subtitle">Ops can't find that</Font>
+          <Frame marginTop="small">
+            <Font>Try a new search.</Font>
+          </Frame>
+        </Animated.View>
+      )}
     </Frame>
   );
 }
