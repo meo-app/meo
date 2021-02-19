@@ -12,17 +12,7 @@ type Spacing =
   | [Value, Value, Value]
   | [Value, Value, Value, Value];
 
-interface Props
-  extends Pick<
-    FlexStyle,
-    | "justifyContent"
-    | "alignItems"
-    | "flex"
-    | "flexBasis"
-    | "flexGrow"
-    | "flexWrap"
-    | "flexDirection"
-  > {
+interface SpacingStyles {
   marginTop?: Spacing;
   marginRight?: Spacing;
   marginBottom?: Spacing;
@@ -31,12 +21,24 @@ interface Props
   paddingRight?: Spacing;
   paddingBottom?: Spacing;
   paddingLeft?: Spacing;
+}
+
+type Props = Pick<
+  FlexStyle,
+  | "justifyContent"
+  | "alignItems"
+  | "flex"
+  | "flexBasis"
+  | "flexGrow"
+  | "flexWrap"
+  | "flexDirection"
+> & {
   style?: StyleProp<ViewStyle>;
   debugTrace?: boolean;
   backgroundColor?: string;
   width?: keyof Scales;
   height?: keyof Scales;
-}
+} & SpacingStyles;
 
 const Frame: React.FunctionComponent<
   Props & React.ComponentProps<typeof View>
@@ -130,4 +132,4 @@ function useFrameStyles({
   };
 }
 
-export { Frame, useFrameStyles, Spacing, Props as FrameProps };
+export { Frame, useFrameStyles, Spacing, Props as FrameProps, SpacingStyles };

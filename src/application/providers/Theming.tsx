@@ -196,4 +196,11 @@ const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
   );
 };
 
-export { ThemeProvider, useTheme, useEdgeSpacing, FlipColorScheme };
+export {
+  ThemeProvider,
+  useTheme,
+  useEdgeSpacing,
+  FlipColorScheme,
+  STATUSBAR_BACKGROUND_COLOR,
+  STATUS_BAR_SCHEME_MAP,
+};

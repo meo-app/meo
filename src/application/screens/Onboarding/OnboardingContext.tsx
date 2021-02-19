@@ -12,7 +12,6 @@ import { useAvatarContext } from "../AvatarSelection";
 
 export enum RootStackRoutes {
   OnboardingSlider = "OnboardingSlider",
-  InsertName = "InsertName",
   AvatarSelection = "AvatarSelection",
 }
 
@@ -35,7 +34,6 @@ function useOnboardingContext() {
 
 const routes = [
   RootStackRoutes.OnboardingSlider,
-  RootStackRoutes.InsertName,
   RootStackRoutes.AvatarSelection,
 ];
 
@@ -62,7 +60,6 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
         index,
         disabled,
         finalize: () => {
-          // TODO: onSave is async, should look into a loading state for onboarding
           onSave();
           client.refetchQueries([QueryIds.hasSeenOnboarding]);
         },
