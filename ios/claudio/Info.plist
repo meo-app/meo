@@ -24,29 +24,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSAppTransportSecurity</key>
-	<!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
 	<dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -59,7 +40,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow claudio to access your calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow claudio to use the camera</string>
+	<string>Give $(PRODUCT_NAME) permission to access your camera</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Allow claudio experiences to access your contacts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -69,20 +50,26 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow claudio to use your location</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow claudio to access your microphone</string>
+	<string>Give $(PRODUCT_NAME) permission to use your microphone</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Allow claudio to access your device's accelerometer</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give claudio periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give claudio periences permission to access your photos</string>
+	<string>Give $(PRODUCT_NAME) permission to save photos</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow claudio to access your reminders</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to save photos</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to access your camera</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to use your microphone</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
