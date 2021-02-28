@@ -8,7 +8,6 @@ import "intl";
 import "intl/locale-data/jsonp/en";
 import React from "react";
 import { Platform, View } from "react-native";
-import { useHasSeenOnboarding } from "./storage/onboarding";
 import { Providers } from "./application/providers/Providers";
 import { useTheme } from "./application/providers/Theming";
 import { Create } from "./application/screens/Create";
@@ -20,6 +19,7 @@ import { Settings } from "./application/screens/Settings/Settings";
 import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
+import { useHasSeenOnboarding } from "./storage/onboarding";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
