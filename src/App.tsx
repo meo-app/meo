@@ -20,6 +20,7 @@ import { CustomDrawerContent } from "./components/CustomDrawerContent";
 import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
 import { useHasSeenOnboarding } from "./storage/onboarding";
+import SplashScreen from "react-native-bootsplash";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -150,6 +151,9 @@ function Root() {
 }
 
 const App: React.FunctionComponent = function App() {
+  SplashScreen.hide({
+    fade: true,
+  });
   return (
     <Providers>
       <Root />
