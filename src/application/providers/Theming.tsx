@@ -1,6 +1,7 @@
 import {
   Inter_400Regular,
   Inter_700Bold,
+  Inter_500Medium,
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext } from "react";
@@ -99,6 +100,11 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
       fontSize: 12,
       lineHeight: 16,
     },
+    highlight: {
+      fontFamily: "Inter_400Regular",
+      fontSize: 20,
+      lineHeight: 24,
+    },
   },
 };
 
@@ -118,9 +124,11 @@ const ThemeProvider: React.FunctionComponent<{
 }> = function ThemeProvider({ children, forceColorSchemeTo }) {
   const systemColorScheme = useColorScheme();
   const scheme = forceColorSchemeTo || (systemColorScheme ?? "light");
+  // TODO: load it on splashscreen
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
     Inter_400Regular,
+    Inter_500Medium,
   });
 
   if (!fontsLoaded) {
@@ -136,6 +144,9 @@ const ThemeProvider: React.FunctionComponent<{
         colors: colors[scheme],
         typography: {
           body: Object.assign({}, base.typography.body, {
+            color: foregroundPrimary,
+          }),
+          highlight: Object.assign({}, base.typography.highlight, {
             color: foregroundPrimary,
           }),
           display: Object.assign({}, base.typography.display, {

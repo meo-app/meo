@@ -8,7 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { useCreatePost } from "../../sqlite/use-create-post";
+import { useCreatePost } from "../../hooks/use-create-post";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -188,7 +188,7 @@ function Screens() {
                     paddingRight: theme.units.large,
                   }}
                 >
-                  <Icon type="Close" size="small" />
+                  <Icon type="Close" size="medium" />
                 </Pressable>
               </Frame>
               <Frame marginTop="large">

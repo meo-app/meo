@@ -10,7 +10,7 @@ const Back: React.FunctionComponent<SVGIconProps> = function Back({
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Path
-        d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414-4.95 4.95z"
+        d="M10.828 12L15.778 16.95L14.364 18.364L8 12L14.364 5.63599L15.778 7.04999L10.828 12Z"
         fill={color}
       />
     </Svg>

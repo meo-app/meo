@@ -1,9 +1,3 @@
-import { Avatar01 } from "./Avatar01";
-import React from "react";
-import { Avatar02 } from "./Avatar02";
-import { Avatar03 } from "./Avatar03";
-import { Avatar04 } from "./Avatar04";
-
 enum AvatarIds {
   __USER_PHOTO__ = "__USER_PHOTO__",
   Wynonna = "Wynonna",

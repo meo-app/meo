@@ -11,11 +11,12 @@ import { Header } from "./Header";
 import { Icon } from "./Icon/Icon";
 
 interface Props extends React.ComponentProps<typeof Header> {
-  title?: string;
+  title?: string | React.ReactNode;
+  icon?: React.ComponentProps<typeof Icon>["type"];
   backContent?: React.ReactNode;
 }
 
-function SubtitleHeader({ title, backContent }: Props) {
+function SubtitleHeader({ title, backContent, icon = "Back" }: Props) {
   const navigation = useNavigation();
   const theme = useTheme();
   const spacing = useEdgeSpacing();
@@ -68,7 +69,7 @@ function SubtitleHeader({ title, backContent }: Props) {
                 position: "absolute",
               })}
             >
-              <Icon type="Back" size="medium" />
+              <Icon type={icon} size="medium" />
             </Pressable>
           ))}
         <Font

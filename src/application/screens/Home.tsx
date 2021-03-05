@@ -4,13 +4,13 @@ import { View } from "react-native";
 import { Font } from "../../components/Font";
 import { Header } from "../../components/Header";
 import { PostsList } from "../../components/PostsList";
-import { QueryIds } from "../../sqlite/QueryIds";
-import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
+import { QueryKeys } from "../../shared/QueryKeys";
+import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
 import { useAppContext } from "../providers/AppProvider";
 
 function Home() {
   const { data, error, isFetching, fetchNextPage } = usePaginatedPosts(
-    QueryIds.posts,
+    QueryKeys.POSTS,
     {
       queryFn: ({ limit, offset }) =>
         `select * from posts order by id desc limit ${limit}, ${offset}`,

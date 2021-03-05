@@ -7,8 +7,8 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, View } from "react-native";
-import { QueryIds } from "../../sqlite/QueryIds";
-import { usePaginatedPosts } from "../../sqlite/use-paginated-posts";
+import { QueryKeys } from "../../shared/QueryKeys";
+import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Header } from "../../components/Header";
@@ -25,7 +25,7 @@ function HashtagViewer(props: {
   const theme = useTheme();
   const { hashtag } = props.route.params;
   const { data, isLoading, isError, fetchNextPage } = usePaginatedPosts(
-    [QueryIds.hashtagViewer, hashtag],
+    [QueryKeys.HASHTAG_VIEWER, hashtag],
     {
       queryFn: ({ limit, offset }) =>
         `select * from posts where id in (select post_id from hashtags where value like "%${hashtag}%") order by timestamp desc limit ${limit}, ${offset}`,

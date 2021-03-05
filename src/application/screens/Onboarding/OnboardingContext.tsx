@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
-import { QueryIds } from "../../../sqlite/QueryIds";
+import { QueryKeys } from "../../../shared/QueryKeys";
 import { useAvatarContext } from "../AvatarSelection";
 
 export enum RootStackRoutes {
@@ -61,7 +61,7 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
         disabled,
         finalize: () => {
           onSave();
-          client.refetchQueries([QueryIds.hasSeenOnboarding]);
+          client.refetchQueries([QueryKeys.HAS_SEEN_ONBOARDING]);
         },
         ...(index + 1 <= routes.length - 1 && {
           next: () => {

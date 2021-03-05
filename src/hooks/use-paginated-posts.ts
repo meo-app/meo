@@ -4,9 +4,10 @@ import {
   UseInfiniteQueryResult,
 } from "react-query";
 import { useDB } from "../application/providers/SQLiteProvider";
-import { Post } from "./Entities";
+import { Post } from "../shared/SQLiteEntities";
 
 const POSTS_PER_PAGE = 40;
+
 function usePaginatedPosts(
   queryKey: QueryKey,
   {

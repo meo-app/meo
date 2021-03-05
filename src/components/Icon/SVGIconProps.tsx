@@ -6,6 +6,8 @@ import { Back } from "./components/Back";
 import { Hamburguer } from "./components/Hamburguer";
 import { Edit } from "./components/Edit";
 import { Camera } from "./components/Camera";
+import { Share } from "./components/Share";
+import { Trash } from "./components/Trash";
 
 export interface SVGIconProps {
   width: number;
@@ -21,7 +23,9 @@ type IconTypes =
   | "Back"
   | "Hamburguer"
   | "Edit"
-  | "Camera";
+  | "Camera"
+  | "Share"
+  | "Trash";
 
 export const ICONS: {
   [key in IconTypes]: React.FunctionComponent<SVGIconProps>;
@@ -34,4 +38,6 @@ export const ICONS: {
   Hamburguer,
   Edit,
   Camera,
+  Share,
+  Trash,
 };

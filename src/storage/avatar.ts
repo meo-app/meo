@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "react-query";
 import { AvatarIds } from "../components/Avatars/avatars-list";
-import { QueryIds } from "../sqlite/QueryIds";
+import { QueryKeys } from "../shared/QueryKeys";
 
 const key = "@@selected-avatar";
 
@@ -33,7 +33,7 @@ const set = async (data: Data) => {
 };
 
 function useAvatar() {
-  return useQuery<Data | null>(QueryIds.getUserAvatar, get);
+  return useQuery<Data | null>(QueryKeys.GET_USER_AVATAR, get);
 }
 
 function useSelectAvatar(options?: MutationOptions<void, "Error", Data>) {
@@ -41,7 +41,7 @@ function useSelectAvatar(options?: MutationOptions<void, "Error", Data>) {
   return useMutation((data) => set(data), {
     ...options,
     onSuccess: (...args) => {
-      client.refetchQueries(QueryIds.getUserAvatar);
+      client.refetchQueries(QueryKeys.GET_USER_AVATAR);
       options?.onSuccess?.call(null, ...args);
     },
   });

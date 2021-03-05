@@ -1,4 +1,3 @@
-// TODO: remove react-native fs
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
 import React, { useCallback, useContext, useMemo, useState } from "react";
@@ -7,7 +6,6 @@ import {
   ImageBackground,
   ListRenderItem,
   Pressable,
-  Text,
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -21,7 +19,7 @@ import { Frame } from "../../components/Frame";
 import { Icon } from "../../components/Icon/Icon";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
-import { QueryIds } from "../../sqlite/QueryIds";
+import { QueryKeys } from "../../shared/QueryKeys";
 import { useAvatar, useSelectAvatar } from "../../storage/avatar";
 import { assert } from "../../utils/assert";
 import { base64ToImageUrl } from "../../utils/base64-to-image-url";
@@ -119,7 +117,7 @@ function UploadButton() {
   useQuery<{
     base64?: string;
   } | null>(
-    QueryIds.pickAvatarPhoto,
+    QueryKeys.PICK_AVATAR_PHOTO,
     () => (!isImagePickerOpened ? Promise.resolve(null) : getImage()),
     {
       enabled: isImagePickerOpened,
