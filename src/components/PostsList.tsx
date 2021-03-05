@@ -1,10 +1,18 @@
-import React, { useCallback, useRef } from "react";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useMemo, useRef } from "react";
 import { FormattedDate } from "react-intl";
-import { FlatList, FlatListProps, ListRenderItem, View } from "react-native";
+import {
+  FlatList,
+  FlatListProps,
+  ListRenderItem,
+  Pressable,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
-import { Post } from "../sqlite/Entities";
+import { RootStackParamList, RootStackRoutes } from "../root-stack-routes";
+import { Post } from "../shared/SQLiteEntities";
 import { timestampToDate } from "../utils/timestamp-to-date";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
@@ -75,6 +83,7 @@ const PostsList = React.forwardRef<
 
 const POST_ITEM_HEIGHT = 130;
 const PostLine = React.memo(function PostLine({
+  id,
   value,
   timestamp,
   bottomSpacing,
@@ -83,56 +92,62 @@ const PostLine = React.memo(function PostLine({
 }) {
   const spacing = useEdgeSpacing();
   const theme = useTheme();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   return (
-    <Frame
-      paddingRight={spacing.horizontal}
-      paddingLeft={spacing.horizontal}
-      flexGrow={0}
-      style={{
-        paddingBottom: theme.units.small,
-        paddingTop: theme.units.small,
-      }}
+    <Pressable
+      onPress={() => navigation.navigate(RootStackRoutes.PostDetails, { id })}
     >
       <Frame
-        justifyContent="flex-start"
-        alignItems="center"
-        flexDirection="row"
+        paddingRight={spacing.horizontal}
+        paddingLeft={spacing.horizontal}
+        flexGrow={0}
+        style={{
+          paddingBottom: theme.units.small,
+          paddingTop: theme.units.small,
+        }}
       >
         <Frame
+          justifyContent="flex-start"
+          alignItems="center"
           flexDirection="row"
-          alignItems="flex-start"
-          style={{
-            height: "100%",
-          }}
         >
-          <UserAvatar />
+          <Frame
+            flexDirection="row"
+            alignItems="flex-start"
+            style={{
+              height: "100%",
+            }}
+          >
+            <UserAvatar />
+          </Frame>
+          <Frame flexGrow={1} flex={1} paddingLeft="small">
+            <PostTextContent value={value} numberOfLines={3} />
+          </Frame>
         </Frame>
-        <Frame flexGrow={1} flex={1} paddingLeft="small">
-          <PostTextContent value={value} numberOfLines={3} />
+        <Frame
+          alignItems="flex-end"
+          paddingTop="small"
+          paddingLeft={spacing.horizontal}
+        >
+          <Font variant="caption" color="foregroundSecondary">
+            <FormattedDate
+              value={date}
+              dateStyle="medium"
+              month="short"
+              day="2-digit"
+            />
+          </Font>
         </Frame>
-      </Frame>
-      <Frame
-        alignItems="flex-end"
-        paddingTop="small"
-        paddingLeft={spacing.horizontal}
-      >
-        <Font variant="caption" color="foregroundSecondary">
-          <FormattedDate
-            value={timestampToDate(timestamp)}
-            dateStyle="medium"
-            month="short"
-            day="2-digit"
+        {Boolean(bottomSpacing) && (
+          <View
+            style={{
+              height: bottomSpacing,
+            }}
           />
-        </Font>
+        )}
       </Frame>
-      {Boolean(bottomSpacing) && (
-        <View
-          style={{
-            height: bottomSpacing,
-          }}
-        />
-      )}
-    </Frame>
+    </Pressable>
   );
 });
 

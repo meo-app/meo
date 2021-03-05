@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { QueryIds } from "./QueryIds";
+import { QueryKeys } from "../shared/QueryKeys";
 import { useTransaction } from "./use-transaction";
 
+// TODO: useTransaction w/ mutation
 function useFlushDatabase() {
   const [enabled, setEnable] = useState(false);
 
-  useTransaction<null>(QueryIds.flushPosts, "delete from posts;", {
+  useTransaction<null>(QueryKeys.FLUSH_POSTS, "delete from posts;", {
     enabled,
   });
 
-  useTransaction<null>(QueryIds.flushHashtags, "delete from hashtags;", {
+  useTransaction<null>(QueryKeys.FLUSH_HASHTAGS, "delete from hashtags;", {
     enabled,
   });
 

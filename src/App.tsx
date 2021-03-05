@@ -21,12 +21,12 @@ import { FloatingActions } from "./components/FloatingActions";
 import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
 import { useHasSeenOnboarding } from "./storage/onboarding";
 import SplashScreen from "react-native-bootsplash";
+import { PostDetails } from "./application/screens/PostDetails";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
-
 const EXPLORE_REGEX = new RegExp(RootStackRoutes.Explore);
 
 function TabsNavigator() {
@@ -75,6 +75,7 @@ function MainScreens() {
       screenOptions={{
         headerTitle: () => null,
         headerTransparent: true,
+        headerShown: false,
       }}
     >
       <RootStack.Screen
@@ -82,14 +83,12 @@ function MainScreens() {
         component={TabsNavigator}
         options={{
           animationEnabled: true,
-          headerShown: false,
         }}
       />
       <RootStack.Screen
         name={RootStackRoutes.Create}
         component={Create}
         options={{
-          headerShown: false,
           animationEnabled: true,
           gestureEnabled: false,
         }}
@@ -100,7 +99,6 @@ function MainScreens() {
         options={{
           animationEnabled: true,
           gestureEnabled: true,
-          headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
@@ -121,6 +119,10 @@ function MainScreens() {
             ...theme.constants.shadow,
           },
         }}
+      />
+      <RootStack.Screen
+        component={PostDetails}
+        name={RootStackRoutes.PostDetails}
       />
     </RootStack.Navigator>
   );

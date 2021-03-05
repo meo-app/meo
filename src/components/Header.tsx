@@ -10,7 +10,7 @@ import { OpenDrawerButton } from "./OpenDrawerButton";
 
 interface Props {
   hideBackground?: boolean;
-  title?: string;
+  title?: string | React.ReactNode;
 }
 
 const Header: React.FunctionComponent<Props> = function Header({

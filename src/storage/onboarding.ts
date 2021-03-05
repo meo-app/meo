@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { QueryIds } from "../sqlite/QueryIds";
+import { QueryKeys } from "../shared/QueryKeys";
 
 const key = "@@has-seen-onboarding";
 
@@ -35,7 +35,7 @@ const clear = async () => {
 };
 
 function useHasSeenOnboarding() {
-  return useQuery<boolean>(QueryIds.hasSeenOnboarding, get);
+  return useQuery<boolean>(QueryKeys.HAS_SEEN_ONBOARDING, get);
 }
 
 function useCompleteOnboarding(options?: MutationOptions) {
@@ -47,7 +47,7 @@ function useFlushOnboarding(options?: MutationOptions) {
   return useMutation(clear, {
     ...options,
     onSuccess: (...args) => {
-      client.refetchQueries([QueryIds.hasSeenOnboarding]);
+      client.refetchQueries([QueryKeys.HAS_SEEN_ONBOARDING]);
       options?.onSuccess?.call(null, ...args);
     },
   });

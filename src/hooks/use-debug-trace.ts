@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import { ViewStyle } from "react-native";
 
 function useDebugTrace(): ViewStyle {

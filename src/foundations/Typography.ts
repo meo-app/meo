@@ -5,4 +5,5 @@ export interface Typography {
   body: TextStyle;
   caption: TextStyle;
   subtitle: TextStyle;
+  highlight: TextStyle;
 }

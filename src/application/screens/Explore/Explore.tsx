@@ -31,9 +31,9 @@ import {
   RootStackParamList,
   RootStackRoutes,
 } from "../../../root-stack-routes";
-import { QueryIds } from "../../../sqlite/QueryIds";
-import { usePaginatedPosts } from "../../../sqlite/use-paginated-posts";
-import { useTransaction } from "../../../sqlite/use-transaction";
+import { QueryKeys } from "../../../shared/QueryKeys";
+import { usePaginatedPosts } from "../../../hooks/use-paginated-posts";
+import { useTransaction } from "../../../hooks/use-transaction";
 import { useAppContext } from "../../providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
@@ -70,12 +70,12 @@ function Explore() {
   }, [setMode]);
 
   const { data: hashtags } = useTransaction<HashtagCount>(
-    QueryIds.topHashtags,
+    QueryKeys.TOP_HASHTAGS,
     "select count(value) as total, value from hashtags group by value order by total desc"
   );
 
   const { data, isFetched, fetchNextPage } = usePaginatedPosts(
-    [QueryIds.search, value],
+    [QueryKeys.SEARCH, value],
     {
       queryFn: ({ limit, offset }) =>
         `select * from posts where value like "%${value}%" collate nocase order by id desc limit ${limit}, ${offset}`,

@@ -6,6 +6,7 @@ enum RootStackRoutes {
   Placeholder = "Placeholder",
   Settings = "Settings",
   HashtagViewer = "HashtagViewer",
+  PostDetails = "PostDetails",
 }
 
 type RootStackParamList = {
@@ -16,6 +17,7 @@ type RootStackParamList = {
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };
+  PostDetails: { id: string };
 };
 
 export { RootStackRoutes, RootStackParamList };

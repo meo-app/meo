@@ -10,7 +10,7 @@ const Close: React.FunctionComponent<SVGIconProps> = function Home({
   return (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <Path
-        d="M12 9.556L20.556 1 23 3.444 14.444 12 23 20.556 20.556 23 12 14.444 3.444 23 1 20.556 9.556 12 1 3.444 3.444 1 12 9.556z"
+        d="M12 10.586L16.95 5.63599L18.364 7.04999L13.414 12L18.364 16.95L16.95 18.364L12 13.414L7.04999 18.364L5.63599 16.95L10.586 12L5.63599 7.04999L7.04999 5.63599L12 10.586Z"
         fill={color}
       />
     </Svg>
