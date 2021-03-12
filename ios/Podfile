@@ -39,6 +39,7 @@ target 'claudio' do
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+  pod 'RNShare', :path => '../node_modules/react-native-share/RNShare.podspec'
   # Other native modules
 
   # Automatically detect installed unimodules
