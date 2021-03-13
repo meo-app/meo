@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useMemo } from "react";
 import { RootStackRoutes } from "../root-stack-routes";
-import { HASHTAG_REGEX } from "../utils/hashtag-regex";
+import { HASHTAG_REGEX } from "../shared/hashtag-utils";
 import { Font } from "./Font";
 
 const PostTextContent = React.memo(function PostTextContent({

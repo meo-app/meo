@@ -21,8 +21,8 @@ import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useStyles } from "../../hooks/use-styles";
 import { QueryKeys } from "../../shared/QueryKeys";
 import { useAvatar, useSelectAvatar } from "../../storage/avatar";
-import { assert } from "../../utils/assert";
-import { base64ToImageUrl } from "../../utils/base64-to-image-url";
+import { assert } from "../../shared/assert";
+import { base64ToImageUrl } from "../../shared/image-utils";
 import { useTheme } from "../providers/Theming";
 
 async function getImage(): Promise<{ base64?: string } | null> {

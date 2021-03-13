@@ -1,50 +1,40 @@
-import { MutationOptions, useMutation, useQueryClient } from "react-query";
-import { useDB } from "../application/providers/SQLiteProvider";
-import { HASHTAG_REGEX } from "../utils/hashtag-regex";
+import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
+import { extractHashtags } from "../shared/hashtag-utils";
 import { QueryKeys } from "../shared/QueryKeys";
+import { useInsertHashtags } from "./use-insert-hashtags";
+import { useSQLiteMutation } from "./use-sqlite-mutation";
 
-// TODO: useSQLiteMutations
+interface Variables {
+  text: string;
+}
 
-function useCreatePost(
-  options?: MutationOptions<void, unknown, { text: string }>
-) {
-  const db = useDB();
+interface Data {
+  postId: number;
+}
+
+function useCreatePost(options: UseMutationOptions<Data, string, Variables>) {
   const client = useQueryClient();
-  return useMutation<void, unknown, { text: string }>(
-    ({ text }) => {
-      const hashtags = text
-        .split(HASHTAG_REGEX)
-        .filter((item) => /#/.test(item));
-      return new Promise<void>((resolve, reject) =>
-        db.transaction(
-          (tx) => {
-            tx.executeSql(
-              "insert into posts (value) values (?)",
-              [text],
-              (_, { insertId }) => {
-                if (hashtags.length) {
-                  Promise.all(
-                    hashtags.map((value) =>
-                      tx.executeSql(
-                        "insert into hashtags (value, post_id) values (?, ?)",
-                        [value, insertId]
-                      )
-                    )
-                  ).then(() => resolve());
-                } else {
-                  resolve();
-                }
-              }
-            );
-          },
-          (err) => {
-            console.error(
-              `Error while creating post. \nCode: ${err.code}. \nMessage ${err.message} `
-            );
-            reject(err);
-          }
+  const { mutateAsync: insertHashtag } = useInsertHashtags();
+  const { mutateAsync: insertPost } = useSQLiteMutation<{ text: string }>({
+    mutation: "insert into posts (value) values (?)",
+    variables: ({ text }) => [text],
+  });
+
+  return useMutation<Data, string, Variables>(
+    async ({ text }) => {
+      const hashtags = extractHashtags(text);
+      const { insertId: postId } = await insertPost({ text });
+      await Promise.all(
+        hashtags.map((hashtag) =>
+          insertHashtag({
+            hashtag,
+            postId,
+          })
         )
       );
+      return {
+        postId,
+      };
     },
     {
       ...options,

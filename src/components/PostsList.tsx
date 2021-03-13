@@ -13,7 +13,7 @@ import { InfiniteData } from "react-query";
 import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
 import { RootStackParamList, RootStackRoutes } from "../root-stack-routes";
 import { Post } from "../shared/SQLiteEntities";
-import { timestampToDate } from "../utils/timestamp-to-date";
+import { timestampToDate } from "../shared/date-utils";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
