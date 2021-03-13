@@ -5,7 +5,7 @@ import { useTheme } from "../application/providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
 import { useAvatar } from "../storage/avatar";
-import { base64ToImageUrl } from "../utils/base64-to-image-url";
+import { base64ToImageUrl } from "../shared/image-utils";
 import { AVATARS_LIST } from "./Avatars/avatars-list";
 
 interface Props {

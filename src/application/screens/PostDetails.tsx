@@ -6,8 +6,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useKeyboard } from "@react-native-community/hooks";
 import { FormattedTime } from "react-intl";
-import { Alert, Pressable, TextInput, useWindowDimensions } from "react-native";
+import { Alert, Pressable, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Share from "react-native-share";
@@ -17,34 +18,42 @@ import { Icon } from "../../components/Icon/Icon";
 import { PostTextContent } from "../../components/PostTextContent";
 import { SubtitleHeader } from "../../components/SubtitleHeader";
 import { useDeletePost } from "../../hooks/use-delete-post";
+import { useEditPost } from "../../hooks/use-edit-post";
 import { useStyles } from "../../hooks/use-styles";
 import { useTransaction } from "../../hooks/use-transaction";
 import { RootStackParamList } from "../../root-stack-routes";
+import { timestampToDate } from "../../shared/date-utils";
 import { QueryKeys } from "../../shared/QueryKeys";
 import { Post } from "../../shared/SQLiteEntities";
-import { timestampToDate } from "../../utils/timestamp-to-date";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
     params: { id },
   } = useRoute<RouteProp<RootStackParamList, "PostDetails">>();
-  const { height } = useWindowDimensions();
+  const keyboard = useKeyboard();
+  console.log(JSON.stringify(keyboard, null, 2));
   const navigation = useNavigation();
   const theme = useTheme();
   const spacing = useEdgeSpacing(); // TODO: refactor useEdgeSpacing to useHorizontalPadding
   const input = useRef<TextInput>(null);
   const [editable, setEditable] = useState(false);
   const [text, onChangeText] = useState("");
-  const { mutateAsync: deletePostAsync } = useDeletePost({
-    onSuccess: () => {
-      navigation.goBack();
-    },
-  });
+  const { mutate: editPost } = useEditPost(
+    { id },
+    {
+      onSuccess: () => input.current?.blur(),
+    }
+  );
   const { data } = useTransaction<Post>(
     [QueryKeys.POST_DETAILS, id],
     `select * from posts where id = ${id}`
   );
+  const { mutate: deletePost } = useDeletePost({
+    onSuccess: () => {
+      navigation.goBack();
+    },
+  });
 
   const post = data?.[0];
   const date = useMemo(
@@ -59,12 +68,12 @@ const PostDetails = React.memo(function PostDetails() {
         text: "Delete",
         style: "destructive",
         onPress: () =>
-          deletePostAsync({
+          deletePost({
             id,
           }),
       },
     ]);
-  }, [deletePostAsync, id]);
+  }, [deletePost, id]);
 
   const styles = useStyles(() => ({
     pressable: {
@@ -87,7 +96,15 @@ const PostDetails = React.memo(function PostDetails() {
               variant="body"
               color="primary"
               onPress={() => {
-                setEditable(true);
+                if (!editable) {
+                  setEditable(true);
+                } else {
+                  // TODO: only if has changes
+                  editPost({
+                    id,
+                    text,
+                  });
+                }
               }}
             >
               {editable ? "Save" : "Edit"}
@@ -103,7 +120,7 @@ const PostDetails = React.memo(function PostDetails() {
         }}
       >
         <KeyboardAwareScrollView
-          extraHeight={height}
+          extraHeight={keyboard.keyboardHeight}
           enableAutomaticScroll
           contentContainerStyle={{
             flexGrow: 1,
