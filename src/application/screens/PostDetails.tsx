@@ -1,4 +1,11 @@
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  EventListenerCallback,
+  EventMapCore,
+  NavigationState,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import React, {
   useCallback,
   useEffect,
@@ -26,29 +33,27 @@ import { timestampToDate } from "../../shared/date-utils";
 import { QueryKeys } from "../../shared/QueryKeys";
 import { Post } from "../../shared/SQLiteEntities";
 import { useEdgeSpacing, useTheme } from "../providers/Theming";
+import { useDebounceValue } from "../../hooks/use-debounce-value";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
     params: { id },
   } = useRoute<RouteProp<RootStackParamList, "PostDetails">>();
   const keyboard = useKeyboard();
-  console.log(JSON.stringify(keyboard, null, 2));
   const navigation = useNavigation();
   const theme = useTheme();
   const spacing = useEdgeSpacing(); // TODO: refactor useEdgeSpacing to useHorizontalPadding
   const input = useRef<TextInput>(null);
   const [editable, setEditable] = useState(false);
   const [text, onChangeText] = useState("");
-  const { mutate: editPost } = useEditPost(
-    { id },
-    {
-      onSuccess: () => input.current?.blur(),
-    }
-  );
+  const changes = useDebounceValue(text, { delay: 1000 });
+  const { mutate: editPost } = useEditPost({ id }, {});
+
   const { data } = useTransaction<Post>(
     [QueryKeys.POST_DETAILS, id],
     `select * from posts where id = ${id}`
   );
+
   const { mutate: deletePost } = useDeletePost({
     onSuccess: () => {
       navigation.goBack();
@@ -75,6 +80,23 @@ const PostDetails = React.memo(function PostDetails() {
     ]);
   }, [deletePost, id]);
 
+  useEffect(() => {
+    const listener: EventListenerCallback<
+      EventMapCore<NavigationState>,
+      "beforeRemove"
+    > = () => {
+      if (text) {
+        editPost({
+          id,
+          text,
+        });
+      }
+    };
+
+    navigation.addListener("beforeRemove", listener);
+    return () => navigation.removeListener("beforeRemove", listener);
+  }, [editPost, id, navigation, text]);
+
   const styles = useStyles(() => ({
     pressable: {
       padding: theme.units.medium,
@@ -86,6 +108,16 @@ const PostDetails = React.memo(function PostDetails() {
       input.current?.focus();
     }
   }, [editable]);
+
+  useEffect(() => {
+    if (changes) {
+      console.log("saving it");
+      editPost({
+        id,
+        text: changes,
+      });
+    }
+  }, [changes, editPost, id]);
 
   return (
     <>
@@ -99,11 +131,7 @@ const PostDetails = React.memo(function PostDetails() {
                 if (!editable) {
                   setEditable(true);
                 } else {
-                  // TODO: only if has changes
-                  editPost({
-                    id,
-                    text,
-                  });
+                  input.current?.blur();
                 }
               }}
             >
@@ -179,6 +207,14 @@ const PostDetails = React.memo(function PostDetails() {
               borderTopColor: theme.colors.backgroundAccent,
             }}
           >
+            <Pressable
+              style={styles.pressable}
+              onPress={() =>
+                Alert.alert("This feature is not ready", "Coming soon 😉")
+              }
+            >
+              <Icon type="Reply" size="small" color="foregroundSecondary" />
+            </Pressable>
             <Pressable onPress={() => onDeletePress()} style={styles.pressable}>
               <Icon type="Trash" size="small" color="foregroundSecondary" />
             </Pressable>
