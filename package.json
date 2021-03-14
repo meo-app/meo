@@ -6,7 +6,8 @@
     "web": "expo start --web",
     "start": "react-native start --port=8081",
     "test": "jest",
-    "ios:bundle": "GIT_HASH=\"$(git rev-parse HEAD)\" react-native bundle --platform ios --entry-file index.js --bundle-output ios/claudio/main.jsbundle --assets-dest ios/claudio"
+    "bundle:ios": "react-native bundle --platform ios --entry-file index.js --bundle-output ios/claudio/main.jsbundle --assets-dest ios/claudio",
+    "bundle:android": "mkdir -p android/app/src/main/assets && react-native bundle --platform android --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.1.0",
