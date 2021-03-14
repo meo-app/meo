@@ -3,7 +3,7 @@ import { Text, TextStyle } from "react-native";
 import { Typography } from "../foundations/Typography";
 import { useTheme } from "../application/providers/Theming";
 import { Colors } from "../foundations/Colors";
-import { SpacingStyles, useFrameStyles } from "./Frame";
+import { SpacingProps, useFrame } from "./Frame";
 
 interface Props extends React.ComponentProps<typeof Text> {
   variant?: keyof Typography;
@@ -11,7 +11,7 @@ interface Props extends React.ComponentProps<typeof Text> {
   textAlign?: TextStyle["textAlign"];
 }
 
-interface Props extends SpacingStyles {}
+interface Props extends SpacingProps {}
 
 interface DefaultProps extends Required<Pick<Props, "variant">> {}
 
@@ -35,7 +35,7 @@ const Font: React.FunctionComponent<Props> = function Font(props) {
     ...rest
   } = { ...defaultProps, ...props };
   const theme = useTheme();
-  const spacing = useFrameStyles({
+  const spacing = useFrame({
     marginTop,
     marginRight,
     marginBottom,

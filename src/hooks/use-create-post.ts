@@ -12,7 +12,7 @@ interface Data {
   postId: number;
 }
 
-function useCreatePost(options: UseMutationOptions<Data, string, Variables>) {
+function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
   const client = useQueryClient();
   const { mutateAsync: insertHashtag } = useInsertHashtags();
   const { mutateAsync: insertPost } = useSQLiteMutation<{ text: string }>({

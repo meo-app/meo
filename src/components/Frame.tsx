@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { View, FlexStyle, StyleProp, ViewStyle } from "react-native";
 import { Units, Scales } from "../foundations/Spacing";
 import { useTheme } from "../application/providers/Theming";
 import { useDebugTrace } from "../hooks/use-debug-trace";
+import { Colors } from "../foundations/Colors";
 
 type Value = keyof Units | "none";
 type Spacing =
@@ -10,9 +11,10 @@ type Spacing =
   | [Value]
   | [Value, Value]
   | [Value, Value, Value]
-  | [Value, Value, Value, Value];
+  | [Value, Value, Value, Value]
+  | number;
 
-interface SpacingStyles {
+interface SpacingProps {
   marginTop?: Spacing;
   marginRight?: Spacing;
   marginBottom?: Spacing;
@@ -35,16 +37,17 @@ type Props = Pick<
 > & {
   style?: StyleProp<ViewStyle>;
   debugTrace?: boolean;
-  backgroundColor?: string;
-  width?: keyof Scales;
-  height?: keyof Scales;
-} & SpacingStyles;
+  backgroundColor?: keyof Colors;
+  width?: keyof Scales | number;
+  height?: keyof Scales | number;
+} & SpacingProps;
 
 const Frame: React.FunctionComponent<
   Props & React.ComponentProps<typeof View>
 > = React.memo(function Frame({ children, ...props }) {
-  const viewStyle = useFrameStyles(props);
+  const frame = useFrame(props);
   const {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     justifyContent,
     alignItems,
     flex,
@@ -64,12 +67,13 @@ const Frame: React.FunctionComponent<
     debugTrace,
     width,
     height,
+    backgroundColor,
     ...rest
   } = props;
 
   return (
     <View
-      style={[viewStyle, ...(Array.isArray(props.style) ? props.style : [])]}
+      style={[frame, ...(Array.isArray(props.style) ? props.style : [])]}
       {...rest}
     >
       {children}
@@ -77,7 +81,7 @@ const Frame: React.FunctionComponent<
   );
 });
 
-function useFrameStyles({
+function useFrame({
   justifyContent,
   alignItems,
   flex,
@@ -97,13 +101,37 @@ function useFrameStyles({
   debugTrace,
   width,
   height,
+  backgroundColor,
 }: Omit<Props, "children">): ViewStyle {
   const debugTraceStyles = useDebugTrace();
-  const { units, scales } = useTheme();
+  const { units, scales, colors } = useTheme();
   const getSpacing = useCallback(
     (key?: Spacing) =>
       key === "none" || !key ? 0 : units[key as keyof typeof units],
     [units]
+  );
+  const spacing = useMemo(
+    () => ({
+      marginRight: getSpacing(marginRight),
+      marginTop: getSpacing(marginTop),
+      marginBottom: getSpacing(marginBottom),
+      marginLeft: getSpacing(marginLeft),
+      paddingTop: getSpacing(paddingTop),
+      paddingRight: getSpacing(paddingRight),
+      paddingBottom: getSpacing(paddingBottom),
+      paddingLeft: getSpacing(paddingLeft),
+    }),
+    [
+      getSpacing,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+    ]
   );
   return {
     justifyContent,
@@ -113,23 +141,19 @@ function useFrameStyles({
     flexGrow,
     flexWrap,
     flexDirection,
-    marginRight: getSpacing(marginRight),
-    marginTop: getSpacing(marginTop),
-    marginBottom: getSpacing(marginBottom),
-    marginLeft: getSpacing(marginLeft),
-    paddingTop: getSpacing(paddingTop),
-    paddingRight: getSpacing(paddingRight),
-    paddingBottom: getSpacing(paddingBottom),
-    paddingLeft: getSpacing(paddingLeft),
-    ...(style as Object),
-    ...(debugTrace && debugTraceStyles),
+    ...spacing,
     ...(width && {
-      width: scales[width],
+      width: typeof width === "string" ? scales[width] : width,
     }),
     ...(height && {
-      height: scales[height],
+      height: typeof height === "string" ? scales[height] : height,
     }),
+    ...(backgroundColor && {
+      backgroundColor: colors[backgroundColor],
+    }),
+    ...(style as Object),
+    ...(debugTrace && debugTraceStyles),
   };
 }
 
-export { Frame, useFrameStyles, Spacing, Props as FrameProps, SpacingStyles };
+export { Frame, useFrame, Spacing, Props as FrameProps, SpacingProps };

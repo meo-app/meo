@@ -22,11 +22,7 @@ const Indicators: React.FunctionComponent<{
           marginRight="small"
           width="smaller"
           height="smaller"
-          backgroundColor={
-            active === item
-              ? theme.colors.primary
-              : theme.colors.foregroundPrimary
-          }
+          backgroundColor={active === item ? "primary" : "foregroundPrimary"}
           style={{
             borderRadius: theme.constants.absoluteRadius,
           }}
