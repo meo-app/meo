@@ -26,18 +26,17 @@ import { Header } from "../../../components/Header";
 import { OpenDrawerButton } from "../../../components/OpenDrawerButton";
 import { PostsList } from "../../../components/PostsList";
 import { SearchTextInput } from "../../../components/SearchTextInput";
-import { useDebounce } from "../../../hooks/use-debounce";
+import { useDebounceValue } from "../../../hooks/use-debounce-value";
+import { usePaginatedPosts } from "../../../hooks/use-paginated-posts";
+import { useTransaction } from "../../../hooks/use-transaction";
 import {
   RootStackParamList,
   RootStackRoutes,
 } from "../../../root-stack-routes";
 import { QueryKeys } from "../../../shared/QueryKeys";
-import { usePaginatedPosts } from "../../../hooks/use-paginated-posts";
-import { useTransaction } from "../../../hooks/use-transaction";
 import { useAppContext } from "../../providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
-import { PostTextContent } from "../../../components/PostTextContent";
 
 const KeyboardAvoidingView = Animated.createAnimatedComponent(
   RNKeyboardAvoidingView
@@ -64,7 +63,7 @@ function Explore() {
   const [term, onChangeText] = useState("");
   const searchInputRef = useRef(null);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const value = useDebounce(term, { delay: 300 });
+  const value = useDebounceValue(term, { delay: 300 });
 
   useEffect(() => {
     setMode("explore");

@@ -122,7 +122,7 @@ const PostLine = React.memo(function PostLine({
             <UserAvatar />
           </Frame>
           <Frame flexGrow={1} flex={1} paddingLeft="small">
-            <PostTextContent value={value} numberOfLines={3} />
+            <PostTextContent value={value} numberOfLines={6} />
           </Frame>
         </Frame>
         <Frame

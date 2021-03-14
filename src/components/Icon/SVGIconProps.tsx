@@ -8,6 +8,7 @@ import { Edit } from "./components/Edit";
 import { Camera } from "./components/Camera";
 import { Share } from "./components/Share";
 import { Trash } from "./components/Trash";
+import { Reply } from "./components/Reply";
 
 export interface SVGIconProps {
   width: number;
@@ -25,7 +26,8 @@ type IconTypes =
   | "Edit"
   | "Camera"
   | "Share"
-  | "Trash";
+  | "Trash"
+  | "Reply";
 
 export const ICONS: {
   [key in IconTypes]: React.FunctionComponent<SVGIconProps>;
@@ -40,4 +42,5 @@ export const ICONS: {
   Camera,
   Share,
   Trash,
+  Reply,
 };
