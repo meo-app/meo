@@ -10,7 +10,7 @@ import {
 } from "../application/providers/Theming";
 import { Units } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
-import { Frame, useFrameStyles } from "./Frame";
+import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
 const CREATE_BUTTON_SIZE: keyof Units = "largest";
@@ -99,7 +99,7 @@ const Gradient: React.FunctionComponent = function Gradient({ children }) {
 function Dock() {
   const spacing = useEdgeSpacing();
   const { onSearchPress, onHomePress } = useContext(Context);
-  const touch = useFrameStyles({
+  const touch = useFrame({
     height: "largest",
     alignItems: "center",
     justifyContent: "center",

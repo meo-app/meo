@@ -115,11 +115,7 @@ function Explore() {
   const keyExtractor = useCallback(({ value }: HashtagCount) => value, []);
 
   return (
-    <Frame
-      flexDirection="column"
-      backgroundColor={theme.colors.background}
-      flex={1}
-    >
+    <Frame flexDirection="column" backgroundColor="background" flex={1}>
       <Animated.View
         style={{
           flexDirection: "column",
