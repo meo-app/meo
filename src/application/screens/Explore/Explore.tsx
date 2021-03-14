@@ -37,6 +37,7 @@ import { useTransaction } from "../../../hooks/use-transaction";
 import { useAppContext } from "../../providers/AppProvider";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
+import { PostTextContent } from "../../../components/PostTextContent";
 
 const KeyboardAvoidingView = Animated.createAnimatedComponent(
   RNKeyboardAvoidingView
@@ -211,6 +212,14 @@ function Explore() {
           </View>
         </Header>
       </Animated.View>
+      {Boolean(!hashtags?.length) && mode === "explore" && (
+        <Frame flex={1 / 2} justifyContent="center" alignItems="center">
+          <Font variant="subtitle">Hashtags shows up here</Font>
+          <Font variant="body" marginTop="small">
+            Tag any post to start
+          </Font>
+        </Frame>
+      )}
       <Animated.View
         style={{
           position: "relative",
@@ -235,11 +244,12 @@ function Explore() {
           <PostsList data={data} onEndReached={() => fetchNextPage()} />
         )}
       </Animated.View>
+
       {displayNoSearchResults && (
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
-            flex: 1,
+            flex: 1 / 2,
             justifyContent: "center",
             alignItems: "center",
             transform: [{ translateY }],
