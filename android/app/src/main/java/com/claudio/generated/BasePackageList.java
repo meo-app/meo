@@ -1,4 +1,4 @@
-package com.claudio.generated;
+package com.meoapp.generated;
 
 import java.util.Arrays;
 import java.util.List;

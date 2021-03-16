@@ -179,9 +179,6 @@ function useTheme(): Theme {
   return theme;
 }
 
-/**
- * Note: Edges can have variants based on device/screen size etc
- */
 function useEdgeSpacing(): {
   vertical: keyof Units;
   horizontal: keyof Units;

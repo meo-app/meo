@@ -11,8 +11,7 @@ const duration = {
 
 const OnboardingFadeInView: React.FunctionComponent<{
   screenIndex: number;
-  bleed?: boolean;
-}> = function OnboardingFadeInView({ screenIndex, children, bleed }) {
+}> = function OnboardingFadeInView({ screenIndex, children }) {
   const opacity = useRef(new Animated.Value(0)).current;
   const { index: currentIndex } = useOnboardingContext();
   const index = useDebounceValue(currentIndex, {
@@ -37,10 +36,6 @@ const OnboardingFadeInView: React.FunctionComponent<{
       style={{
         flex: 1,
         opacity,
-        ...(!bleed && {
-          paddingLeft: theme.units[spacing.vertical],
-          paddingRight: theme.units[spacing.vertical],
-        }),
         paddingTop: theme.units[spacing.horizontal],
         paddingBottom: theme.units[spacing.horizontal],
       }}
