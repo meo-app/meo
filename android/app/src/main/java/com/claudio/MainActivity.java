@@ -1,4 +1,4 @@
-package com.claudio;
+package com.meoapp;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
