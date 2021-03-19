@@ -8,7 +8,7 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { QueryKeys } from "../../../shared/QueryKeys";
-import { useAvatarContext } from "../AvatarSelection";
+import { useAvatarContext } from "../../../components/AvatarSelection";
 
 export enum RootStackRoutes {
   OnboardingSlider = "OnboardingSlider",
@@ -40,7 +40,7 @@ const routes = [
 const OnboardingNavigationProvider: React.FunctionComponent = function OnboardingNavigationProvider({
   children,
 }) {
-  const { disabled, onSave } = useAvatarContext();
+  const { disabled, saveAvatar } = useAvatarContext();
   const navigationRef = useRef<NavigationContainerRef>(null);
   const [index, setIndex] = useState(0);
   const client = useQueryClient();
@@ -60,7 +60,7 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
         index,
         disabled,
         finalize: () => {
-          onSave();
+          saveAvatar();
           client.refetchQueries([QueryKeys.HAS_SEEN_ONBOARDING]);
         },
         ...(index + 1 <= routes.length - 1 && {

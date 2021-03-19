@@ -22,6 +22,7 @@ import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
 import { useHasSeenOnboarding } from "./storage/onboarding";
 import SplashScreen from "react-native-bootsplash";
 import { PostDetails } from "./application/screens/PostDetails";
+import { ChangeAvatar } from "./application/screens/ChangeAvatar";
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 const Tab = createBottomTabNavigator();
@@ -68,7 +69,6 @@ function TabsNavigator() {
 
 function MainScreens() {
   const theme = useTheme();
-
   return (
     <RootStack.Navigator
       mode="modal"
@@ -123,6 +123,10 @@ function MainScreens() {
       <RootStack.Screen
         component={PostDetails}
         name={RootStackRoutes.PostDetails}
+      />
+      <RootStack.Screen
+        component={ChangeAvatar}
+        name={RootStackRoutes.ChangeAvatar}
       />
     </RootStack.Navigator>
   );

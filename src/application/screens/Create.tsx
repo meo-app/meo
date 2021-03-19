@@ -87,46 +87,32 @@ function Create() {
   const theme = useTheme();
   const spacing = useEdgeSpacing();
   const { onChangeText, text } = useCreateContext();
+  const backgroundColor = theme.colors.background;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: theme.colors.background,
-        }}
-      >
-        <View
+    <Frame flex={1} style={{ flex: 1, backgroundColor }}>
+      <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <Frame
+          paddingLeft={spacing.horizontal}
+          paddingRight={spacing.horizontal}
+          flex={1}
+          justifyContent="flex-end"
+          alignItems="flex-start"
           style={{
-            flex: 1,
-            paddingLeft: theme.units[spacing.horizontal],
-            paddingRight: theme.units[spacing.horizontal],
             backgroundColor: theme.colors.background,
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "flex-start",
           }}
         >
           <Frame
             flexDirection="row"
             alignItems="center"
+            justifyContent="space-around"
             flex={1}
-            style={{
-              width: "100%",
-            }}
+            style={{ width: "100%" }}
           >
             <Frame
-              height="largest"
               alignItems="flex-end"
               marginTop="small"
-              style={{
-                alignSelf: "flex-start",
-              }}
+              alignSelf="flex-start"
             >
               <UserAvatar size="larger" />
             </Frame>
@@ -151,9 +137,9 @@ function Create() {
               <PostTextContent value={text} />
             </TextInput>
           </Frame>
-        </View>
+        </Frame>
       </ScrollView>
-    </View>
+    </Frame>
   );
 }
 
@@ -193,25 +179,15 @@ function Screens() {
               </Frame>
               <Frame marginTop="large">
                 <Pressable
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.5 : 1,
+                  })}
                   disabled={!text}
                   onPress={() => {
                     createPost({ text });
                   }}
-                  style={({ pressed }) => ({
-                    backgroundColor: !text
-                      ? theme.colors.foregroundSecondary
-                      : theme.colors.primary,
-                    opacity: pressed ? 0.5 : 1,
-                    paddingTop: theme.units.smaller,
-                    paddingBottom: theme.units.smaller,
-                    paddingLeft: theme.units.small,
-                    paddingRight: theme.units.small,
-                    borderRadius: theme.constants.absoluteRadius,
-                    alignItems: "center",
-                    ...(theme.typography.caption as Object),
-                  })}
                 >
-                  <Font color="absoluteLight">Create</Font>
+                  <Font color="primary">Create</Font>
                 </Pressable>
               </Frame>
             </Frame>

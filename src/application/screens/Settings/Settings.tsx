@@ -1,19 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoremIpsum } from "lorem-ipsum";
 import React from "react";
 import { Pressable } from "react-native";
 import { useMutation } from "react-query";
-import { useFlushOnboarding } from "../../../storage/onboarding";
-import { useCreatePost } from "../../../hooks/use-create-post";
-import { useFlushDatabase } from "../../../hooks/use-flush-database";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { SubtitleHeader } from "../../../components/SubtitleHeader";
+import { useCreatePost } from "../../../hooks/use-create-post";
+import { useFlushDatabase } from "../../../hooks/use-flush-database";
 import { useStyles } from "../../../hooks/use-styles";
-import { RootStackRoutes } from "../../../root-stack-routes";
+import { useFlushOnboarding } from "../../../storage/onboarding";
 import { useEdgeSpacing, useTheme } from "../../providers/Theming";
-import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import { SettingsStackRoutes } from "./settings-stack-routes";
 
 const Stack = createStackNavigator();
@@ -48,7 +45,6 @@ function useCreatDummyPosts(times: number = 100) {
 }
 
 function Settings() {
-  const navigation = useNavigation();
   const theme = useTheme();
   const { mutate: flushOnboarding } = useFlushOnboarding();
   const flushDatabase = useFlushDatabase();
@@ -71,12 +67,6 @@ function Settings() {
       }}
     >
       <SubtitleHeader title="Settings" />
-      <Pressable
-        style={styles.pressable}
-        onPress={() => navigation.navigate(SettingsStackRoutes.AvatarSelection)}
-      >
-        <Font color="primary">Select avatar</Font>
-      </Pressable>
       <Pressable onPress={() => flushOnboarding()} style={styles.pressable}>
         <Font color="primary">Flush onboarding</Font>
       </Pressable>
@@ -91,28 +81,14 @@ function Settings() {
 }
 
 function Root() {
-  const navigation = useNavigation();
   return (
-    <AvatarContextProvider
-      onSuccess={() => {
-        navigation.navigate(RootStackRoutes.Home);
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
       }}
     >
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen
-          name={SettingsStackRoutes.Settings}
-          component={Settings}
-        />
-        <Stack.Screen
-          name={SettingsStackRoutes.AvatarSelection}
-          component={AvatarSelection}
-        />
-      </Stack.Navigator>
-    </AvatarContextProvider>
+      <Stack.Screen name={SettingsStackRoutes.Settings} component={Settings} />
+    </Stack.Navigator>
   );
 }
 

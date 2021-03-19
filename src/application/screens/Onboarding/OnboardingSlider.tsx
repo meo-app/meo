@@ -1,5 +1,4 @@
 import ViewPager from "@react-native-community/viewpager";
-import { ThemeProvider } from "@react-navigation/native";
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Font } from "../../../components/Font";

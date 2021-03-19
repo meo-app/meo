@@ -1,6 +1,12 @@
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Image,
   ImageBackground,
@@ -9,21 +15,16 @@ import {
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useQuery } from "react-query";
-import {
-  AvatarIds,
-  AVATARS_LIST,
-  DefaultAvatar,
-} from "../../components/Avatars/avatars-list";
-import { Frame } from "../../components/Frame";
-import { Icon } from "../../components/Icon/Icon";
-import { SubtitleHeader } from "../../components/SubtitleHeader";
-import { useStyles } from "../../hooks/use-styles";
-import { QueryKeys } from "../../shared/QueryKeys";
-import { useAvatar, useSelectAvatar } from "../../storage/avatar";
-import { assert } from "../../shared/assert";
-import { base64ToImageUrl } from "../../shared/image-utils";
-import { useTheme } from "../providers/Theming";
+import { useQuery, useQueryClient } from "react-query";
+import { useTheme } from "../application/providers/Theming";
+import { useStyles } from "../hooks/use-styles";
+import { assert } from "../shared/assert";
+import { base64ToImageUrl } from "../shared/image-utils";
+import { QueryKeys } from "../shared/QueryKeys";
+import { useAvatar, useSelectAvatar } from "../storage/avatar";
+import { AvatarIds, AVATARS_LIST, DefaultAvatar } from "./Avatars/avatars-list";
+import { Frame } from "./Frame";
+import { Icon } from "./Icon/Icon";
 
 async function getImage(): Promise<{ base64?: string } | null> {
   try {
@@ -51,7 +52,7 @@ const Context = React.createContext<{
   setSelectedPhoto: (photo: string) => void;
   photo: string | null;
   disabled: boolean;
-  onSave: () => void;
+  saveAvatar: () => void;
 } | null>(null);
 
 function useAvatarContext() {
@@ -60,21 +61,23 @@ function useAvatarContext() {
   return context;
 }
 
-const AvatarContextProvider: React.FunctionComponent<{
+const AvatarSelectionProvider: React.FunctionComponent<{
   onSuccess?: () => void;
-}> = function AvatarContextProvider({ children, onSuccess }) {
+}> = function AvatarSelectionProvider({ children, onSuccess }) {
   const { data } = useAvatar();
   const [photo, setSelectedPhoto] = useState<string | null>(
     data?.avatarId === AvatarIds.__USER_PHOTO__ ? String(data.base64) : null
   );
   const [avatarId, setAvatarId] = useState<AvatarIds>(AvatarIds.Wynonna);
+  const client = useQueryClient();
   const { mutate } = useSelectAvatar({
     onSuccess: () => {
+      client.invalidateQueries(QueryKeys.GET_USER_AVATAR);
       onSuccess?.();
     },
   });
 
-  const onSave = useCallback(() => {
+  const saveAvatar = useCallback(() => {
     if (avatarId === AvatarIds.__USER_PHOTO__ && photo) {
       return mutate({
         avatarId,
@@ -99,7 +102,7 @@ const AvatarContextProvider: React.FunctionComponent<{
         photo,
         setSelectedPhoto,
         disabled,
-        onSave,
+        saveAvatar,
         avatarId,
         setAvatarId,
       }}
@@ -170,7 +173,7 @@ function UploadButton() {
         setImagePickerOpen(true);
       }}
     >
-      {!photo && <Icon type="Camera" color="absoluteLight" size="larger" />}
+      {!photo && <Icon type="Camera" color="absoluteLight" size="medium" />}
       {photo && (
         <ImageBackground
           source={{
@@ -194,20 +197,10 @@ function UploadButton() {
   );
 }
 
-interface Props {
-  mode?: "onboarding" | "default";
-}
-
-interface DefaultProps extends Required<Pick<Props, "mode">> {}
-
-const defaultProps: DefaultProps = {
-  mode: "default",
-};
-
 const size = 120;
+const data = [...AVATARS_LIST, { id: AvatarIds.__USER_PHOTO__ }];
 
-function AvatarSelection(props: Props) {
-  const { mode } = { ...defaultProps, ...props };
+function AvatarSelection() {
   const theme = useTheme();
   const { setAvatarId, avatarId } = useAvatarContext();
   const styles = useStyles(() => ({
@@ -269,19 +262,8 @@ function AvatarSelection(props: Props) {
     [avatarId, setAvatarId, styles.avatar, theme.colors.primary]
   );
 
-  const data = useMemo(
-    () => [
-      ...AVATARS_LIST,
-      {
-        id: AvatarIds.__USER_PHOTO__,
-      },
-    ],
-    []
-  );
-
   return (
     <Frame flex={1} justifyContent="flex-start" alignItems="center">
-      {mode === "default" && <SubtitleHeader title="Select your avatar" />}
       <Frame
         flexWrap="wrap"
         flexDirection="row"
@@ -296,9 +278,6 @@ function AvatarSelection(props: Props) {
           numColumns={2}
           contentContainerStyle={{
             flexGrow: 1 / 2,
-            ...(mode === "onboarding" && {
-              flexGrow: 1,
-            }),
             paddingHorizontal: theme.units.large,
             justifyContent: "center",
           }}
@@ -308,4 +287,4 @@ function AvatarSelection(props: Props) {
   );
 }
 
-export { AvatarSelection, AvatarContextProvider, useAvatarContext };
+export { AvatarSelection, AvatarSelectionProvider, useAvatarContext };
