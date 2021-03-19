@@ -1,17 +1,17 @@
 {
   "main": "index.js",
-  "name": "claudio",
+  "name": "meo",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "react-native start --port=8081",
     "test": "jest",
-    "bundle:ios": "react-native bundle --platform ios --entry-file index.js --bundle-output ios/claudio/main.jsbundle --assets-dest ios/claudio",
+    "bundle:ios": "react-native bundle --platform ios --entry-file index.js --bundle-output ios/meo/main.jsbundle --assets-dest ios/meo",
     "bundle:android": "mkdir -p android/app/src/main/assets && react-native bundle --platform android --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "bump-patch": "npm version patch --no-git-tag-version && bundle exec fastlane bump",
-    "bump-minor": "npm version minor --no-git-tag-version && bundle exec fastlane bump",
-    "bump-major": "npm version major --no-git-tag-version && bundle exec fastlane bump"
+    "bump:patch": "npm version patch --no-git-tag-version && bundle exec fastlane bump",
+    "bump:minor": "npm version minor --no-git-tag-version && bundle exec fastlane bump",
+    "bump:major": "npm version major --no-git-tag-version && bundle exec fastlane bump"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.1.0",
