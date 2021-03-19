@@ -1,5 +1,6 @@
 {
   "main": "index.js",
+  "name": "claudio",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -8,9 +9,9 @@
     "test": "jest",
     "bundle:ios": "react-native bundle --platform ios --entry-file index.js --bundle-output ios/claudio/main.jsbundle --assets-dest ios/claudio",
     "bundle:android": "mkdir -p android/app/src/main/assets && react-native bundle --platform android --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "bump-patch": "yarn version patch --no-git-tag-version && bundle exec fastlane bump",
-    "bump-minor": "yarn version minor --no-git-tag-version && bundle exec fastlane bump",
-    "bump-major": "yarn version major --no-git-tag-version && bundle exec fastlane bump"
+    "bump-patch": "npm version patch --no-git-tag-version && bundle exec fastlane bump",
+    "bump-minor": "npm version minor --no-git-tag-version && bundle exec fastlane bump",
+    "bump-major": "npm version major --no-git-tag-version && bundle exec fastlane bump"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.1.0",
@@ -72,5 +73,5 @@
     "preset": "react-native"
   },
   "private": true,
-  "version": "0.0.0"
+  "version": "3.0.0"
 }

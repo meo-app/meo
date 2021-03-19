@@ -1,4 +1,5 @@
 import ViewPager from "@react-native-community/viewpager";
+import { ThemeProvider } from "@react-navigation/native";
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Font } from "../../../components/Font";
@@ -45,7 +46,7 @@ function Section({ title, subtitle }: { title: string; subtitle: string }) {
 
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
-  const styles = useStyles(() => ({
+  const styles = useStyles((theme) => ({
     container: {
       flex: 1,
       justifyContent: "center",
@@ -54,6 +55,7 @@ function OnboardingSlider() {
     slider: {
       justifyContent: "center",
       alignItems: "center",
+      padding: theme.units.large,
     },
   }));
   return (
