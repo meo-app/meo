@@ -10,6 +10,8 @@ import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { UserAvatar } from "./UserAvatar";
 import { Linking } from "react-native";
+import { SettingsStackRoutes } from "../application/screens/Settings/settings-stack-routes";
+import { RootStackRoutes } from "../root-stack-routes";
 
 interface Props extends DrawerContentComponentProps {}
 
@@ -46,7 +48,11 @@ const CustomDrawerContent: React.VoidFunctionComponent<Props> = function CustomD
     >
       <SafeAreaView style={styles.root}>
         <Frame alignItems="center" justifyContent="center" paddingTop="large">
-          <Pressable onPress={() => console.log("TODO: change avatar")}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate(RootStackRoutes.ChangeAvatar);
+            }}
+          >
             <Frame marginRight="medium" alignItems="center">
               <UserAvatar size="largest" />
             </Frame>
@@ -76,14 +82,14 @@ const CustomDrawerContent: React.VoidFunctionComponent<Props> = function CustomD
         </Frame>
         <Frame marginTop="larger">
           <DrawerItem
-            onPress={() => navigation.navigate("Settings")}
+            onPress={() => navigation.navigate(SettingsStackRoutes.Settings)}
             text="Settings"
           />
           <DrawerItem
+            text="Feedback"
             onPress={() =>
               Linking.openURL("https://airtable.com/shrkkB8aDPVb65Yrr")
             }
-            text="Feedback"
           />
           <DrawerItem onPress={() => {}} text="About" />
         </Frame>

@@ -1,6 +1,6 @@
 enum SettingsStackRoutes {
   Settings = "Settings",
-  AvatarSelection = "AvatarSelection",
+  // AvatarSelection = "AvatarSelection",
 }
 
 type SettingsStackParamsList = {

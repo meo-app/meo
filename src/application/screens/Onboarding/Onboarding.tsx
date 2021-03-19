@@ -2,6 +2,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Pressable, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  AvatarSelectionProvider,
+  AvatarSelection,
+} from "../../../components/AvatarSelection";
 import { Font } from "../../../components/Font";
 import { Frame } from "../../../components/Frame";
 import { Picture } from "../../../components/Picture";
@@ -13,7 +17,6 @@ import {
   useEdgeSpacing,
   useTheme,
 } from "../../providers/Theming";
-import { AvatarContextProvider, AvatarSelection } from "../AvatarSelection";
 import {
   OnboardingNavigationProvider,
   RootStackRoutes,
@@ -52,7 +55,7 @@ const OnboardingSliderScreen = () => (
 
 const OnboardingAvatarSelectionScreen = () => (
   <OnboardingFadeInView screenIndex={1}>
-    <AvatarSelection mode="onboarding" />
+    <AvatarSelection />
   </OnboardingFadeInView>
 );
 
@@ -153,7 +156,7 @@ function Onboarding() {
 
 function Root() {
   return (
-    <AvatarContextProvider>
+    <AvatarSelectionProvider>
       <ThemeProvider forceColorSchemeTo="dark">
         <StatusBar
           barStyle={STATUS_BAR_SCHEME_MAP.dark}
@@ -165,7 +168,7 @@ function Root() {
           <OnboardingBackgroundImage />
         </OnboardingNavigationProvider>
       </ThemeProvider>
-    </AvatarContextProvider>
+    </AvatarSelectionProvider>
   );
 }
 

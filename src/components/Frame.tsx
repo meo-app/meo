@@ -34,6 +34,7 @@ type Props = Pick<
   | "flexGrow"
   | "flexWrap"
   | "flexDirection"
+  | "alignSelf"
 > & {
   style?: StyleProp<ViewStyle>;
   debugTrace?: boolean;
@@ -68,6 +69,7 @@ const Frame: React.FunctionComponent<
     width,
     height,
     backgroundColor,
+    alignSelf,
     ...rest
   } = props;
 
@@ -102,6 +104,7 @@ function useFrame({
   width,
   height,
   backgroundColor,
+  alignSelf,
 }: Omit<Props, "children">): ViewStyle {
   const debugTraceStyles = useDebugTrace();
   const { units, scales, colors } = useTheme();
@@ -141,6 +144,7 @@ function useFrame({
     flexGrow,
     flexWrap,
     flexDirection,
+    alignSelf,
     ...spacing,
     ...(width && {
       width: typeof width === "string" ? scales[width] : width,
