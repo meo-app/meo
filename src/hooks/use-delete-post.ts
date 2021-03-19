@@ -29,11 +29,12 @@ function useDeletePost(
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        console.log("onSuccess");
         client.invalidateQueries([QueryKeys.POSTS]);
         client.invalidateQueries([QueryKeys.HASHTAG_VIEWER]);
         client.invalidateQueries([QueryKeys.SEARCH]);
         client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
         options.onSuccess?.(data, variables, context);
       },
     }
