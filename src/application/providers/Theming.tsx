@@ -72,12 +72,12 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
   },
   scales: {
     smallest: 8,
-    smaller: 12,
-    small: 16,
-    medium: 24,
-    large: 32,
-    larger: 48,
-    largest: 64,
+    smaller: 16,
+    small: 24,
+    medium: 32,
+    large: 48,
+    larger: 64,
+    largest: 128,
   },
   typography: {
     body: {

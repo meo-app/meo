@@ -13,7 +13,7 @@ import { useStyles } from "../hooks/use-styles";
 import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
-const CREATE_BUTTON_SIZE: keyof Units = "largest";
+const CREATE_BUTTON_SIZE: keyof Units = "larger";
 const CREATE_BUTTON_DIMENSION = 1.3;
 
 interface Props {
@@ -100,7 +100,7 @@ function Dock() {
   const spacing = useEdgeSpacing();
   const { onSearchPress, onHomePress } = useContext(Context);
   const touch = useFrame({
-    height: "largest",
+    height: "larger",
     alignItems: "center",
     justifyContent: "center",
     style: {
@@ -121,7 +121,7 @@ function Dock() {
       backgroundColor: theme.colors.background,
       marginRight: theme.units[spacing.horizontal] * 1.5,
       marginLeft: theme.units[spacing.horizontal] * 1.5,
-      height: theme.scales.largest,
+      height: theme.scales.larger,
       borderRadius: theme.constants.absoluteRadius,
       ...theme.constants.shadow,
     },
@@ -135,12 +135,12 @@ function Dock() {
     >
       <Frame flexGrow={1}>
         <Pressable onPress={() => onHomePress?.()} style={touchable}>
-          <Icon type="Home" size="medium" />
+          <Icon type="Home" size="small" />
         </Pressable>
       </Frame>
       <Frame flexGrow={1}>
         <Pressable onPress={() => onSearchPress?.()} style={touchable}>
-          <Icon type="Search" size="medium" />
+          <Icon type="Search" size="small" />
         </Pressable>
       </Frame>
     </Frame>
@@ -180,7 +180,7 @@ function CreateButton() {
             : theme.colors.backgroundAccent,
         })}
       >
-        <Icon type="Plus" size="medium" />
+        <Icon type="Plus" size="small" />
       </Pressable>
     </Frame>
   );

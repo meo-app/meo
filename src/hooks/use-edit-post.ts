@@ -43,10 +43,13 @@ function useEditPost(
     {
       ...options,
       onSuccess: (data, variables, context) => {
+        // TODO: Save queries that needs to be updated on the same place for delete/edit/create
         client.invalidateQueries([QueryKeys.POSTS]);
         client.invalidateQueries([QueryKeys.HASHTAG_VIEWER]);
         client.invalidateQueries([QueryKeys.SEARCH]);
         client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
         options.onSuccess?.(data, variables, context);
       },
     }

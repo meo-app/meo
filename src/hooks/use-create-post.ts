@@ -41,6 +41,8 @@ function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
       onSuccess: (...args) => {
         client.invalidateQueries([QueryKeys.POSTS]);
         client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
+        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
         options?.onSuccess?.call(null, ...args);
       },
     }

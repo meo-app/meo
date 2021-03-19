@@ -128,7 +128,7 @@ function Create() {
                 alignSelf: "flex-start",
               }}
             >
-              <UserAvatar />
+              <UserAvatar size="larger" />
             </Frame>
             <TextInput
               autoFocus

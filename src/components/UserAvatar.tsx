@@ -9,28 +9,16 @@ import { base64ToImageUrl } from "../shared/image-utils";
 import { AVATARS_LIST } from "./Avatars/avatars-list";
 
 interface Props {
-  size?: "default" | "large";
+  size?: keyof Scales;
 }
 
-const SIZE_MAP: {
-  [k in NonNullable<Props["size"]>]: Extract<
-    keyof Scales,
-    "larger" | "largest"
-  >;
-} = {
-  default: "larger",
-  large: "largest",
-};
-
-const defaultProps: Required<Pick<Props, "size">> = {
-  size: "default",
-};
-
-const UserAvatar = React.memo(function UserAvatar(props: Props) {
+const UserAvatar = React.memo<Props>(function UserAvatar({
+  children,
+  size = "large",
+}) {
   const { data } = useAvatar();
-  const { size } = { ...defaultProps, ...props };
   const theme = useTheme();
-  const width = theme.scales[SIZE_MAP[size]];
+  const width = theme.scales[size];
   const styles = useStyles((theme) => ({
     root: {
       width,
@@ -64,7 +52,9 @@ const UserAvatar = React.memo(function UserAvatar(props: Props) {
           source={{
             uri,
           }}
-        />
+        >
+          {children}
+        </FastImage>
       )}
       {Platform.OS === "android" && (
         <Image
@@ -73,7 +63,9 @@ const UserAvatar = React.memo(function UserAvatar(props: Props) {
           source={{
             uri,
           }}
-        />
+        >
+          {children}
+        </Image>
       )}
     </View>
   );

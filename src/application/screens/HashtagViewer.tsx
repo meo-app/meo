@@ -39,11 +39,6 @@ function HashtagViewer(props: {
         backgroundColor: theme.colors.background,
       }}
     >
-      {isLoading && (
-        <View>
-          <Font>TODO: loading state</Font>
-        </View>
-      )}
       {isError && (
         <View
           style={{
@@ -53,9 +48,7 @@ function HashtagViewer(props: {
           <Font variant="body">There was an error!</Font>
         </View>
       )}
-      {data?.pages.length && (
-        <PostsList data={data} onEndReached={() => fetchNextPage()} />
-      )}
+      <PostsList data={data} onEndReached={() => fetchNextPage()} />
     </View>
   );
 }
