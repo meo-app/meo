@@ -1,9 +1,9 @@
 import { NavigationProp } from "@react-navigation/native";
 import React from "react";
-import { ImageBackground, Linking, Pressable } from "react-native";
+import { Alert, ImageBackground, Linking, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useStyles } from "../hooks/use-styles";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
+import { useStyles } from "../hooks/use-styles";
 import { usePaddingHorizontal } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
@@ -86,7 +86,25 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
               Linking.openURL("https://airtable.com/shrkkB8aDPVb65Yrr")
             }
           />
-          <DrawerItem onPress={() => {}} text="About" />
+          <DrawerItem
+            onPress={() =>
+              Alert.alert("Something About Us", "Daft Punk", [
+                {
+                  onPress: () =>
+                    Linking.openURL(
+                      "https://www.youtube.com/watch?v=sOS9aOIXPEk"
+                    ),
+                  style: "destructive",
+                  text: "Nah",
+                },
+                {
+                  onPress: () => {},
+                  text: "Okay",
+                },
+              ])
+            }
+            text="About"
+          />
         </Frame>
       </SafeAreaView>
     </ImageBackground>
