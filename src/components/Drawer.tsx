@@ -10,6 +10,7 @@ import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { UserAvatar } from "./UserAvatar";
+import { version } from "../../package.json";
 
 interface Props {
   navigation: NavigationProp<NavigationParamsConfig>;
@@ -23,6 +24,7 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
     root: {
       paddingHorizontal,
       flex: 1,
+      justifyContent: "space-between",
     },
   }));
 
@@ -46,65 +48,70 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
       }}
     >
       <SafeAreaView style={styles.root}>
-        <Frame alignItems="center" justifyContent="center" paddingTop="large">
-          <Pressable onPress={() => navigation.navigate("ChangeAvatar")}>
-            <Frame marginRight="medium" alignItems="center">
-              <UserAvatar size="largest" />
-            </Frame>
-          </Pressable>
-          <Frame marginTop="large" flexDirection="row">
-            <Frame
-              alignItems="center"
-              justifyContent="center"
-              paddingLeft="large"
-              paddingRight="large"
-            >
-              <Font variant="display">{posts?.[0]?.total}</Font>
-              <Font variant="caption">posts</Font>
-            </Frame>
-            <Frame
-              alignItems="center"
-              justifyContent="center"
-              paddingLeft="large"
-              paddingRight="large"
-            >
-              <Font variant="display" color="primary">
-                {tags?.[0].total}
-              </Font>
-              <Font variant="caption">tags</Font>
+        <Frame>
+          <Frame alignItems="center" justifyContent="center" paddingTop="large">
+            <Pressable onPress={() => navigation.navigate("ChangeAvatar")}>
+              <Frame marginRight="medium" alignItems="center">
+                <UserAvatar size="largest" />
+              </Frame>
+            </Pressable>
+            <Frame marginTop="large" flexDirection="row">
+              <Frame
+                alignItems="center"
+                justifyContent="center"
+                paddingLeft="large"
+                paddingRight="large"
+              >
+                <Font variant="display">{posts?.[0]?.total}</Font>
+                <Font variant="caption">posts</Font>
+              </Frame>
+              <Frame
+                alignItems="center"
+                justifyContent="center"
+                paddingLeft="large"
+                paddingRight="large"
+              >
+                <Font variant="display" color="primary">
+                  {tags?.[0].total}
+                </Font>
+                <Font variant="caption">tags</Font>
+              </Frame>
             </Frame>
           </Frame>
+          <Frame marginTop="larger">
+            <DrawerItem
+              onPress={() => navigation.navigate("Settings")}
+              text="Settings"
+            />
+            <DrawerItem
+              text="Feedback"
+              onPress={() =>
+                Linking.openURL("https://airtable.com/shrkkB8aDPVb65Yrr")
+              }
+            />
+            <DrawerItem
+              onPress={() =>
+                Alert.alert("Something About Us", "Daft Punk", [
+                  {
+                    onPress: () =>
+                      Linking.openURL(
+                        "https://www.youtube.com/watch?v=sOS9aOIXPEk"
+                      ),
+                    style: "destructive",
+                    text: "Nah",
+                  },
+                  {
+                    onPress: () => {},
+                    text: "Okay",
+                  },
+                ])
+              }
+              text="About"
+            />
+          </Frame>
         </Frame>
-        <Frame marginTop="larger">
-          <DrawerItem
-            onPress={() => navigation.navigate("Settings")}
-            text="Settings"
-          />
-          <DrawerItem
-            text="Feedback"
-            onPress={() =>
-              Linking.openURL("https://airtable.com/shrkkB8aDPVb65Yrr")
-            }
-          />
-          <DrawerItem
-            onPress={() =>
-              Alert.alert("Something About Us", "Daft Punk", [
-                {
-                  onPress: () =>
-                    Linking.openURL(
-                      "https://www.youtube.com/watch?v=sOS9aOIXPEk"
-                    ),
-                  style: "destructive",
-                  text: "Nah",
-                },
-                {
-                  onPress: () => {},
-                  text: "Okay",
-                },
-              ])
-            }
-            text="About"
-          />
+        <Frame alignItems="flex-end">
+          <Font variant="caption">{version}</Font>
         </Frame>
       </SafeAreaView>
     </ImageBackground>
