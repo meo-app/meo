@@ -143,7 +143,7 @@ function Create() {
                   paddingLeft: theme.units.small,
                 }}
               >
-                <PostTextContent value={text} />
+                <PostTextContent value={text} variant="highlight" />
               </TextInput>
             </Frame>
           </Frame>

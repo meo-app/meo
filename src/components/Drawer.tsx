@@ -110,7 +110,7 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
             />
           </Frame>
         </Frame>
-        <Frame alignItems="flex-end">
+        <Frame alignItems="flex-end" paddingBottom="medium">
           <Font variant="caption">{version}</Font>
         </Frame>
       </SafeAreaView>
