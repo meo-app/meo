@@ -1,11 +1,17 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { View, ViewStyle } from "react-native";
 import FastImage, { Source } from "react-native-fast-image";
-import { useTheme } from "../application/providers/Theming";
-import { AspectRatio, useAspectRatio } from "../hooks/use-aspect-ratio";
+import { useTheme } from "../providers/Theming";
 
 type ResizeMode = "cover" | "contain" | "stretch" | "center";
 type MediaOrientation = "portrait" | "landscape";
+type AspectRatio =
+  | "standard"
+  | "classic"
+  | "square"
+  | "widescreen"
+  | "panorama"
+  | "superscope";
 
 interface Props {
   /** Image Url or React Native image source object */
@@ -42,36 +48,49 @@ interface Props {
   style?: ViewStyle;
 }
 
-interface DefaultProps
-  extends Required<
-    Pick<Props, "resizeMode" | "aspectRatio" | "orientation" | "lazyload">
-  > {}
+function getAspectRatioValue(aspectRatio?: AspectRatio): number {
+  switch (aspectRatio) {
+    case "classic":
+      return 1.5; // 3/2;
 
-const defaultProps: DefaultProps = {
-  resizeMode: "cover",
-  aspectRatio: "standard",
-  orientation: "landscape",
-  lazyload: true,
-};
+    case "square":
+      return 1; // 1/1
+
+    case "widescreen":
+      return 1.777; // 16/9;
+
+    case "panorama":
+      return 3; // 3/1;
+
+    case "superscope":
+      return 2; // 2/1;
+
+    case "standard": // DEFAULT
+    default:
+      return 1.333; // 4/3;
+  }
+}
 
 const Picture = React.memo(function Picture(props: Props) {
   const {
     width,
     height,
-    aspectRatio,
-    orientation,
     source,
-    resizeMode,
-    lazyload,
     onImageLoaded,
     onImageFailed,
     children,
+    resizeMode = "cover",
+    aspectRatio = "standard",
+    orientation = "landscape",
+    lazyload = true,
     style: overrideStyle,
-  } = { ...defaultProps, ...props };
+  } = props;
 
   const theme = useTheme();
   const [isImageAlreadyLoaded, setImageAlreadyLoaded] = useState(false);
-  const aspectRatioValue = useAspectRatio(aspectRatio);
+  const aspectRatioValue = useMemo(() => getAspectRatioValue(aspectRatio), [
+    aspectRatio,
+  ]);
 
   const sanitizedWidth = useMemo(() => {
     if (height && !width) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { ICONS } from "./SVGIconProps";
-import { useTheme } from "../../application/providers/Theming";
+import { useTheme } from "../../providers/Theming";
 import { Scales } from "../../foundations/Spacing";
 import { Colors } from "../../foundations/Colors";
 

@@ -19,23 +19,20 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { Font } from "../../../components/Font";
-import { Frame } from "../../../components/Frame";
-import { HashtagCard } from "../../../components/HashtagCard";
-import { Header } from "../../../components/Header";
-import { OpenDrawerButton } from "../../../components/OpenDrawerButton";
-import { PostsList } from "../../../components/PostsList";
-import { SearchTextInput } from "../../../components/SearchTextInput";
-import { useDebounceValue } from "../../../hooks/use-debounce-value";
-import { usePaginatedPosts } from "../../../hooks/use-paginated-posts";
-import { useTransaction } from "../../../hooks/use-transaction";
-import {
-  RootStackParamList,
-  RootStackRoutes,
-} from "../../../root-stack-routes";
-import { QueryKeys } from "../../../shared/QueryKeys";
+import { Font } from "../../components/Font";
+import { Frame } from "../../components/Frame";
+import { HashtagCard } from "../../components/HashtagCard";
+import { Header } from "../../components/Header";
+import { OpenDrawerButton } from "../../components/OpenDrawerButton";
+import { PostsList } from "../../components/PostsList";
+import { SearchTextInput } from "../../components/SearchTextInput";
+import { useDebounceValue } from "../../hooks/use-debounce-value";
+import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
+import { useSQLiteQuery } from "../../hooks/use-sqlite-query";
 import { useAppContext } from "../../providers/AppProvider";
-import { useEdgeSpacing, useTheme } from "../../providers/Theming";
+import { usePaddingHorizontal, useTheme } from "../../providers/Theming";
+import { QueryKeys } from "../../shared/QueryKeys";
+import { NavigationParamsConfig } from "../../shared/NavigationParamsConfig";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
 
 const KeyboardAvoidingView = Animated.createAnimatedComponent(
@@ -57,19 +54,19 @@ function Explore() {
     scale,
     mode,
   } = useSearchInputAnimation();
-  const spacing = useEdgeSpacing();
+  const { paddingHorizontal } = usePaddingHorizontal();
   const theme = useTheme();
   const { tabBarHeight } = useAppContext();
   const [term, onChangeText] = useState("");
   const searchInputRef = useRef(null);
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const value = useDebounceValue(term, { delay: 300 });
 
   useEffect(() => {
     setMode("explore");
   }, [setMode]);
 
-  const { data: hashtags } = useTransaction<HashtagCount>(
+  const { data: hashtags } = useSQLiteQuery<HashtagCount>(
     QueryKeys.TOP_HASHTAGS,
     "select count(value) as total, value from hashtags group by value order by total desc"
   );
@@ -93,23 +90,19 @@ function Explore() {
       <Pressable
         style={{
           flex: 1 / 2,
-          marginLeft: theme.units[spacing.horizontal],
-          marginTop: theme.units[spacing.horizontal],
+          marginLeft: paddingHorizontal,
+          marginTop: paddingHorizontal,
           ...(index % 2 && {
-            marginRight: theme.units[spacing.horizontal],
+            marginRight: paddingHorizontal,
           }),
         }}
         key={String(item.value + item.total)}
-        onPress={() => {
-          navigation.navigate(RootStackRoutes.HashtagViewer, {
-            hashtag: item.value,
-          });
-        }}
+        onPress={() => navigate("HashtagViewer", { hashtag: item.value })}
       >
         <HashtagCard hashtag={item.value} total={item.total} />
       </Pressable>
     ),
-    [navigation, spacing.horizontal, theme.units]
+    [navigate, paddingHorizontal]
   );
 
   const keyExtractor = useCallback(({ value }: HashtagCount) => value, []);

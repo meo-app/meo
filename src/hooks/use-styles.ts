@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { useTheme } from "../application/providers/Theming";
+import { useTheme } from "../providers/Theming";
 import { ViewStyle, TextStyle, ImageStyle } from "react-native";
 import { useMemo } from "react";
 

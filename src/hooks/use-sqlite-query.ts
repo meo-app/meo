@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { QueryKey, useQuery, UseQueryOptions } from "react-query";
-import { useDB } from "../application/providers/SQLiteProvider";
+import { useDB } from "../providers/SQLiteProvider";
 
-function useTransaction<T>(
+function useSQLiteQuery<T>(
   id: QueryKey,
   query: string,
   options?: UseQueryOptions<T[]>
@@ -44,4 +44,4 @@ function useTransaction<T>(
   return result;
 }
 
-export { useTransaction };
+export { useSQLiteQuery };

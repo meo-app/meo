@@ -7,13 +7,13 @@ import {
 } from "@react-navigation/native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
-import { QueryKeys } from "../../../shared/QueryKeys";
-import { useAvatarContext } from "../../../components/AvatarSelection";
+import { QueryKeys } from "../../shared/QueryKeys";
+import { useAvatarContext } from "../../components/AvatarSelection";
 
-export enum RootStackRoutes {
-  OnboardingSlider = "OnboardingSlider",
-  AvatarSelection = "AvatarSelection",
-}
+type OnboardingParamsConfig = {
+  OnboardingSlider: undefined;
+  AvatarSelection: undefined;
+};
 
 const Context = React.createContext<{
   index: number;
@@ -32,9 +32,13 @@ function useOnboardingContext() {
   return context;
 }
 
-const routes = [
-  RootStackRoutes.OnboardingSlider,
-  RootStackRoutes.AvatarSelection,
+/**
+ * Routes should contain the order of onboarding steps so that next/back takes to the correct screen
+ * TODO: if onboarding will only be two screens remove this and simplify
+ */
+const routes: (keyof OnboardingParamsConfig)[] = [
+  "OnboardingSlider",
+  "AvatarSelection",
 ];
 
 const OnboardingNavigationProvider: React.FunctionComponent = function OnboardingNavigationProvider({
@@ -49,7 +53,9 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
     const listener: EventListenerCallback<
       NavigationContainerEventMap,
       "state"
-    > = (event) => setIndex(event.data.state?.index || 0);
+    > = (event) => {
+      setIndex(event.data.state?.index || 0);
+    };
     current?.addListener("state", listener);
     return () => current?.removeListener("state", listener);
   }, []);
@@ -80,10 +86,7 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
         independent
         theme={{
           ...DefaultTheme,
-          colors: {
-            ...DefaultTheme.colors,
-            background: "transparent",
-          },
+          colors: { ...DefaultTheme.colors, background: "transparent" },
         }}
       >
         {children}
@@ -92,4 +95,8 @@ const OnboardingNavigationProvider: React.FunctionComponent = function Onboardin
   );
 };
 
-export { OnboardingNavigationProvider, useOnboardingContext };
+export {
+  OnboardingNavigationProvider,
+  useOnboardingContext,
+  OnboardingParamsConfig,
+};

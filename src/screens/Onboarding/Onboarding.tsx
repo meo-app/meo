@@ -3,23 +3,23 @@ import React from "react";
 import { Pressable, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
-  AvatarSelectionProvider,
   AvatarSelection,
-} from "../../../components/AvatarSelection";
-import { Font } from "../../../components/Font";
-import { Frame } from "../../../components/Frame";
-import { Picture } from "../../../components/Picture";
-import { useCompleteOnboarding } from "../../../storage/onboarding";
+  AvatarSelectionProvider,
+} from "../../components/AvatarSelection";
+import { Font } from "../../components/Font";
+import { Frame } from "../../components/Frame";
+import { Picture } from "../../components/Picture";
 import {
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,
   ThemeProvider,
-  useEdgeSpacing,
+  usePaddingHorizontal,
   useTheme,
 } from "../../providers/Theming";
+import { useCompleteOnboarding } from "../../storage/onboarding";
 import {
   OnboardingNavigationProvider,
-  RootStackRoutes,
+  OnboardingParamsConfig,
   useOnboardingContext,
 } from "./OnboardingContext";
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
@@ -29,7 +29,7 @@ function OnboardingBackgroundImage() {
   const theme = useTheme();
   return (
     <Picture
-      source={require("../../../assets/bg-pattern.png")}
+      source={require("../../assets/bg-pattern.png")}
       resizeMode="cover"
       lazyload={false}
       style={{
@@ -45,7 +45,7 @@ function OnboardingBackgroundImage() {
   );
 }
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<OnboardingParamsConfig>();
 
 const OnboardingSliderScreen = () => (
   <OnboardingFadeInView screenIndex={0}>
@@ -55,6 +55,9 @@ const OnboardingSliderScreen = () => (
 
 const OnboardingAvatarSelectionScreen = () => (
   <OnboardingFadeInView screenIndex={1}>
+    <Font variant="display" textAlign="center">
+      How do you look?
+    </Font>
     <AvatarSelection />
   </OnboardingFadeInView>
 );
@@ -62,7 +65,7 @@ const OnboardingAvatarSelectionScreen = () => (
 function Onboarding() {
   const safeArea = useSafeAreaInsets();
   const theme = useTheme();
-  const spacing = useEdgeSpacing();
+  const { paddingHorizontal } = usePaddingHorizontal();
   const { back, next, finalize, disabled } = useOnboardingContext();
   const { mutate: completeOnboarding, status } = useCompleteOnboarding({
     onSuccess: finalize,
@@ -84,7 +87,7 @@ function Onboarding() {
         }}
       />
       <Stack.Navigator
-        initialRouteName={RootStackRoutes.OnboardingSlider}
+        initialRouteName="OnboardingSlider"
         screenOptions={{
           header: () => null,
           gestureEnabled: false,
@@ -92,18 +95,17 @@ function Onboarding() {
       >
         <Stack.Screen
           component={OnboardingSliderScreen}
-          name={RootStackRoutes.OnboardingSlider}
+          name="OnboardingSlider"
         />
         <Stack.Screen
           component={OnboardingAvatarSelectionScreen}
-          name={RootStackRoutes.AvatarSelection}
+          name="AvatarSelection"
         />
       </Stack.Navigator>
       <Frame
         justifyContent="space-between"
         flexDirection="row"
-        paddingRight={spacing.vertical}
-        paddingLeft={spacing.vertical}
+        paddingHorizontal={paddingHorizontal}
         style={{
           paddingTop: theme.units.large,
           paddingBottom: safeArea.bottom + theme.units.medium,

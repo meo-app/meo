@@ -3,7 +3,7 @@ import {
   useInfiniteQuery,
   UseInfiniteQueryResult,
 } from "react-query";
-import { useDB } from "../application/providers/SQLiteProvider";
+import { useDB } from "../providers/SQLiteProvider";
 import { Post } from "../shared/SQLiteEntities";
 
 const POSTS_PER_PAGE = 40;

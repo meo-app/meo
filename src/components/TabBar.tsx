@@ -1,30 +1,25 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { Pressable, PressableProps } from "react-native";
-import { useAppContext } from "../application/providers/AppProvider";
-import {
-  FlipColorScheme,
-  useEdgeSpacing,
-  useTheme,
-} from "../application/providers/Theming";
 import { Units } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
+import { useAppContext } from "../providers/AppProvider";
+import {
+  FlipColorScheme,
+  usePaddingHorizontal,
+  useTheme,
+} from "../providers/Theming";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
 const CREATE_BUTTON_SIZE: keyof Units = "larger";
 const CREATE_BUTTON_DIMENSION = 1.3;
 
-interface Props {
-  onHomePress: () => void;
-  onCreatePress: () => void;
-  onSearchPress: () => void;
-}
-
-const Context = React.createContext<Partial<Props>>({});
-
-function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
+function TabBar() {
+  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const theme = useTheme();
   const { setTabBarHeight } = useAppContext();
   const styles = useStyles(() => ({
@@ -48,20 +43,15 @@ function FloatingActions({ onHomePress, onCreatePress, onSearchPress }: Props) {
       justifyContent="space-evenly"
       style={styles.root}
     >
-      <Context.Provider
-        value={{
-          onCreatePress,
-          onHomePress,
-          onSearchPress,
-        }}
-      >
-        <FlipColorScheme>
-          <CreateButton />
-        </FlipColorScheme>
-        <Gradient>
-          <Dock />
-        </Gradient>
-      </Context.Provider>
+      <FlipColorScheme>
+        <CreateButton onPress={() => navigate("Create")} />
+      </FlipColorScheme>
+      <Gradient>
+        <Dock
+          onHomePress={() => navigate("Home")}
+          onExplorePress={() => navigate("Explore")}
+        />
+      </Gradient>
     </Frame>
   );
 }
@@ -70,18 +60,12 @@ const Gradient: React.FunctionComponent = function Gradient({ children }) {
   const theme = useTheme();
   return (
     <LinearGradient
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 0.5 }}
       colors={[
         transparentize(1, theme.colors.background),
         theme.colors.background,
       ]}
-      start={{
-        x: 0,
-        y: 0,
-      }}
-      end={{
-        x: 0,
-        y: 0.5,
-      }}
       style={{
         position: "absolute",
         left: 0,
@@ -96,9 +80,14 @@ const Gradient: React.FunctionComponent = function Gradient({ children }) {
   );
 };
 
-function Dock() {
-  const spacing = useEdgeSpacing();
-  const { onSearchPress, onHomePress } = useContext(Context);
+function Dock({
+  onHomePress,
+  onExplorePress,
+}: {
+  onHomePress: () => void;
+  onExplorePress: () => void;
+}) {
+  const { paddingHorizontalUnit } = usePaddingHorizontal();
   const touch = useFrame({
     height: "larger",
     alignItems: "center",
@@ -119,8 +108,8 @@ function Dock() {
   const styles = useStyles((theme) => ({
     root: {
       backgroundColor: theme.colors.background,
-      marginRight: theme.units[spacing.horizontal] * 1.5,
-      marginLeft: theme.units[spacing.horizontal] * 1.5,
+      marginRight: theme.units[paddingHorizontalUnit] * 1.5,
+      marginLeft: theme.units[paddingHorizontalUnit] * 1.5,
       height: theme.scales.larger,
       borderRadius: theme.constants.absoluteRadius,
       ...theme.constants.shadow,
@@ -134,12 +123,12 @@ function Dock() {
       style={styles.root}
     >
       <Frame flexGrow={1}>
-        <Pressable onPress={() => onHomePress?.()} style={touchable}>
+        <Pressable onPress={onHomePress} style={touchable}>
           <Icon type="Home" size="small" />
         </Pressable>
       </Frame>
       <Frame flexGrow={1}>
-        <Pressable onPress={() => onSearchPress?.()} style={touchable}>
+        <Pressable onPress={onExplorePress} style={touchable}>
           <Icon type="Search" size="small" />
         </Pressable>
       </Frame>
@@ -147,9 +136,8 @@ function Dock() {
   );
 }
 
-function CreateButton() {
+function CreateButton({ onPress }: { onPress: () => void }) {
   const theme = useTheme();
-  const { onCreatePress } = useContext(Context);
   const styles = useStyles((theme) => ({
     root: {
       top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
@@ -172,7 +160,7 @@ function CreateButton() {
   return (
     <Frame alignItems="center" pointerEvents="box-none" style={styles.root}>
       <Pressable
-        onPress={() => onCreatePress?.()}
+        onPress={onPress}
         style={({ pressed }) => ({
           ...styles.pressabe,
           backgroundColor: pressed
@@ -186,4 +174,4 @@ function CreateButton() {
   );
 }
 
-export { FloatingActions };
+export { TabBar };

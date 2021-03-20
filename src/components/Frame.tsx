@@ -1,9 +1,9 @@
+import { ThemeProvider } from "@react-navigation/native";
 import React, { useCallback, useMemo } from "react";
-import { View, FlexStyle, StyleProp, ViewStyle } from "react-native";
-import { Units, Scales } from "../foundations/Spacing";
-import { useTheme } from "../application/providers/Theming";
-import { useDebugTrace } from "../hooks/use-debug-trace";
+import { FlexStyle, StyleProp, View, ViewStyle } from "react-native";
 import { Colors } from "../foundations/Colors";
+import { Scales, Units } from "../foundations/Spacing";
+import { useTheme } from "../providers/Theming";
 
 type Value = keyof Units | "none";
 type Spacing =
@@ -23,6 +23,10 @@ interface SpacingProps {
   paddingRight?: Spacing;
   paddingBottom?: Spacing;
   paddingLeft?: Spacing;
+  paddingHorizontal?: Value | number;
+  paddingVertical?: Value | number;
+  marginHorizontal?: Value | number;
+  marginVertical?: Value | number;
 }
 
 type Props = Pick<
@@ -70,6 +74,10 @@ const Frame: React.FunctionComponent<
     height,
     backgroundColor,
     alignSelf,
+    paddingHorizontal,
+    paddingVertical,
+    marginHorizontal,
+    marginVertical,
     ...rest
   } = props;
 
@@ -82,6 +90,12 @@ const Frame: React.FunctionComponent<
     </View>
   );
 });
+
+const DEBUG_TRACE_STYLES: ViewStyle = {
+  borderStyle: "dashed",
+  borderWidth: 1,
+  borderColor: "red",
+};
 
 function useFrame({
   justifyContent,
@@ -99,6 +113,10 @@ function useFrame({
   paddingRight,
   paddingBottom,
   paddingLeft,
+  paddingHorizontal,
+  paddingVertical,
+  marginHorizontal,
+  marginVertical,
   style,
   debugTrace,
   width,
@@ -106,11 +124,20 @@ function useFrame({
   backgroundColor,
   alignSelf,
 }: Omit<Props, "children">): ViewStyle {
-  const debugTraceStyles = useDebugTrace();
   const { units, scales, colors } = useTheme();
   const getSpacing = useCallback(
     (key?: Spacing) =>
-      key === "none" || !key ? 0 : units[key as keyof typeof units],
+      key === "none" || !key ? undefined : units[key as keyof typeof units],
+    [units]
+  );
+  const getEdgesSpacing = useCallback(
+    (value: Value | number) => {
+      if (typeof value === "number") {
+        return value;
+      }
+
+      return units[value as keyof typeof units];
+    },
     [units]
   );
   const spacing = useMemo(
@@ -123,19 +150,37 @@ function useFrame({
       paddingRight: getSpacing(paddingRight),
       paddingBottom: getSpacing(paddingBottom),
       paddingLeft: getSpacing(paddingLeft),
+      ...(paddingHorizontal && {
+        paddingHorizontal: getEdgesSpacing(paddingHorizontal),
+      }),
+      ...(paddingVertical && {
+        paddingVertical: getEdgesSpacing(paddingVertical),
+      }),
+      ...(marginHorizontal && {
+        marginHorizontal: getEdgesSpacing(marginHorizontal),
+      }),
+      ...(marginVertical && {
+        marginVertical: getEdgesSpacing(marginVertical),
+      }),
     }),
     [
       getSpacing,
-      marginBottom,
-      marginLeft,
       marginRight,
       marginTop,
+      marginBottom,
+      marginLeft,
+      paddingTop,
+      paddingRight,
       paddingBottom,
       paddingLeft,
-      paddingRight,
-      paddingTop,
+      getEdgesSpacing,
+      paddingHorizontal,
+      paddingVertical,
+      marginHorizontal,
+      marginVertical,
     ]
   );
+
   return {
     justifyContent,
     alignItems,
@@ -156,7 +201,7 @@ function useFrame({
       backgroundColor: colors[backgroundColor],
     }),
     ...(style as Object),
-    ...(debugTrace && debugTraceStyles),
+    ...(debugTrace && DEBUG_TRACE_STYLES),
   };
 }
 

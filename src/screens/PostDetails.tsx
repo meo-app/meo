@@ -19,37 +19,37 @@ import { Alert, Pressable, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Share from "react-native-share";
-import { Font } from "../../components/Font";
-import { Frame } from "../../components/Frame";
-import { Icon } from "../../components/Icon/Icon";
-import { PostTextContent } from "../../components/PostTextContent";
-import { SubtitleHeader } from "../../components/SubtitleHeader";
-import { useDeletePost } from "../../hooks/use-delete-post";
-import { useEditPost } from "../../hooks/use-edit-post";
-import { useStyles } from "../../hooks/use-styles";
-import { useTransaction } from "../../hooks/use-transaction";
-import { RootStackParamList } from "../../root-stack-routes";
-import { timestampToDate } from "../../shared/date-utils";
-import { QueryKeys } from "../../shared/QueryKeys";
-import { Post } from "../../shared/SQLiteEntities";
-import { useEdgeSpacing, useTheme } from "../providers/Theming";
-import { useDebounceValue } from "../../hooks/use-debounce-value";
+import { Font } from "../components/Font";
+import { Frame } from "../components/Frame";
+import { Icon } from "../components/Icon/Icon";
+import { PostTextContent } from "../components/PostTextContent";
+import { SubtitleHeader } from "../components/SubtitleHeader";
+import { useDeletePost } from "../hooks/use-delete-post";
+import { useEditPost } from "../hooks/use-edit-post";
+import { useStyles } from "../hooks/use-styles";
+import { useSQLiteQuery } from "../hooks/use-sqlite-query";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
+import { timestampToDate } from "../shared/date-utils";
+import { QueryKeys } from "../shared/QueryKeys";
+import { Post } from "../shared/SQLiteEntities";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import { useDebounceValue } from "../hooks/use-debounce-value";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
     params: { id },
-  } = useRoute<RouteProp<RootStackParamList, "PostDetails">>();
+  } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
   const keyboard = useKeyboard();
   const navigation = useNavigation();
   const theme = useTheme();
-  const spacing = useEdgeSpacing(); // TODO: refactor useEdgeSpacing to useHorizontalPadding
+  const { paddingHorizontal } = usePaddingHorizontal();
   const input = useRef<TextInput>(null);
   const [editable, setEditable] = useState(false);
   const [text, onChangeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1000 });
   const { mutate: editPost } = useEditPost({ id }, {});
 
-  const { data } = useTransaction<Post>(
+  const { data } = useSQLiteQuery<Post>(
     [QueryKeys.POST_DETAILS, id],
     `select * from posts where id = ${id}`
   );
@@ -143,7 +143,7 @@ const PostDetails = React.memo(function PostDetails() {
       <SafeAreaView
         edges={["right", "bottom", "left"]}
         style={{
-          paddingHorizontal: theme.units[spacing.horizontal],
+          paddingHorizontal,
           flex: 1,
         }}
       >
@@ -152,7 +152,7 @@ const PostDetails = React.memo(function PostDetails() {
           enableAutomaticScroll
           contentContainerStyle={{
             flexGrow: 1,
-            paddingTop: theme.units[spacing.vertical],
+            paddingTop: theme.units.medium,
           }}
         >
           <Frame>

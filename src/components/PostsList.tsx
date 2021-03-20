@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
-import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
-import { RootStackParamList, RootStackRoutes } from "../root-stack-routes";
-import { Post } from "../shared/SQLiteEntities";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
+import { Post } from "../shared/SQLiteEntities";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { PostTextContent } from "./PostTextContent";
@@ -30,7 +30,6 @@ const PostsList = React.forwardRef<
   const momentumRef = useRef(false);
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const spacing = useEdgeSpacing();
   const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
   const renderItem = useCallback<ListRenderItem<Post>>(
     ({ item, index }) => (
@@ -71,7 +70,7 @@ const PostsList = React.forwardRef<
       data={posts as Post[]}
       renderItem={renderItem}
       contentContainerStyle={{
-        paddingTop: theme.units[spacing.vertical],
+        paddingTop: theme.units.large,
         paddingBottom: insets.bottom,
       }}
       style={{
@@ -90,22 +89,16 @@ const PostLine = React.memo(function PostLine({
 }: Post & {
   bottomSpacing?: number;
 }) {
-  const spacing = useEdgeSpacing();
-  const theme = useTheme();
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { paddingHorizontal } = usePaddingHorizontal();
+  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   return (
-    <Pressable
-      onPress={() => navigation.navigate(RootStackRoutes.PostDetails, { id })}
-    >
+    <Pressable onPress={() => navigate("PostDetails", { id })}>
       <Frame
-        paddingRight={spacing.horizontal}
-        paddingLeft={spacing.horizontal}
+        paddingHorizontal={paddingHorizontal}
         flexGrow={0}
-        style={{
-          paddingBottom: theme.units.small,
-          paddingTop: theme.units.small,
-        }}
+        paddingBottom="small"
+        paddingTop="small"
       >
         <Frame
           justifyContent="flex-start"
@@ -115,9 +108,7 @@ const PostLine = React.memo(function PostLine({
           <Frame
             flexDirection="row"
             alignItems="flex-start"
-            style={{
-              height: "100%",
-            }}
+            style={{ height: "100%" }}
           >
             <UserAvatar />
           </Frame>
@@ -128,7 +119,7 @@ const PostLine = React.memo(function PostLine({
         <Frame
           alignItems="flex-end"
           paddingTop="small"
-          paddingLeft={spacing.horizontal}
+          paddingLeft={paddingHorizontal}
         >
           <Font variant="caption" color="foregroundSecondary">
             <FormattedDate

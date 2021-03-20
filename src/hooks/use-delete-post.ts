@@ -6,7 +6,6 @@ interface Variables {
   id: string;
 }
 
-//
 function useDeletePost(
   options: UseMutationOptions<void, string, Variables> = {}
 ) {
