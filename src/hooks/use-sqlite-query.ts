@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { QueryKey, useQuery, UseQueryOptions } from "react-query";
 import { useDB } from "../providers/SQLiteProvider";
 
+// TODO: sync api with useSQLiteMutation
 function useSQLiteQuery<T>(
   id: QueryKey,
   query: string,

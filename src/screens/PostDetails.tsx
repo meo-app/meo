@@ -46,7 +46,7 @@ const PostDetails = React.memo(function PostDetails() {
   const input = useRef<TextInput>(null);
   const [editable, setEditable] = useState(false);
   const [text, onChangeText] = useState("");
-  const changes = useDebounceValue(text, { delay: 1000 });
+  const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
 
   const { data } = useSQLiteQuery<Post>(
