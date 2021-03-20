@@ -7,70 +7,45 @@ import {
 import "intl";
 import "intl/locale-data/jsonp/en";
 import React from "react";
-import { Platform, View } from "react-native";
-import { Providers } from "./application/providers/Providers";
-import { useTheme } from "./application/providers/Theming";
-import { Create } from "./application/screens/Create";
-import { Explore } from "./application/screens/Explore/Explore";
-import { HashtagViewer } from "./application/screens/HashtagViewer";
-import { Home } from "./application/screens/Home";
-import { Onboarding } from "./application/screens/Onboarding/Onboarding";
-import { Settings } from "./application/screens/Settings/Settings";
-import { CustomDrawerContent } from "./components/CustomDrawerContent";
-import { FloatingActions } from "./components/FloatingActions";
-import { RootStackParamList, RootStackRoutes } from "./root-stack-routes";
-import { useHasSeenOnboarding } from "./storage/onboarding";
+import { Platform } from "react-native";
 import SplashScreen from "react-native-bootsplash";
-import { PostDetails } from "./application/screens/PostDetails";
-import { ChangeAvatar } from "./application/screens/ChangeAvatar";
+import { Drawer } from "./components/Drawer";
+import { TabBar } from "./components/TabBar";
+import { Providers } from "./providers/Providers";
+import { useTheme } from "./providers/Theming";
+import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
+import { ChangeAvatar } from "./screens/ChangeAvatar";
+import { Create } from "./screens/Create";
+import { Explore } from "./screens/Explore/Explore";
+import { HashtagViewer } from "./screens/HashtagViewer";
+import { Home } from "./screens/Home";
+import { Onboarding } from "./screens/Onboarding/Onboarding";
+import { PostDetails } from "./screens/PostDetails";
+import { Settings } from "./screens/Settings";
+import { useHasSeenOnboarding } from "./storage/onboarding";
+import { NavigationProp } from "@react-navigation/native";
 
-const Placeholder = () => <View style={{ flex: 1 }} />;
-const Tab = createBottomTabNavigator();
-const RootStack = createStackNavigator<RootStackParamList>();
-const Drawer = createDrawerNavigator();
-const EXPLORE_REGEX = new RegExp(RootStackRoutes.Explore);
+const TabsNavigator = createBottomTabNavigator();
+const DrawerNavigator = createDrawerNavigator<NavigationParamsConfig>();
+const RootNavigator = createStackNavigator<NavigationParamsConfig>();
 
-function TabsNavigator() {
+function Tabs() {
   return (
-    <Tab.Navigator
+    <TabsNavigator.Navigator
       lazy={false}
-      screenOptions={{
-        unmountOnBlur: false,
-      }}
-      tabBar={({ navigation, state }) => (
-        <FloatingActions
-          onCreatePress={() => navigation.navigate(RootStackRoutes.Create)}
-          onHomePress={() => navigation.navigate(RootStackRoutes.Home)}
-          onSearchPress={() => {
-            if (EXPLORE_REGEX.test(state.history[1]?.key)) {
-              // navigation.navigate(RootStackRoutes.SearchResutls);
-            } else {
-              navigation.navigate(RootStackRoutes.Explore);
-            }
-          }}
-        />
-      )}
+      screenOptions={{ unmountOnBlur: false }}
+      tabBar={() => <TabBar />}
     >
-      <Tab.Screen name={RootStackRoutes.Home} component={Home} />
-      <Tab.Screen name={RootStackRoutes.Explore} component={Explore} />
-      <Tab.Screen
-        name={RootStackRoutes.Placeholder}
-        component={Placeholder}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate(RootStackRoutes.Create);
-          },
-        })}
-      />
-    </Tab.Navigator>
+      <TabsNavigator.Screen name="Home" component={Home} />
+      <TabsNavigator.Screen name="Explore" component={Explore} />
+    </TabsNavigator.Navigator>
   );
 }
 
-function MainScreens() {
+function Screens() {
   const theme = useTheme();
   return (
-    <RootStack.Navigator
+    <RootNavigator.Navigator
       mode="modal"
       screenOptions={{
         headerTitle: () => null,
@@ -78,23 +53,22 @@ function MainScreens() {
         headerShown: false,
       }}
     >
-      <RootStack.Screen
-        name={RootStackRoutes.Tabs}
-        component={TabsNavigator}
-        options={{
-          animationEnabled: true,
-        }}
+      <RootNavigator.Screen
+        name="Tabs"
+        component={Tabs}
+        options={{ animationEnabled: true }}
       />
-      <RootStack.Screen
-        name={RootStackRoutes.Create}
+      <RootNavigator.Screen
+        name="Create"
         component={Create}
         options={{
           animationEnabled: true,
           gestureEnabled: false,
+          header: () => null,
         }}
       />
-      <RootStack.Screen
-        name={RootStackRoutes.Settings}
+      <RootNavigator.Screen
+        name="Settings"
         component={Settings}
         options={{
           animationEnabled: true,
@@ -102,9 +76,9 @@ function MainScreens() {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
-      <RootStack.Screen
+      <RootNavigator.Screen
         component={HashtagViewer}
-        name={RootStackRoutes.HashtagViewer}
+        name="HashtagViewer"
         options={{
           animationEnabled: true,
           gestureEnabled: Platform.OS === "ios",
@@ -120,21 +94,18 @@ function MainScreens() {
           },
         }}
       />
-      <RootStack.Screen
-        component={PostDetails}
-        name={RootStackRoutes.PostDetails}
-      />
-      <RootStack.Screen
-        component={ChangeAvatar}
-        name={RootStackRoutes.ChangeAvatar}
-      />
-    </RootStack.Navigator>
+      <RootNavigator.Screen component={PostDetails} name="PostDetails" />
+      <RootNavigator.Screen component={ChangeAvatar} name="ChangeAvatar" />
+    </RootNavigator.Navigator>
   );
 }
 
+/**
+ * TODO: <Root /> can pre-fetch posts/hashtags/avatar etc while holding splashscreen
+ */
+
 function Root() {
   const theme = useTheme();
-  // TODO: pre fetch stuff
   const { data, isLoading } = useHasSeenOnboarding();
   if (isLoading) {
     return null;
@@ -144,15 +115,18 @@ function Root() {
   }
 
   return (
-    <Drawer.Navigator
+    <DrawerNavigator.Navigator
       drawerStyle={{ backgroundColor: theme.colors.background }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      drawerContent={({ navigation }) => (
+        <Drawer
+          navigation={
+            (navigation as unknown) as NavigationProp<NavigationParamsConfig>
+          }
+        />
+      )}
     >
-      <Drawer.Screen
-        name={RootStackRoutes.Placeholder}
-        component={MainScreens}
-      />
-    </Drawer.Navigator>
+      <DrawerNavigator.Screen name="Placeholder" component={Screens} />
+    </DrawerNavigator.Navigator>
   );
 }
 

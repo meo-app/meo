@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Image, Platform, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useTheme } from "../application/providers/Theming";
+import { useTheme } from "../providers/Theming";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
 import { useAvatar } from "../storage/avatar";

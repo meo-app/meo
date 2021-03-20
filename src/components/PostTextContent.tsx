@@ -1,7 +1,7 @@
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React, { useMemo } from "react";
-import { RootStackRoutes } from "../root-stack-routes";
 import { HASHTAG_REGEX } from "../shared/hashtag-utils";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Font } from "./Font";
 
 const PostTextContent = React.memo(function PostTextContent({
@@ -13,7 +13,7 @@ const PostTextContent = React.memo(function PostTextContent({
   value: string;
   numberOfLines?: number;
 } & Pick<React.ComponentProps<typeof Font>, "variant" | "color">) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const content = useMemo(() => value.split(HASHTAG_REGEX), [value]);
   return (
     <Font numberOfLines={numberOfLines} color={color} variant={variant}>
@@ -25,9 +25,7 @@ const PostTextContent = React.memo(function PostTextContent({
               variant={variant}
               key={`hashtag-${index}-${item}`}
               onPress={() =>
-                navigation.navigate(RootStackRoutes.HashtagViewer, {
-                  hashtag: item,
-                })
+                navigation.navigate("HashtagViewer", { hashtag: item })
               }
             >
               {item}

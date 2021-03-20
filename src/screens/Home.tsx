@@ -1,13 +1,13 @@
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useMemo, useRef } from "react";
 import { View } from "react-native";
-import { Font } from "../../components/Font";
-import { Header } from "../../components/Header";
-import { PostsList } from "../../components/PostsList";
-import { QueryKeys } from "../../shared/QueryKeys";
-import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
+import { Font } from "../components/Font";
+import { Header } from "../components/Header";
+import { PostsList } from "../components/PostsList";
+import { QueryKeys } from "../shared/QueryKeys";
+import { usePaginatedPosts } from "../hooks/use-paginated-posts";
 import { useAppContext } from "../providers/AppProvider";
-import { Frame } from "../../components/Frame";
+import { Frame } from "../components/Frame";
 
 function Home() {
   const { data, error, fetchNextPage } = usePaginatedPosts(QueryKeys.POSTS, {

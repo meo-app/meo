@@ -1,12 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -16,7 +10,7 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useQuery, useQueryClient } from "react-query";
-import { useTheme } from "../application/providers/Theming";
+import { useTheme } from "../providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 import { assert } from "../shared/assert";
 import { base64ToImageUrl } from "../shared/image-utils";

@@ -1,5 +1,5 @@
 import { MutationOptions, useMutation } from "react-query";
-import { useDB } from "../application/providers/SQLiteProvider";
+import { useDB } from "../providers/SQLiteProvider";
 
 type Variables<TVariables = void> = (
   variables: TVariables

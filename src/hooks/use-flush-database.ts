@@ -1,20 +1,21 @@
-import { useState } from "react";
-import { QueryKeys } from "../shared/QueryKeys";
-import { useTransaction } from "./use-transaction";
+import { useMutation, UseMutationOptions } from "react-query";
+import { useSQLiteMutation } from "./use-sqlite-mutation";
 
-// TODO: useTransaction w/ mutation
-function useFlushDatabase() {
-  const [enabled, setEnable] = useState(false);
-
-  useTransaction<null>(QueryKeys.FLUSH_POSTS, "delete from posts;", {
-    enabled,
+function useFlushDatabase(options?: UseMutationOptions) {
+  const { mutateAsync: deletePosts } = useSQLiteMutation({
+    mutation: "delete from posts;",
+    variables: () => [],
   });
 
-  useTransaction<null>(QueryKeys.FLUSH_HASHTAGS, "delete from hashtags;", {
-    enabled,
+  const { mutateAsync: deleteHashtags } = useSQLiteMutation({
+    mutation: "delete from hashtags;",
+    variables: () => [],
   });
 
-  return () => setEnable(true);
+  return useMutation(
+    () => Promise.all([deleteHashtags(), deletePosts()]),
+    options
+  );
 }
 
 export { useFlushDatabase };

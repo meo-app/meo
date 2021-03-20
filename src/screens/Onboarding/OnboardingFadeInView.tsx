@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
-import { useDebounceValue } from "../../../hooks/use-debounce-value";
+import { useDebounceValue } from "../../hooks/use-debounce-value";
+import { useTheme } from "../../providers/Theming";
 import { useOnboardingContext } from "./OnboardingContext";
-import { useEdgeSpacing, useTheme } from "../../providers/Theming";
 
 const duration = {
   in: 300,
@@ -18,7 +18,6 @@ const OnboardingFadeInView: React.FunctionComponent<{
     delay: 80,
   });
   const isCurrentScreen = index === screenIndex;
-  const spacing = useEdgeSpacing();
   const theme = useTheme();
   useEffect(() => {
     const animate = Animated.timing(opacity, {
@@ -36,8 +35,8 @@ const OnboardingFadeInView: React.FunctionComponent<{
       style={{
         flex: 1,
         opacity,
-        paddingTop: theme.units[spacing.horizontal],
-        paddingBottom: theme.units[spacing.horizontal],
+        paddingTop: theme.units.large,
+        paddingBottom: theme.units.large,
       }}
     >
       {children}

@@ -1,10 +1,10 @@
 import ViewPager from "@react-native-community/viewpager";
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
-import { Font } from "../../../components/Font";
-import { Frame } from "../../../components/Frame";
-import { Picture } from "../../../components/Picture";
-import { useStyles } from "../../../hooks/use-styles";
+import { Font } from "../../components/Font";
+import { Frame } from "../../components/Frame";
+import { Picture } from "../../components/Picture";
+import { useStyles } from "../../hooks/use-styles";
 import { useTheme } from "../../providers/Theming";
 
 const Indicators: React.FunctionComponent<{
@@ -84,7 +84,7 @@ function OnboardingSlider() {
             }}
             resizeMode="contain"
             lazyload={false}
-            source={require("../../../assets/hashtag.png")}
+            source={require("../../assets/hashtag.png")}
           />
           <Section
             title="Easily orgnize things"

@@ -1,6 +1,6 @@
 import React from "react";
 import { TextInput } from "react-native-gesture-handler";
-import { useTheme } from "../application/providers/Theming";
+import { useTheme } from "../providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 
 const SearchTextInput = React.forwardRef<

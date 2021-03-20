@@ -1,38 +1,37 @@
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { NavigationProp } from "@react-navigation/native";
 import React from "react";
-import { ImageBackground, Pressable } from "react-native";
+import { ImageBackground, Linking, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEdgeSpacing } from "../application/providers/Theming";
 import { useStyles } from "../hooks/use-styles";
-import { useTransaction } from "../hooks/use-transaction";
+import { useSQLiteQuery } from "../hooks/use-sqlite-query";
+import { usePaddingHorizontal } from "../providers/Theming";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { UserAvatar } from "./UserAvatar";
-import { Linking } from "react-native";
-import { SettingsStackRoutes } from "../application/screens/Settings/settings-stack-routes";
-import { RootStackRoutes } from "../root-stack-routes";
 
-interface Props extends DrawerContentComponentProps {}
+interface Props {
+  navigation: NavigationProp<NavigationParamsConfig>;
+}
 
-const CustomDrawerContent: React.VoidFunctionComponent<Props> = function CustomDrawerContent({
+const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
   navigation,
 }) {
-  const spacing = useEdgeSpacing();
-  const styles = useStyles((theme) => ({
+  const { paddingHorizontal } = usePaddingHorizontal();
+  const styles = useStyles(() => ({
     root: {
-      paddingLeft: theme.units[spacing.horizontal],
-      paddingRight: theme.units[spacing.horizontal],
+      paddingHorizontal,
       flex: 1,
     },
   }));
 
-  const { data: posts } = useTransaction<{ total: number }>(
+  const { data: posts } = useSQLiteQuery<{ total: number }>(
     QueryKeys.TOTAL_OF_POSTS,
     "select count(*) as total from posts"
   );
 
-  const { data: tags } = useTransaction<{ total: number }>(
+  const { data: tags } = useSQLiteQuery<{ total: number }>(
     QueryKeys.TOTAL_OF_HASHTAGS,
     "select count(*) as total from (select distinct value from hashtags)"
   );
@@ -48,11 +47,7 @@ const CustomDrawerContent: React.VoidFunctionComponent<Props> = function CustomD
     >
       <SafeAreaView style={styles.root}>
         <Frame alignItems="center" justifyContent="center" paddingTop="large">
-          <Pressable
-            onPress={() => {
-              navigation.navigate(RootStackRoutes.ChangeAvatar);
-            }}
-          >
+          <Pressable onPress={() => navigation.navigate("ChangeAvatar")}>
             <Frame marginRight="medium" alignItems="center">
               <UserAvatar size="largest" />
             </Frame>
@@ -82,7 +77,7 @@ const CustomDrawerContent: React.VoidFunctionComponent<Props> = function CustomD
         </Frame>
         <Frame marginTop="larger">
           <DrawerItem
-            onPress={() => navigation.navigate(SettingsStackRoutes.Settings)}
+            onPress={() => navigation.navigate("Settings")}
             text="Settings"
           />
           <DrawerItem
@@ -127,4 +122,4 @@ const DrawerItem = React.memo(function DrawerItem({
   );
 });
 
-export { CustomDrawerContent };
+export { Drawer };

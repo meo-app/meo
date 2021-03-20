@@ -3,7 +3,7 @@ import { rgba } from "polished";
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useEdgeSpacing, useTheme } from "../application/providers/Theming";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { useStyles } from "../hooks/use-styles";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
@@ -24,17 +24,16 @@ function SubtitleHeader({
 }: Props) {
   const navigation = useNavigation();
   const theme = useTheme();
-  const spacing = useEdgeSpacing();
+  const { paddingHorizontal, paddingHorizontalUnit } = usePaddingHorizontal();
   const insets = useSafeAreaInsets();
   const styles = useStyles(() => ({
     spacer: {
-      height: insets.top + theme.units[spacing.horizontal],
+      height: insets.top + theme.units[paddingHorizontalUnit],
       width: "100%",
       backgroundColor: rgba(255, 255, 255, 0),
     },
     root: {
-      paddingLeft: theme.units[spacing.horizontal],
-      paddingRight: theme.units[spacing.horizontal],
+      paddingHorizontal,
       paddingBottom: theme.units.medium,
       display: "flex",
       borderBottomWidth: StyleSheet.hairlineWidth,

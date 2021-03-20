@@ -12,8 +12,8 @@ import {
   StatusBarStyle,
   useColorScheme,
 } from "react-native";
-import { Units } from "../../foundations/Spacing";
-import { Theme } from "../../foundations/Theme";
+import { Units } from "../foundations/Spacing";
+import { Theme } from "../foundations/Theme";
 
 const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
 
@@ -179,13 +179,12 @@ function useTheme(): Theme {
   return theme;
 }
 
-function useEdgeSpacing(): {
-  vertical: keyof Units;
-  horizontal: keyof Units;
-} {
+function usePaddingHorizontal() {
+  const theme = useTheme();
+  const paddingHorizontalUnit: keyof Units = "medium";
   return {
-    vertical: "large",
-    horizontal: "medium",
+    paddingHorizontalUnit,
+    paddingHorizontal: theme.units[paddingHorizontalUnit],
   };
 }
 
@@ -207,7 +206,7 @@ const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
 export {
   ThemeProvider,
   useTheme,
-  useEdgeSpacing,
+  usePaddingHorizontal,
   FlipColorScheme,
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,
