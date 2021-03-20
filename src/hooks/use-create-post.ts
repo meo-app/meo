@@ -1,7 +1,7 @@
-import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
+import { useMutation, UseMutationOptions } from "react-query";
 import { extractHashtags } from "../shared/hashtag-utils";
-import { QueryKeys } from "../shared/QueryKeys";
 import { useInsertHashtags } from "./use-insert-hashtags";
+import { useInvalidatePosts } from "./use-invalidate-posts";
 import { useSQLiteMutation } from "./use-sqlite-mutation";
 
 interface Variables {
@@ -13,7 +13,7 @@ interface Data {
 }
 
 function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
-  const client = useQueryClient();
+  const { mutate: invalidatePosts } = useInvalidatePosts();
   const { mutateAsync: insertHashtag } = useInsertHashtags();
   const { mutateAsync: insertPost } = useSQLiteMutation<{ text: string }>({
     mutation: "insert into posts (value) values (?)",
@@ -39,10 +39,7 @@ function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
     {
       ...options,
       onSuccess: (...args) => {
-        client.invalidateQueries([QueryKeys.POSTS]);
-        client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
+        invalidatePosts();
         options?.onSuccess?.call(null, ...args);
       },
     }

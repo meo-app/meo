@@ -1,8 +1,8 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LoremIpsum } from "lorem-ipsum";
 import { transparentize } from "polished";
-import React from "react";
-import { Alert, Modal, Pressable, StyleSheet } from "react-native";
+import React, { useMemo } from "react";
+import { Alert, Linking, Modal, Pressable, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useMutation } from "react-query";
 import { Font } from "../components/Font";
@@ -11,9 +11,11 @@ import { SubtitleHeader } from "../components/SubtitleHeader";
 import { Colors } from "../foundations/Colors";
 import { useCreatePost } from "../hooks/use-create-post";
 import { useFlushDatabase } from "../hooks/use-flush-database";
+import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { useStyles } from "../hooks/use-styles";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
+import { QueryKeys } from "../shared/QueryKeys";
 import { useFlushOnboarding } from "../storage/onboarding";
 
 const lorem = new LoremIpsum({
@@ -47,9 +49,17 @@ function useCreatDummyPosts(times: number = DUMMY_POSTS_SIZE) {
   );
 }
 
+const HOT_TO_GET_A_THOUSAND_SIMOLEONS = "klapaucius";
+
 function Settings() {
   const theme = useTheme();
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
+  const { data: developer } = useSQLiteQuery<{ total: number }>(
+    QueryKeys.IS_DEVELOPER,
+    `select count(*) as total from posts where value like "%${HOT_TO_GET_A_THOUSAND_SIMOLEONS}%" collate nocase`
+  );
+
+  const isDeveloper = useMemo(() => Boolean(developer?.[0].total), [developer]);
   const {
     mutate: flushOnboarding,
     isLoading: isFlusingOboarding,
@@ -115,28 +125,44 @@ function Settings() {
             title="Erase all my data"
             color="destructive"
           />
-          <Font
-            textAlign="center"
-            paddingHorizontal="larger"
-            variant="subtitle"
-            marginTop="large"
-            marginBottom="medium"
-          >
-            Developer options
-          </Font>
-          <Button
-            title={`Create ${DUMMY_POSTS_SIZE} dummy posts`}
-            onPress={() => createDummyPosts()}
-          />
-          <Button
-            title="Reset onboarding flow"
-            onPress={() => flushOnboarding()}
-          />
+          {isDeveloper && (
+            <>
+              <Title text="Developer Options" />
+              <Button
+                title={`Create ${DUMMY_POSTS_SIZE} dummy posts`}
+                onPress={() => createDummyPosts()}
+              />
+              <Button
+                title="Reset onboarding flow"
+                onPress={() => flushOnboarding()}
+              />
+              <Button
+                title="Github"
+                onPress={() =>
+                  Linking.openURL("https://github.com/meo-app/meo")
+                }
+              />
+            </>
+          )}
         </ScrollView>
       </Frame>
     </Frame>
   );
 }
+
+const Title = React.memo<{ text: string }>(function Title({ text }) {
+  return (
+    <Font
+      textAlign="center"
+      paddingHorizontal="larger"
+      variant="subtitle"
+      marginTop="large"
+      marginBottom="medium"
+    >
+      {text}
+    </Font>
+  );
+});
 
 const Button = React.memo<{
   title: string;

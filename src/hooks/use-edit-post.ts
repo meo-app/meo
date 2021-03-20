@@ -1,7 +1,7 @@
-import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
+import { useMutation, UseMutationOptions } from "react-query";
 import { extractHashtags } from "../shared/hashtag-utils";
-import { QueryKeys } from "../shared/QueryKeys";
 import { useInsertHashtags } from "./use-insert-hashtags";
+import { useInvalidatePosts } from "./use-invalidate-posts";
 import { useSQLiteMutation } from "./use-sqlite-mutation";
 
 interface Variables {
@@ -13,7 +13,7 @@ function useEditPost(
   { id }: Pick<Variables, "id">,
   options: UseMutationOptions<void, string, Variables> = {}
 ) {
-  const client = useQueryClient();
+  const { mutate: invalidatePosts } = useInvalidatePosts();
   const { mutateAsync: insertHashtag } = useInsertHashtags();
   const { mutateAsync: editPost } = useSQLiteMutation<Pick<Variables, "text">>({
     variables: ({ text }) => [text],
@@ -43,13 +43,7 @@ function useEditPost(
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        // TODO: Save queries that needs to be updated on the same place for delete/edit/create
-        client.invalidateQueries([QueryKeys.POSTS]);
-        client.invalidateQueries([QueryKeys.HASHTAG_VIEWER]);
-        client.invalidateQueries([QueryKeys.SEARCH]);
-        client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
+        invalidatePosts();
         options.onSuccess?.(data, variables, context);
       },
     }

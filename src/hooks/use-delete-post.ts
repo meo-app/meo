@@ -1,5 +1,5 @@
-import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
-import { QueryKeys } from "../shared/QueryKeys";
+import { useMutation, UseMutationOptions } from "react-query";
+import { useInvalidatePosts } from "./use-invalidate-posts";
 import { useSQLiteMutation } from "./use-sqlite-mutation";
 
 interface Variables {
@@ -9,7 +9,7 @@ interface Variables {
 function useDeletePost(
   options: UseMutationOptions<void, string, Variables> = {}
 ) {
-  const client = useQueryClient();
+  const { mutate: invalidatePosts } = useInvalidatePosts();
   const { mutateAsync: deletePost } = useSQLiteMutation<Variables>({
     variables: ({ id }) => [id],
     mutation: "delete from posts where id = (?)",
@@ -28,12 +28,7 @@ function useDeletePost(
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        client.invalidateQueries([QueryKeys.POSTS]);
-        client.invalidateQueries([QueryKeys.HASHTAG_VIEWER]);
-        client.invalidateQueries([QueryKeys.SEARCH]);
-        client.invalidateQueries([QueryKeys.TOP_HASHTAGS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_POSTS]);
-        client.invalidateQueries([QueryKeys.TOTAL_OF_HASHTAGS]);
+        invalidatePosts();
         options.onSuccess?.(data, variables, context);
       },
     }
