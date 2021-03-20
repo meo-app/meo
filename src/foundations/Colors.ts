@@ -6,4 +6,5 @@ export interface Colors {
   background: string;
   backgroundAccent: string;
   primary: string;
+  destructive: string;
 }

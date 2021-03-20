@@ -25,10 +25,12 @@ if (Platform.OS === "android") {
 const absoluteDark = "#000";
 const absoluteLight = "#FFF";
 const primary = "#2D9CDB";
+const destructive = "#FC5B10";
 const light: Theme["colors"] = {
   absoluteDark,
   absoluteLight,
   primary,
+  destructive,
   background: "#FFFFFF",
   backgroundAccent: "#f2f2f2",
   foregroundPrimary: "#4F4F4F",
@@ -39,6 +41,7 @@ const dark: Theme["colors"] = {
   absoluteDark,
   absoluteLight,
   primary,
+  destructive,
   background: "#1D222D",
   backgroundAccent: "#292F3F",
   foregroundPrimary: "#F2F2F2",
