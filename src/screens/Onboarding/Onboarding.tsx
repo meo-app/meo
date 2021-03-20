@@ -22,7 +22,6 @@ import {
   OnboardingParamsConfig,
   useOnboardingContext,
 } from "./OnboardingContext";
-import { OnboardingFadeInView } from "./OnboardingFadeInView";
 import { OnboardingSlider } from "./OnboardingSlider";
 
 function OnboardingBackgroundImage() {
@@ -47,19 +46,39 @@ function OnboardingBackgroundImage() {
 
 const Stack = createStackNavigator<OnboardingParamsConfig>();
 
-const OnboardingSliderScreen = () => (
-  <OnboardingFadeInView screenIndex={0}>
-    <OnboardingSlider />
-  </OnboardingFadeInView>
-);
+const Spacing = React.memo(function Spacing({ children }) {
+  const { paddingHorizontal } = usePaddingHorizontal();
+  return (
+    <Frame
+      paddingHorizontal={paddingHorizontal}
+      flex={1}
+      paddingTop="large"
+      paddingBottom="large"
+    >
+      {children}
+    </Frame>
+  );
+});
 
-const OnboardingAvatarSelectionScreen = () => (
-  <OnboardingFadeInView screenIndex={1}>
-    <Font variant="display" textAlign="center">
-      How do you look?
-    </Font>
-    <AvatarSelection />
-  </OnboardingFadeInView>
+const OnboardingSliderScreen = React.memo(function OnboardingSliderScreen() {
+  return (
+    <Spacing>
+      <OnboardingSlider />
+    </Spacing>
+  );
+});
+
+const OnboardingAvatarSelectionScreen = React.memo(
+  function OnboardingAvatarSelectionScreen() {
+    return (
+      <Spacing>
+        <Font variant="display" textAlign="center">
+          How do you look?
+        </Font>
+        <AvatarSelection />
+      </Spacing>
+    );
+  }
 );
 
 function Onboarding() {
@@ -108,7 +127,7 @@ function Onboarding() {
         paddingHorizontal={paddingHorizontal}
         style={{
           paddingTop: theme.units.large,
-          paddingBottom: safeArea.bottom + theme.units.medium,
+          paddingBottom: safeArea.bottom + theme.units.larger,
         }}
       >
         <Frame>

@@ -2,7 +2,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LoremIpsum } from "lorem-ipsum";
 import { transparentize } from "polished";
 import React, { useMemo } from "react";
-import { Alert, Linking, Modal, Pressable, StyleSheet } from "react-native";
+import { Alert, Linking, Modal, Pressable } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useMutation } from "react-query";
 import { Font } from "../components/Font";
@@ -176,10 +176,6 @@ const Button = React.memo<{
       paddingBottom: theme.units.medium,
       backgroundColor: theme.colors.background,
       paddingHorizontal,
-      borderColor: transparentize(0.5, theme.colors.foregroundSecondary),
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderTopWidth: StyleSheet.hairlineWidth,
-      marginBottom: theme.units.medium,
     },
   }));
   return (
