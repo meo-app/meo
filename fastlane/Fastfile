@@ -18,16 +18,16 @@ desc 'Android: Increment versionCode and set versionName to package.json version
   package = load_json(json_path: "./package.json")
     ## TODO: change ios app name
     increment_build_number(
-      xcodeproj: './ios/' + 'claudio' + '.xcodeproj'
+      xcodeproj: './ios/' + package['name'] + '.xcodeproj'
     )
     increment_version_number(
-      xcodeproj: './ios/' + 'claudio' + '.xcodeproj',
+      xcodeproj: './ios/' + package['name'] + '.xcodeproj',
       version_number: package['version']
     )
   end
 
 
-  desc 'Bump build numbers, and set the version to match the pacakage.json version.'
+  desc 'Bump build numbers, and set the version to match the package.json version.'
   lane :bump do
     inc_ver_ios
     inc_ver_and
