@@ -19,7 +19,7 @@ or alternatively using `brew install fastlane`
 ```
 fastlane bump
 ```
-Bump build numbers, and set the version to match the pacakage.json version.
+Bump build numbers, and set the version to match the package.json version.
 
 ----
 
