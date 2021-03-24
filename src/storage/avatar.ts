@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { AvatarIds } from "../components/Avatars/avatars-list";
+import { AvatarIds } from "../shared/avatars-list";
 import { QueryKeys } from "../shared/QueryKeys";
 
 const key = "@@selected-avatar";
