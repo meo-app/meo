@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
-import { Image, Platform, View } from "react-native";
-import FastImage from "react-native-fast-image";
-import { useTheme } from "../providers/Theming";
+import { Image, View } from "react-native";
 import { Scales } from "../foundations/Spacing";
 import { useStyles } from "../hooks/use-styles";
-import { useAvatar } from "../storage/avatar";
+import { useTheme } from "../providers/Theming";
 import { base64ToImageUrl } from "../shared/image-utils";
-import { AVATARS_LIST } from "./Avatars/avatars-list";
+import { useAvatar } from "../storage/avatar";
+import { AVATARS_LIST } from "../shared/avatars-list";
 
 interface Props {
   size?: keyof Scales;
@@ -45,28 +44,15 @@ const UserAvatar = React.memo<Props>(function UserAvatar({
 
   return (
     <View style={styles.root}>
-      {Platform.OS === "ios" && (
-        <FastImage
-          style={styles.root}
-          resizeMode="cover"
-          source={{
-            uri,
-          }}
-        >
-          {children}
-        </FastImage>
-      )}
-      {Platform.OS === "android" && (
-        <Image
-          style={styles.root}
-          resizeMode="cover"
-          source={{
-            uri,
-          }}
-        >
-          {children}
-        </Image>
-      )}
+      <Image
+        style={styles.root}
+        resizeMode="cover"
+        source={{
+          uri,
+        }}
+      >
+        {children}
+      </Image>
     </View>
   );
 });

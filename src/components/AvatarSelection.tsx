@@ -16,7 +16,7 @@ import { assert } from "../shared/assert";
 import { base64ToImageUrl } from "../shared/image-utils";
 import { QueryKeys } from "../shared/QueryKeys";
 import { useAvatar, useSelectAvatar } from "../storage/avatar";
-import { AvatarIds, AVATARS_LIST, DefaultAvatar } from "./Avatars/avatars-list";
+import { AvatarIds, AVATARS_LIST, DefaultAvatar } from "../shared/avatars-list";
 import { Frame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
@@ -131,7 +131,7 @@ function UploadButton() {
     root: {
       height: size,
       width: size,
-      borderRadius: 46,
+      borderRadius: theme.constants.absoluteRadius,
       backgroundColor: theme.colors.absoluteDark,
       justifyContent: "center",
       alignItems: "center",
@@ -226,7 +226,7 @@ function AvatarSelection() {
                   backgroundColor: theme.colors.primary,
                   width: size,
                   height: size,
-                  borderRadius: 46,
+                  borderRadius: theme.constants.absoluteRadius,
                   transform: [
                     {
                       scale: 1.1,
@@ -238,11 +238,11 @@ function AvatarSelection() {
             {source ? (
               <Image
                 source={{ uri: source }}
-                resizeMode="cover"
+                resizeMode="contain"
                 style={{
                   width: size,
                   height: size,
-                  borderRadius: 46,
+                  borderRadius: theme.constants.absoluteRadius,
                   overflow: "hidden",
                 }}
               />
@@ -253,7 +253,13 @@ function AvatarSelection() {
         </Frame>
       );
     },
-    [avatarId, setAvatarId, styles.avatar, theme.colors.primary]
+    [
+      avatarId,
+      setAvatarId,
+      styles.avatar,
+      theme.colors.primary,
+      theme.constants.absoluteRadius,
+    ]
   );
 
   return (
