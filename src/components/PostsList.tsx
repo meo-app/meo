@@ -1,10 +1,12 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { darken } from "polished";
 import React, { useCallback, useMemo, useRef } from "react";
 import { FormattedDate } from "react-intl";
 import {
   FlatList,
   FlatListProps,
   ListRenderItem,
+  Platform,
   Pressable,
   View,
 } from "react-native";
@@ -70,7 +72,6 @@ const PostsList = React.forwardRef<
       data={posts as Post[]}
       renderItem={renderItem}
       contentContainerStyle={{
-        paddingTop: theme.units.large,
         paddingBottom: insets.bottom,
       }}
       style={{
@@ -92,13 +93,29 @@ const PostLine = React.memo(function PostLine({
   const { paddingHorizontal } = usePaddingHorizontal();
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
+  const theme = useTheme();
   return (
-    <Pressable onPress={() => navigate("PostDetails", { id })}>
+    <Pressable
+      onPress={() => navigate("PostDetails", { id })}
+      android_ripple={{
+        color: darken(0.05, theme.colors.background),
+      }}
+      style={({ pressed }) => ({
+        flex: 1,
+        ...Platform.select({
+          ios: {
+            backgroundColor: pressed
+              ? darken(0.05, theme.colors.background)
+              : theme.colors.background,
+          },
+        }),
+      })}
+    >
       <Frame
         paddingHorizontal={paddingHorizontal}
         flexGrow={0}
         paddingBottom="small"
-        paddingTop="small"
+        paddingTop="medium"
       >
         <Frame
           justifyContent="flex-start"

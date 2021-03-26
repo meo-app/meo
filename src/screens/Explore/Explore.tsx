@@ -12,13 +12,14 @@ import React, {
 } from "react";
 import {
   Animated,
+  FlatList,
   Keyboard,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   ListRenderItem,
   Platform,
   Pressable,
+  StyleSheet,
   View,
-  FlatList,
 } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Font } from "../../components/Font";
@@ -33,18 +34,21 @@ import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
 import { useSQLiteQuery } from "../../hooks/use-sqlite-query";
 import { useAppContext } from "../../providers/AppProvider";
 import { usePaddingHorizontal, useTheme } from "../../providers/Theming";
-import { QueryKeys } from "../../shared/QueryKeys";
 import { NavigationParamsConfig } from "../../shared/NavigationParamsConfig";
+import { QueryKeys } from "../../shared/QueryKeys";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
 
 const KeyboardAvoidingView = Animated.createAnimatedComponent(
   RNKeyboardAvoidingView
 );
 
-interface HashtagCount {
-  total: string;
-  value: string;
-}
+type HashtagCount =
+  | {
+      empty: never;
+      total: string;
+      value: string;
+    }
+  | { empty: boolean; total: never; value: never };
 
 function Explore() {
   const {
@@ -69,10 +73,31 @@ function Explore() {
     setMode("explore");
   }, [setMode]);
 
-  const { data: hashtags } = useSQLiteQuery<HashtagCount>(
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        pressable: {
+          flex: 1 / 2,
+          marginLeft: paddingHorizontal,
+          marginTop: paddingHorizontal,
+          marginRight: paddingHorizontal,
+        },
+      }),
+    [paddingHorizontal]
+  );
+
+  const { data: hashtagsData } = useSQLiteQuery<HashtagCount>(
     QueryKeys.TOP_HASHTAGS,
     "select count(value) as total, value from hashtags group by value order by total desc"
   );
+
+  const hashtags = useMemo<HashtagCount[]>(() => {
+    if (hashtagsData && hashtagsData?.length % 2 === 1) {
+      return [...hashtagsData, { empty: true }] as HashtagCount[];
+    }
+
+    return hashtagsData || [];
+  }, [hashtagsData]);
 
   const { data, isFetched, fetchNextPage } = usePaginatedPosts(
     [QueryKeys.SEARCH, value],
@@ -89,26 +114,35 @@ function Explore() {
   }, [data?.pages, isFetched, mode, term]);
 
   const renderItem = useCallback<ListRenderItem<HashtagCount>>(
-    ({ item, index }) => (
-      <Pressable
-        style={{
-          flex: 1 / 2,
-          marginLeft: paddingHorizontal,
-          marginTop: paddingHorizontal,
-          ...(index % 2 && {
-            marginRight: paddingHorizontal,
-          }),
-        }}
-        key={String(item.value + item.total)}
-        onPress={() => navigate("HashtagViewer", { hashtag: item.value })}
-      >
-        <HashtagCard hashtag={item.value} total={item.total} />
-      </Pressable>
-    ),
-    [navigate, paddingHorizontal]
+    ({ item, index }) => {
+      if (item.empty) {
+        return <View style={styles.pressable} />;
+      }
+
+      return (
+        <Pressable
+          key={String(item.value + item.total)}
+          onPress={() => navigate("HashtagViewer", { hashtag: item.value })}
+          style={[
+            styles.pressable,
+            {
+              ...(index % 2 && {
+                marginRight: paddingHorizontal,
+              }),
+            },
+          ]}
+        >
+          <HashtagCard hashtag={item.value} total={item.total} />
+        </Pressable>
+      );
+    },
+    [navigate, paddingHorizontal, styles.pressable]
   );
 
-  const keyExtractor = useCallback(({ value }: HashtagCount) => value, []);
+  const keyExtractor = useCallback(
+    (item: HashtagCount, index: number) => (!item ? String(index) : item.value),
+    []
+  );
 
   return (
     <Frame flexDirection="column" backgroundColor="background" flex={1}>
@@ -218,9 +252,10 @@ function Explore() {
         }}
       >
         {mode === "explore" && (
-          <FlatList
+          <FlatList<HashtagCount>
             ref={ref}
             contentContainerStyle={{
+              paddingTop: theme.units.small,
               paddingBottom: tabBarHeight + HashtagCard.HEIGHT,
             }}
             keyExtractor={keyExtractor}
