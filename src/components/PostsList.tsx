@@ -34,18 +34,8 @@ const PostsList = React.forwardRef<
   const theme = useTheme();
   const keyExtractor = useCallback(({ id }: { id: string }) => String(id), []);
   const renderItem = useCallback<ListRenderItem<Post>>(
-    ({ item, index }) => (
-      <PostLine
-        {...item}
-        key={String(item.id)}
-        bottomSpacing={
-          index === (posts?.length ?? 0) - 1
-            ? bottomSpacing || insets.bottom
-            : 0
-        }
-      />
-    ),
-    [insets.bottom, bottomSpacing, posts?.length]
+    ({ item }) => <PostLine {...item} key={String(item.id)} />,
+    []
   );
 
   if (posts && !posts.length) {
@@ -67,6 +57,15 @@ const PostsList = React.forwardRef<
       }}
       ref={ref}
       ItemSeparatorComponent={null}
+      ListFooterComponent={
+        bottomSpacing ? (
+          <View
+            style={{
+              height: bottomSpacing,
+            }}
+          />
+        ) : null
+      }
       scrollIndicatorInsets={{ right: 1 }}
       keyExtractor={keyExtractor}
       data={posts as Post[]}
@@ -82,14 +81,7 @@ const PostsList = React.forwardRef<
 });
 
 const POST_ITEM_HEIGHT = 130;
-const PostLine = React.memo(function PostLine({
-  id,
-  value,
-  timestamp,
-  bottomSpacing,
-}: Post & {
-  bottomSpacing?: number;
-}) {
+const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const { paddingHorizontal } = usePaddingHorizontal();
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
@@ -147,13 +139,6 @@ const PostLine = React.memo(function PostLine({
             />
           </Font>
         </Frame>
-        {Boolean(bottomSpacing) && (
-          <View
-            style={{
-              height: bottomSpacing,
-            }}
-          />
-        )}
       </Frame>
     </Pressable>
   );
