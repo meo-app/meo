@@ -111,7 +111,6 @@ const PostDetails = React.memo(function PostDetails() {
 
   useEffect(() => {
     if (changes) {
-      console.log("saving it");
       editPost({
         id,
         text: changes,

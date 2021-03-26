@@ -113,12 +113,12 @@ function Settings() {
                 "Are you sure?",
                 "All your posts and hashtags are going to be deleted.",
                 [
+                  { text: "Dismiss", onPress: () => {} },
                   {
                     text: "Confirm",
                     style: "destructive",
                     onPress: () => flushDatabase(),
                   },
-                  { text: "Dismiss", onPress: () => {} },
                 ]
               )
             }

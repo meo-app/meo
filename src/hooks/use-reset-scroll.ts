@@ -13,16 +13,15 @@ function useResetScroll(flatlist: React.MutableRefObject<FlatList | null>) {
   const { setParams } = useNavigation<
     NavigationProp<NavigationParamsConfig, "Home" | "Explore">
   >();
-  const { params, name } = useRoute<
+  const { params } = useRoute<
     RouteProp<NavigationParamsConfig, "Home" | "Explore">
   >();
   const effect = useCallback(() => {
-    console.log({ name });
     if (params?.resetScroll) {
       flatlist.current?.scrollToOffset({ offset: 0, animated: true });
     }
     setParams({ resetScroll: false });
-  }, [flatlist, name, params?.resetScroll, setParams]);
+  }, [flatlist, params?.resetScroll, setParams]);
 
   useFocusEffect(effect);
 }
