@@ -104,7 +104,10 @@ function Explore() {
     {
       queryFn: ({ limit, offset }) =>
         `select * from posts where value like "%${value}%" collate nocase order by id desc limit ${limit}, ${offset}`,
-      enabled: mode === "search",
+      options: {
+        enabled: mode === "search",
+        keepPreviousData: true,
+      },
     }
   );
 

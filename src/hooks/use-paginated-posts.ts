@@ -1,6 +1,7 @@
 import {
   QueryKey,
   useInfiniteQuery,
+  UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
 } from "react-query";
 import { useDB } from "../providers/SQLiteProvider";
@@ -12,10 +13,10 @@ function usePaginatedPosts(
   queryKey: QueryKey,
   {
     queryFn,
-    enabled,
+    options,
   }: {
     queryFn: (args: { limit: number; offset: number }) => string;
-    enabled?: boolean;
+    options?: UseInfiniteQueryOptions<Post[], {}>;
   }
 ): UseInfiniteQueryResult<Post[], {}> {
   const db = useDB();
@@ -44,7 +45,6 @@ function usePaginatedPosts(
         );
       }),
     {
-      enabled,
       getNextPageParam: (lastPage, allPages) => {
         if (allPages.length === 1) {
           return 1;
@@ -55,6 +55,7 @@ function usePaginatedPosts(
           return result;
         }
       },
+      ...options,
     }
   );
 
