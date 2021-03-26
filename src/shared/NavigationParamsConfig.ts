@@ -1,8 +1,12 @@
 type NavigationParamsConfig = {
   Tabs: undefined;
-  Home: undefined;
+  Home?: {
+    resetScroll?: boolean;
+  };
   Create: undefined;
-  Explore: undefined;
+  Explore?: {
+    resetScroll?: boolean;
+  };
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };

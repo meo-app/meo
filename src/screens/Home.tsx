@@ -1,23 +1,32 @@
-import { useScrollToTop } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useNavigation,
+  useScrollToTop,
+} from "@react-navigation/native";
 import React, { useMemo, useRef } from "react";
-import { View } from "react-native";
+import { FlatList, Pressable, View } from "react-native";
 import { Font } from "../components/Font";
+import { Frame } from "../components/Frame";
 import { Header } from "../components/Header";
 import { PostsList } from "../components/PostsList";
-import { QueryKeys } from "../shared/QueryKeys";
 import { usePaginatedPosts } from "../hooks/use-paginated-posts";
+import { useResetScroll } from "../hooks/use-reset-scroll";
 import { useAppContext } from "../providers/AppProvider";
-import { Frame } from "../components/Frame";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
+import { QueryKeys } from "../shared/QueryKeys";
 
 function Home() {
   const { data, error, fetchNextPage } = usePaginatedPosts(QueryKeys.POSTS, {
     queryFn: ({ limit, offset }) =>
       `select * from posts order by id desc limit ${limit}, ${offset}`,
   });
-
+  const { navigate } = useNavigation<
+    NavigationProp<NavigationParamsConfig, "Home">
+  >();
   const isEmpty = useMemo(() => !data?.pages.flat(1).length, [data]);
   const { tabBarHeight } = useAppContext();
-  const ref = useRef(null);
+  const ref = useRef<FlatList | null>(null);
+  useResetScroll(ref);
   useScrollToTop(ref);
 
   return (
@@ -36,7 +45,9 @@ function Home() {
         <Frame flex={1 / 2} justifyContent="center" alignItems="center">
           <Font variant="subtitle">Thought of something?</Font>
           <Frame marginTop="small">
-            <Font>Add it here :)</Font>
+            <Pressable onPress={() => navigate("Create")}>
+              <Font color="primary">Add it here</Font>
+            </Pressable>
           </Frame>
         </Frame>
       )}
