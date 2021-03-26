@@ -1,5 +1,7 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import React, { useMemo } from "react";
+import React from "react";
+import Autolink from "react-native-autolink";
+import { useTheme } from "../providers/Theming";
 import { HASHTAG_REGEX } from "../shared/hashtag-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Font } from "./Font";
@@ -14,28 +16,32 @@ const PostTextContent = React.memo(function PostTextContent({
   numberOfLines?: number;
 } & Pick<React.ComponentProps<typeof Font>, "variant" | "color">) {
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
-  const content = useMemo(() => value.split(HASHTAG_REGEX), [value]);
+  const theme = useTheme();
   return (
-    <Font numberOfLines={numberOfLines} color={color} variant={variant}>
-      {content.map((item, index) => {
-        if (item[0] === "#") {
-          return (
-            <Font
-              color="primary"
-              variant={variant}
-              key={`hashtag-${index}-${item}`}
-              onPress={() =>
-                navigation.navigate("HashtagViewer", { hashtag: item })
-              }
-            >
-              {item}
-            </Font>
-          );
-        }
-
-        return item;
-      })}
-    </Font>
+    <Autolink
+      numberOfLines={numberOfLines}
+      text={value}
+      linkStyle={{
+        ...theme.typography[variant],
+        color: theme.colors.primary,
+      }}
+      customLinks={[
+        {
+          pattern: HASHTAG_REGEX,
+          extractText: (args) => args[1],
+          onPress: (args) => {
+            navigation.navigate("HashtagViewer", {
+              hashtag: args[0],
+            });
+          },
+        },
+      ]}
+      renderText={(text) => (
+        <Font numberOfLines={numberOfLines} color={color} variant={variant}>
+          {text}
+        </Font>
+      )}
+    />
   );
 });
 

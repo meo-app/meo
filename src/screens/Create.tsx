@@ -98,12 +98,13 @@ function Create() {
           </Frame>
         </Frame>
       </Header>
-      <Frame
-        flex={1}
-        style={{ flex: 1, backgroundColor, paddingTop: theme.units.medium }}
-      >
+      <Frame flex={1} style={{ flex: 1, backgroundColor }}>
         <ScrollView
-          style={{ flex: 1, backgroundColor: theme.colors.background }}
+          style={{
+            flex: 1,
+            backgroundColor: theme.colors.background,
+            paddingTop: theme.units.medium,
+          }}
         >
           <Frame
             paddingHorizontal={paddingHorizontal}
@@ -139,7 +140,7 @@ function Create() {
                 onChangeText={onChangeText}
                 multiline
                 style={{
-                  ...(theme.typography.body as Object),
+                  ...(theme.typography.highlight as Object),
                   width: "80%",
                   marginTop: theme.units.small,
                   paddingBottom: theme.units.medium,

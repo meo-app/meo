@@ -39,6 +39,7 @@ const PostDetails = React.memo(function PostDetails() {
   const {
     params: { id },
   } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
+  const hasFilledState = useRef(false);
   const keyboard = useKeyboard();
   const navigation = useNavigation();
   const theme = useTheme();
@@ -65,6 +66,13 @@ const PostDetails = React.memo(function PostDetails() {
     () => (post?.timestamp ? timestampToDate(post?.timestamp) : ""),
     [post]
   );
+
+  useEffect(() => {
+    if (!text && post?.value && !hasFilledState.current) {
+      hasFilledState.current = true;
+      onChangeText(post.value);
+    }
+  }, [post?.value, text]);
 
   const onDeletePress = useCallback(() => {
     Alert.alert("Delete post", "This action cannot be undone. Are you sure?", [
@@ -165,13 +173,13 @@ const PostDetails = React.memo(function PostDetails() {
               onBlur={() => setEditable(false)}
               multiline
               style={{
-                ...(theme.typography.body as Object),
+                ...(theme.typography.highlight as Object),
                 width: "100%",
               }}
             >
               <PostTextContent
                 variant="highlight"
-                value={text || String(post?.value)}
+                value={text}
                 color="foregroundPrimary"
               />
             </TextInput>

@@ -1,0 +1,194 @@
+diff --git a/node_modules/react-native-autolink/dist/index.d.ts b/node_modules/react-native-autolink/dist/index.d.ts
+index 2428d11..8f5ad5e 100644
+--- a/node_modules/react-native-autolink/dist/index.d.ts
++++ b/node_modules/react-native-autolink/dist/index.d.ts
+@@ -8,9 +8,12 @@
+ import React, { PureComponent, ReactNode } from 'react';
+ import { Match } from 'autolinker/dist/es2015';
+ import { StyleProp, Text, TextStyle, TextProps } from 'react-native';
++import { UserCustomMatchSpec } from './user-custom-match';
+ import { PropsOf } from './types';
++export * from './user-custom-match';
+ interface AutolinkProps<C extends React.ComponentType = React.ComponentType> {
+     component?: C;
++    customLinks?: UserCustomMatchSpec[];
+     email?: boolean;
+     hashtag?: false | 'facebook' | 'instagram' | 'twitter';
+     latlng?: boolean;
+@@ -67,4 +70,3 @@ export default class Autolink<C extends React.ComponentType = typeof Text> exten
+     renderLink(text: string, match: Match, index: number, textProps?: Partial<TextProps>): ReactNode;
+     render(): ReactNode;
+ }
+-export {};
+diff --git a/node_modules/react-native-autolink/dist/index.js b/node_modules/react-native-autolink/dist/index.js
+index 2074c1b..bdabb17 100644
+--- a/node_modules/react-native-autolink/dist/index.js
++++ b/node_modules/react-native-autolink/dist/index.js
+@@ -10,6 +10,8 @@ import { Autolinker, AnchorTagBuilder, } from 'autolinker/dist/es2015';
+ import { Alert, Linking, Platform, StyleSheet, Text, } from 'react-native';
+ import * as Truncate from './truncate';
+ import { Matchers } from './matchers';
++import { UserCustomMatch } from './user-custom-match';
++export * from './user-custom-match';
+ const tagBuilder = new AnchorTagBuilder();
+ const styles = StyleSheet.create({
+     link: {
+@@ -112,6 +114,7 @@ export default class Autolink extends PureComponent {
+                         return [`tel:${number}`];
+                 }
+             }
++            case 'userCustom':
+             case 'url': {
+                 return [match.getAnchorHref()];
+             }
+@@ -121,12 +124,24 @@ export default class Autolink extends PureComponent {
+         }
+     }
+     renderLink(text, match, index, textProps = {}) {
++        var _a;
+         const { truncate, linkStyle } = this.props;
+         const truncated = truncate ? Autolink.truncate(text, this.props) : text;
+-        return (React.createElement(Text, Object.assign({ style: linkStyle || styles.link, onPress: () => this.onPress(match), onLongPress: () => this.onLongPress(match) }, textProps, { key: index }), truncated));
++        let style;
++        let onPress;
++        let onLongPress;
++        if (match.getType() === 'userCustom') {
++            style = match.getStyle();
++            onPress = match.getOnPress();
++            onLongPress = match.getOnLongPress();
++        }
++        style = (_a = (style !== null && style !== void 0 ? style : linkStyle), (_a !== null && _a !== void 0 ? _a : styles.link));
++        onPress = (onPress !== null && onPress !== void 0 ? onPress : (() => this.onPress(match)));
++        onLongPress = (onLongPress !== null && onLongPress !== void 0 ? onLongPress : (() => this.onLongPress(match)));
++        return (React.createElement(Text, Object.assign({ style: style, onPress: onPress, onLongPress: onLongPress }, textProps, { key: index }), truncated));
+     }
+     render() {
+-        const { children, component = Text, email, hashtag, latlng, linkProps, linkStyle, mention, onPress, onLongPress, phone, renderLink, renderText, showAlert, stripPrefix, stripTrailingSlash, text, textProps, truncate, truncateChars, truncateLocation, url, webFallback, ...other } = this.props;
++        const { children, component = Text, customLinks = [], email, hashtag, latlng, linkProps, linkStyle, mention, onPress, onLongPress, phone, renderLink, renderText, showAlert, stripPrefix, stripTrailingSlash, text, textProps, truncate, truncateChars, truncateLocation, url, webFallback, ...other } = this.props;
+         // Creates a token with a random UID that should not be guessable or
+         // conflict with other parts of the string.
+         const uid = Math.floor(Math.random() * 0x10000000000).toString(16);
+@@ -169,6 +184,21 @@ export default class Autolink extends PureComponent {
+                     });
+                 }
+             });
++            // User-specified custom matchers
++            customLinks.forEach((spec) => {
++                linkedText = linkedText.replace(spec.pattern, (...args) => {
++                    const token = generateToken();
++                    const matchedText = args[0];
++                    matches[token] = new UserCustomMatch({
++                        ...spec,
++                        tagBuilder,
++                        matchedText,
++                        offset: args[args.length - 2],
++                        replacerArgs: args,
++                    });
++                    return token;
++                });
++            });
+         }
+         catch (e) {
+             console.warn(e); // eslint-disable-line no-console
+@@ -187,6 +217,7 @@ export default class Autolink extends PureComponent {
+                 case 'mention':
+                 case 'phone':
+                 case 'url':
++                case 'userCustom':
+                     return renderLink
+                         ? renderLink(match.getAnchorText(), match, index)
+                         : this.renderLink(match.getAnchorText(), match, index, linkProps);
+diff --git a/node_modules/react-native-autolink/dist/matchers.js b/node_modules/react-native-autolink/dist/matchers.js
+index fc69549..42401f2 100644
+--- a/node_modules/react-native-autolink/dist/matchers.js
++++ b/node_modules/react-native-autolink/dist/matchers.js
+@@ -32,4 +32,4 @@ export const CustomMatchers = {
+         Match: LatLngMatch,
+     },
+ };
+-export const Matchers = Object.keys(CustomMatchers).map((key) => CustomMatchers[key]);
++export const Matchers = Object.values(CustomMatchers);
+diff --git a/node_modules/react-native-autolink/dist/user-custom-match.d.ts b/node_modules/react-native-autolink/dist/user-custom-match.d.ts
+new file mode 100644
+index 0000000..b2792fd
+--- /dev/null
++++ b/node_modules/react-native-autolink/dist/user-custom-match.d.ts
+@@ -0,0 +1,35 @@
++import { Match, MatchConfig } from 'autolinker/dist/es2015';
++import { StyleProp, TextStyle } from 'react-native';
++export declare type ReplacerArgs = [string, ...any[]];
++export interface UserCustomMatchSpec {
++    /** Regular expression pattern to match user-specified custom links */
++    pattern: RegExp;
++    /** Custom function for extracting link text from regex replacer args */
++    extractText?: (replacerArgs: ReplacerArgs) => string;
++    /** Custom function for extracting link URL from regex replacer args */
++    extractUrl?: (replacerArgs: ReplacerArgs) => string;
++    /** Custom override for styling links of this type */
++    style?: StyleProp<TextStyle>;
++    /** Custom override for handling presses on links of this type */
++    onPress?: (replacerArgs: ReplacerArgs) => void;
++    /** Custom override for handling long-presses on links of this type */
++    onLongPress?: (replacerArgs: ReplacerArgs) => void;
++}
++export interface UserCustomMatchConfig extends MatchConfig, UserCustomMatchSpec {
++    replacerArgs: ReplacerArgs;
++}
++export declare class UserCustomMatch extends Match {
++    private replacerArgs;
++    private extractUrl?;
++    private extractText?;
++    private style?;
++    private onPress?;
++    private onLongPress?;
++    constructor(cfg: UserCustomMatchConfig);
++    getType(): string;
++    getAnchorHref(): string;
++    getAnchorText(): string;
++    getStyle(): StyleProp<TextStyle> | undefined;
++    getOnPress(): (() => void) | undefined;
++    getOnLongPress(): (() => void) | undefined;
++}
+diff --git a/node_modules/react-native-autolink/dist/user-custom-match.js b/node_modules/react-native-autolink/dist/user-custom-match.js
+new file mode 100644
+index 0000000..863060c
+--- /dev/null
++++ b/node_modules/react-native-autolink/dist/user-custom-match.js
+@@ -0,0 +1,37 @@
++import { Match } from 'autolinker/dist/es2015';
++export class UserCustomMatch extends Match {
++    constructor(cfg) {
++        super(cfg);
++        this.replacerArgs = cfg.replacerArgs;
++        this.extractUrl = cfg.extractUrl;
++        this.extractText = cfg.extractText;
++        this.style = cfg.style;
++        const { onPress, onLongPress } = cfg;
++        if (onPress) {
++            this.onPress = () => onPress(this.replacerArgs);
++        }
++        if (onLongPress) {
++            this.onLongPress = () => onLongPress(this.replacerArgs);
++        }
++    }
++    getType() {
++        return 'userCustom';
++    }
++    getAnchorHref() {
++        var _a, _b, _c;
++        return _c = (_b = (_a = this).extractUrl) === null || _b === void 0 ? void 0 : _b.call(_a, this.replacerArgs), (_c !== null && _c !== void 0 ? _c : this.matchedText);
++    }
++    getAnchorText() {
++        var _a, _b, _c;
++        return _c = (_b = (_a = this).extractText) === null || _b === void 0 ? void 0 : _b.call(_a, this.replacerArgs), (_c !== null && _c !== void 0 ? _c : this.matchedText);
++    }
++    getStyle() {
++        return this.style;
++    }
++    getOnPress() {
++        return this.onPress;
++    }
++    getOnLongPress() {
++        return this.onLongPress;
++    }
++}
