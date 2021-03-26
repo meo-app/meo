@@ -1,6 +1,7 @@
 import ViewPager from "@react-native-community/viewpager";
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
@@ -34,12 +35,18 @@ const Indicators: React.FunctionComponent<{
 
 function Section({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Font variant="display" textAlign="center" marginBottom="large">
         {title}
       </Font>
       <Font variant="body">{subtitle}</Font>
-    </>
+    </ScrollView>
   );
 }
 

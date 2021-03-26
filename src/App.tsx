@@ -34,7 +34,7 @@ function Tabs() {
     <TabsNavigator.Navigator
       lazy={false}
       screenOptions={{ unmountOnBlur: false }}
-      tabBar={() => <TabBar />}
+      tabBar={(props) => <TabBar {...props} />}
     >
       <TabsNavigator.Screen name="Home" component={Home} />
       <TabsNavigator.Screen name="Explore" component={Explore} />

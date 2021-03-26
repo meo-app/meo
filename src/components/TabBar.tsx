@@ -1,4 +1,4 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
 import React, { useCallback } from "react";
@@ -11,15 +11,13 @@ import {
   usePaddingHorizontal,
   useTheme,
 } from "../providers/Theming";
-import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
 const CREATE_BUTTON_SIZE: keyof Units = "larger";
 const CREATE_BUTTON_DIMENSION = 1.3;
 
-function TabBar() {
-  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
+function TabBar({ navigation, state }: BottomTabBarProps) {
   const theme = useTheme();
   const { setTabBarHeight } = useAppContext();
   const styles = useStyles(() => ({
@@ -31,6 +29,22 @@ function TabBar() {
       height: 110,
     },
   }));
+
+  const onPress = useCallback(
+    (route: typeof state.routes[0]) => {
+      /**
+       * Needed so that `useScrollToTop` can capture the event on Home/Explore tabs
+       */
+      navigation.emit({
+        type: "tabPress",
+        target: route.key,
+        canPreventDefault: true,
+      });
+
+      navigation.navigate(route.name);
+    },
+    [navigation, state]
+  );
 
   return (
     <Frame
@@ -44,12 +58,12 @@ function TabBar() {
       style={styles.root}
     >
       <FlipColorScheme>
-        <CreateButton onPress={() => navigate("Create")} />
+        <CreateButton onPress={() => navigation.navigate("Create")} />
       </FlipColorScheme>
       <Gradient>
         <Dock
-          onHomePress={() => navigate("Home")}
-          onExplorePress={() => navigate("Explore")}
+          onHomePress={() => onPress(state.routes[0])}
+          onExplorePress={() => onPress(state.routes[1])}
         />
       </Gradient>
     </Frame>

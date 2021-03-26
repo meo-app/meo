@@ -25,7 +25,10 @@ function Create() {
   const [text, onChangeText] = useState("");
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const { mutate: createPost } = useCreatePost({
-    onSuccess: () => navigation.navigate("Home"),
+    onSuccess: () =>
+      navigation.navigate("Home", {
+        resetScroll: true,
+      }),
   });
 
   useEffect(() => {

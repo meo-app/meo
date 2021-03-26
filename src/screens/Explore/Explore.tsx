@@ -1,4 +1,8 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useNavigation,
+  useScrollToTop,
+} from "@react-navigation/native";
 import React, {
   useCallback,
   useEffect,
@@ -14,11 +18,9 @@ import {
   Platform,
   Pressable,
   View,
-} from "react-native";
-import {
   FlatList,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+} from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { HashtagCard } from "../../components/HashtagCard";
@@ -61,7 +63,8 @@ function Explore() {
   const searchInputRef = useRef(null);
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const value = useDebounceValue(term, { delay: 300 });
-
+  const ref = useRef<FlatList | null>(null);
+  useScrollToTop(ref);
   useEffect(() => {
     setMode("explore");
   }, [setMode]);
@@ -216,6 +219,7 @@ function Explore() {
       >
         {mode === "explore" && (
           <FlatList
+            ref={ref}
             contentContainerStyle={{
               paddingBottom: tabBarHeight + HashtagCard.HEIGHT,
             }}
