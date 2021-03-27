@@ -1,3 +1,4 @@
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { darken } from "polished";
 import React, { useCallback, useMemo, useRef } from "react";
@@ -9,6 +10,7 @@ import {
   Platform,
   Pressable,
   View,
+  StyleSheet,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
@@ -18,6 +20,7 @@ import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Post } from "../shared/SQLiteEntities";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
+import { Icon } from "./Icon/Icon";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
@@ -86,6 +89,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   const theme = useTheme();
+  const { showActionSheetWithOptions } = useActionSheet();
   return (
     <Pressable
       onPress={() => navigate("PostDetails", { id })}
@@ -94,6 +98,8 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
       }}
       style={({ pressed }) => ({
         flex: 1,
+        borderBottomColor: theme.colors.backgroundAccent,
+        borderBottomWidth: StyleSheet.hairlineWidth,
         ...Platform.select({
           ios: {
             backgroundColor: pressed
@@ -109,6 +115,31 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         paddingBottom="small"
         paddingTop="medium"
       >
+        <Frame justifyContent="flex-end" flexDirection="row">
+          <Pressable
+            onPress={() =>
+              showActionSheetWithOptions(
+                {
+                  options: ["Delete", "Edit", "Share", "Close"],
+                  autoFocus: true,
+                  destructiveButtonIndex: 0,
+                  cancelButtonIndex: 3,
+                  tintColor: theme.colors.primary,
+                  useModal: true,
+                  containerStyle: {
+                    borderRadius: theme.constants.borderRadius,
+                    backgroundColor: theme.colors.background,
+                  },
+
+                  destructiveColor: theme.colors.destructive,
+                },
+                () => {}
+              )
+            }
+          >
+            <Icon type="More" size="small" color="foregroundSecondary" />
+          </Pressable>
+        </Frame>
         <Frame
           justifyContent="flex-start"
           alignItems="center"
