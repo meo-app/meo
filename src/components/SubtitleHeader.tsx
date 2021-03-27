@@ -24,30 +24,34 @@ function SubtitleHeader({
 }: Props) {
   const navigation = useNavigation();
   const theme = useTheme();
-  const { paddingHorizontal, paddingHorizontalUnit } = usePaddingHorizontal();
+  const { paddingHorizontal } = usePaddingHorizontal();
   const insets = useSafeAreaInsets();
-  const styles = useStyles(() => ({
-    spacer: {
-      height: insets.top + theme.units[paddingHorizontalUnit],
-      width: "100%",
-      backgroundColor: rgba(255, 255, 255, 0),
-    },
-    root: {
-      paddingHorizontal,
-      paddingBottom: theme.units.medium,
-      display: "flex",
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: theme.colors.backgroundAccent,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        spacer: {
+          height: insets.top,
+          width: "100%",
+          backgroundColor: rgba(255, 255, 255, 0),
+        },
+        root: {
+          paddingHorizontal,
+          paddingBottom: theme.units.large,
+          display: "flex",
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          borderBottomColor: theme.colors.backgroundAccent,
+        },
+      }),
+    [insets.top, paddingHorizontal, theme.colors.backgroundAccent, theme.units]
+  );
 
   const back = useMemo(() => {
     if (backContent) {
       return (
         <Frame
+          marginRight="medium"
           style={{
             zIndex: 1,
-            marginRight: theme.units.medium,
             position: "absolute",
           }}
         >

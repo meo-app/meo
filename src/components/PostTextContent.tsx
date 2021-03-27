@@ -21,6 +21,10 @@ const PostTextContent = React.memo(function PostTextContent({
     <Autolink
       numberOfLines={numberOfLines}
       text={value}
+      style={{
+        ...theme.typography[variant],
+        color: theme.colors[color],
+      }}
       linkStyle={{
         ...theme.typography[variant],
         color: theme.colors.primary,
@@ -36,11 +40,6 @@ const PostTextContent = React.memo(function PostTextContent({
           },
         },
       ]}
-      renderText={(text) => (
-        <Font numberOfLines={numberOfLines} color={color} variant={variant}>
-          {text}
-        </Font>
-      )}
     />
   );
 });
