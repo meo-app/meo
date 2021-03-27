@@ -5,14 +5,17 @@ import {
   NavigationState,
   useNavigation,
 } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Alert, Pressable } from "react-native";
+import { rgba } from "polished";
+import React, { useEffect, useMemo, useState } from "react";
+import { Alert, Pressable, StyleSheet } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon/Icon";
 import { PostTextContent } from "../components/PostTextContent";
+import { SubtitleHeader } from "../components/SubtitleHeader";
 import { UserAvatar } from "../components/UserAvatar";
 import { useCreatePost } from "../hooks/use-create-post";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
@@ -23,6 +26,30 @@ function Create() {
   const { paddingHorizontal } = usePaddingHorizontal();
   const backgroundColor = theme.colors.background;
   const [text, onChangeText] = useState("");
+  const insets = useSafeAreaInsets();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        spacer: {
+          height: insets.top,
+          width: "100%",
+          backgroundColor: rgba(255, 255, 255, 0),
+        },
+        root: {
+          paddingHorizontal,
+          paddingTop: theme.units.large,
+          paddingBottom: theme.units.small,
+          borderBottomColor: theme.colors.backgroundAccent,
+        },
+      }),
+    [
+      insets.top,
+      paddingHorizontal,
+      theme.colors.backgroundAccent,
+      theme.units.large,
+      theme.units.small,
+    ]
+  );
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const { mutate: createPost } = useCreatePost({
     onSuccess: () =>
@@ -61,43 +88,32 @@ function Create() {
 
   return (
     <>
-      <Header hideBackground>
+      <Frame style={styles.root}>
+        <Frame style={styles.spacer} />
         <Frame
           flexDirection="row"
           justifyContent="space-between"
-          flex={1}
           alignItems="center"
         >
-          <Frame
-            style={{
-              marginLeft: -theme.units.medium,
-              marginBottom: -theme.units.medium,
-            }}
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={({ pressed }) => ({
+              zIndex: 1,
+              marginRight: theme.units.medium,
+              opacity: pressed ? 0.5 : 1,
+            })}
           >
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={{
-                display: "flex",
-                width: "100%",
-                paddingBottom: theme.units.medium,
-                paddingLeft: theme.units.medium,
-                paddingRight: theme.units.large,
-              }}
-            >
-              <Icon type="Close" size="medium" />
-            </Pressable>
-          </Frame>
-          <Frame marginTop="large">
-            <Pressable
-              style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-              onPress={() => createPost({ text })}
-              disabled={!text}
-            >
-              <Font color="primary">Create</Font>
-            </Pressable>
-          </Frame>
+            <Icon type="Back" size="medium" />
+          </Pressable>
+          <Pressable
+            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+            onPress={() => createPost({ text })}
+            disabled={!text}
+          >
+            <Font color="primary">Create</Font>
+          </Pressable>
         </Frame>
-      </Header>
+      </Frame>
       <Frame flex={1} style={{ flex: 1, backgroundColor }}>
         <ScrollView
           style={{
