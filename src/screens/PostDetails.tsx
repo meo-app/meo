@@ -128,7 +128,7 @@ const PostDetails = React.memo(function PostDetails() {
 
   return (
     <>
-      <SubtitleHeader icon="Close">
+      <SubtitleHeader icon="Back">
         <Frame alignItems="flex-end">
           <Pressable>
             <Font
