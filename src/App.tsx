@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
-import React from "react";
+import React, { useMemo } from "react";
 import { Platform } from "react-native";
 import SplashScreen from "react-native-bootsplash";
 import { Drawer } from "./components/Drawer";
@@ -44,6 +44,23 @@ function Tabs() {
 
 function Screens() {
   const theme = useTheme();
+  const slideRightOptions = useMemo<
+    React.ComponentProps<typeof RootNavigator.Screen>["options"]
+  >(
+    () => ({
+      animationEnabled: true,
+      gestureEnabled: Platform.OS === "ios",
+      gestureDirection: "horizontal",
+      headerShown: false,
+      ...(Platform.OS === "ios" && {
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }),
+      cardStyle: {
+        ...theme.constants.shadow,
+      },
+    }),
+    [theme.constants.shadow]
+  );
   return (
     <RootNavigator.Navigator
       mode="modal"
@@ -79,22 +96,13 @@ function Screens() {
       <RootNavigator.Screen
         component={HashtagViewer}
         name="HashtagViewer"
-        options={{
-          animationEnabled: true,
-          gestureEnabled: Platform.OS === "ios",
-          gestureDirection: "horizontal",
-          headerShown: false,
-          ...(Platform.OS === "ios" && {
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          }),
-          cardStyle: {
-            borderWidth: 1,
-            borderColor: theme.colors.backgroundAccent,
-            ...theme.constants.shadow,
-          },
-        }}
+        options={slideRightOptions}
       />
-      <RootNavigator.Screen component={PostDetails} name="PostDetails" />
+      <RootNavigator.Screen
+        component={PostDetails}
+        name="PostDetails"
+        options={slideRightOptions}
+      />
       <RootNavigator.Screen component={ChangeAvatar} name="ChangeAvatar" />
     </RootNavigator.Navigator>
   );

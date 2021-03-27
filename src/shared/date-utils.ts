@@ -7,7 +7,7 @@ const timestampToDate = (timestamp: string) => {
   }
 
   const [year, month, date, hours, minutes, seconds] = values.map(Number);
-  return new Date(year, month, date, hours, minutes, seconds);
+  return new Date(year, month - 1, date, hours, minutes, seconds);
 };
 
 export { timestampToDate };
