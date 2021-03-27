@@ -28,7 +28,7 @@ const PostsList = React.forwardRef<
     "refreshing" | "onEndReached"
   >
 >(({ data, refreshing, onEndReached, bottomSpacing }, ref) => {
-  const posts = data?.pages?.flat(1);
+  const posts = useMemo(() => data?.pages?.flat(1), [data?.pages]);
   const momentumRef = useRef(false);
   const insets = useSafeAreaInsets();
   const theme = useTheme();
