@@ -79,8 +79,9 @@ function Explore() {
         pressable: {
           flex: 1 / 2,
           marginLeft: paddingHorizontal,
+          marginRight: paddingHorizontal / 2,
           marginTop: paddingHorizontal,
-          marginRight: paddingHorizontal,
+          marginBottom: paddingHorizontal,
         },
       }),
     [paddingHorizontal]
@@ -128,11 +129,9 @@ function Explore() {
           onPress={() => navigate("HashtagViewer", { hashtag: item.value })}
           style={[
             styles.pressable,
-            {
-              ...(index % 2 && {
-                marginRight: paddingHorizontal,
-              }),
-            },
+            index % 2
+              ? { marginRight: paddingHorizontal }
+              : { marginLeft: paddingHorizontal },
           ]}
         >
           <HashtagCard hashtag={item.value} total={item.total} />
@@ -198,12 +197,8 @@ function Explore() {
                   value={term}
                   onChangeText={onChangeText}
                   editable
-                  onTouchStart={() => {
-                    setMode("search");
-                  }}
-                  onFocus={() => {
-                    setMode("search");
-                  }}
+                  onTouchStart={() => setMode("search")}
+                  onFocus={() => setMode("search")}
                 />
               </Animated.View>
               <Animated.View
