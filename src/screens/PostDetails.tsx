@@ -1,3 +1,4 @@
+import { useKeyboard } from "@react-native-community/hooks";
 import {
   EventListenerCallback,
   EventMapCore,
@@ -13,7 +14,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useKeyboard } from "@react-native-community/hooks";
 import { FormattedTime } from "react-intl";
 import { Alert, Pressable, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -24,20 +24,20 @@ import { Frame } from "../components/Frame";
 import { Icon } from "../components/Icon/Icon";
 import { PostTextContent } from "../components/PostTextContent";
 import { SubtitleHeader } from "../components/SubtitleHeader";
+import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useDeletePost } from "../hooks/use-delete-post";
 import { useEditPost } from "../hooks/use-edit-post";
-import { useStyles } from "../hooks/use-styles";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
+import { useStyles } from "../hooks/use-styles";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
+import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Post } from "../shared/SQLiteEntities";
-import { usePaddingHorizontal, useTheme } from "../providers/Theming";
-import { useDebounceValue } from "../hooks/use-debounce-value";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
-    params: { id },
+    params: { id, editPostEnabled },
   } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
   const hasFilledState = useRef(false);
   const keyboard = useKeyboard();
@@ -45,7 +45,7 @@ const PostDetails = React.memo(function PostDetails() {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
   const input = useRef<TextInput>(null);
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(editPostEnabled);
   const [text, onChangeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
