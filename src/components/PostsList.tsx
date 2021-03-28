@@ -8,16 +8,19 @@ import {
   ListRenderItem,
   Platform,
   Pressable,
+  StyleSheet,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
+import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Post } from "../shared/SQLiteEntities";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
+import { Icon } from "./Icon/Icon";
 import { PostTextContent } from "./PostTextContent";
 import { UserAvatar } from "./UserAvatar";
 
@@ -86,6 +89,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   const theme = useTheme();
+  const { showPostActionSheet } = usePostActionSheet({ id, value });
   return (
     <Pressable
       onPress={() => navigate("PostDetails", { id })}
@@ -94,6 +98,8 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
       }}
       style={({ pressed }) => ({
         flex: 1,
+        borderBottomColor: theme.colors.backgroundAccent,
+        borderBottomWidth: StyleSheet.hairlineWidth,
         ...Platform.select({
           ios: {
             backgroundColor: pressed
@@ -109,6 +115,11 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         paddingBottom="small"
         paddingTop="medium"
       >
+        <Frame justifyContent="flex-end" flexDirection="row">
+          <Pressable onPress={() => showPostActionSheet()}>
+            <Icon type="More" size="small" color="foregroundSecondary" />
+          </Pressable>
+        </Frame>
         <Frame
           justifyContent="flex-start"
           alignItems="center"

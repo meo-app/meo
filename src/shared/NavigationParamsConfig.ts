@@ -3,14 +3,14 @@ type NavigationParamsConfig = {
   Home?: {
     resetScroll?: boolean;
   };
-  Create: undefined;
   Explore?: {
     resetScroll?: boolean;
   };
+  Create: undefined;
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };
-  PostDetails: { id: string };
+  PostDetails: { id: string; editPostEnabled?: boolean };
   ChangeAvatar: undefined;
 };
 
