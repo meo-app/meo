@@ -1,4 +1,3 @@
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { darken } from "polished";
 import React, { useCallback, useMemo, useRef } from "react";
@@ -9,11 +8,12 @@ import {
   ListRenderItem,
   Platform,
   Pressable,
-  View,
   StyleSheet,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
+import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
@@ -89,7 +89,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   const theme = useTheme();
-  const { showActionSheetWithOptions } = useActionSheet();
+  const { showPostActionSheet } = usePostActionSheet({ id, value });
   return (
     <Pressable
       onPress={() => navigate("PostDetails", { id })}
@@ -116,27 +116,7 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         paddingTop="medium"
       >
         <Frame justifyContent="flex-end" flexDirection="row">
-          <Pressable
-            onPress={() =>
-              showActionSheetWithOptions(
-                {
-                  options: ["Delete", "Edit", "Share", "Close"],
-                  autoFocus: true,
-                  destructiveButtonIndex: 0,
-                  cancelButtonIndex: 3,
-                  tintColor: theme.colors.primary,
-                  useModal: true,
-                  containerStyle: {
-                    borderRadius: theme.constants.borderRadius,
-                    backgroundColor: theme.colors.background,
-                  },
-
-                  destructiveColor: theme.colors.destructive,
-                },
-                () => {}
-              )
-            }
-          >
+          <Pressable onPress={() => showPostActionSheet()}>
             <Icon type="More" size="small" color="foregroundSecondary" />
           </Pressable>
         </Frame>
