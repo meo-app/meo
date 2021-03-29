@@ -98,11 +98,8 @@ function Settings() {
       </Modal>
       <SubtitleHeader title="Settings" />
       <Frame flex={1} backgroundColor="backgroundAccent">
-        <ScrollView
-          contentContainerStyle={{
-            paddingTop: theme.units.large,
-          }}
-        >
+        <ScrollView>
+          <Title text="Options" />
           <Button
             onPress={() => navigate("ChangeAvatar")}
             title="Pick a new avatar"
@@ -125,6 +122,11 @@ function Settings() {
             title="Erase all my data"
             color="destructive"
           />
+          <Title text="About" />
+          <Button
+            title="Check the source on Github"
+            onPress={() => Linking.openURL("https://github.com/meo-app/meo")}
+          />
           {isDeveloper && (
             <>
               <Title text="Developer Options" />
@@ -136,12 +138,6 @@ function Settings() {
                 title="Reset onboarding flow"
                 onPress={() => flushOnboarding()}
               />
-              <Button
-                title="Github"
-                onPress={() =>
-                  Linking.openURL("https://github.com/meo-app/meo")
-                }
-              />
             </>
           )}
         </ScrollView>
@@ -151,13 +147,17 @@ function Settings() {
 }
 
 const Title = React.memo<{ text: string }>(function Title({ text }) {
+  const { paddingHorizontal } = usePaddingHorizontal();
   return (
     <Font
-      textAlign="center"
-      paddingHorizontal="larger"
-      variant="subtitle"
+      variant="caption"
       marginTop="large"
       marginBottom="medium"
+      color="foregroundSecondary"
+      paddingHorizontal={paddingHorizontal}
+      style={{
+        textTransform: "uppercase",
+      }}
     >
       {text}
     </Font>

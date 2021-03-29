@@ -51,7 +51,7 @@ const PostDetails = React.memo(function PostDetails() {
   const [text, onChangeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
-  const { data } = useSQLiteQuery<Post>(
+  const { data, isLoading } = useSQLiteQuery<Post>(
     [QueryKeys.POST_DETAILS, id],
     `select * from posts where id = ${id}`
   );
@@ -120,6 +120,10 @@ const PostDetails = React.memo(function PostDetails() {
       });
     }
   }, [changes, editPost, id]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>
