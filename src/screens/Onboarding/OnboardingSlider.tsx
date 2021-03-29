@@ -21,8 +21,8 @@ const Indicators: React.FunctionComponent<{
           key={item}
           marginLeft="small"
           marginRight="small"
-          width="smaller"
-          height="smaller"
+          width="smallest"
+          height="smallest"
           backgroundColor={active === item ? "primary" : "foregroundPrimary"}
           style={{
             borderRadius: theme.constants.absoluteRadius,

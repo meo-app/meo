@@ -116,7 +116,10 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
         paddingTop="medium"
       >
         <Frame justifyContent="flex-end" flexDirection="row">
-          <Pressable onPress={() => showPostActionSheet()}>
+          <Pressable
+            onPress={() => showPostActionSheet()}
+            hitSlop={theme.units.large}
+          >
             <Icon type="More" size="small" color="foregroundSecondary" />
           </Pressable>
         </Frame>

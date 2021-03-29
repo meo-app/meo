@@ -1,16 +1,27 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useCallback, useMemo } from "react";
-import { Alert } from "react-native";
+import Share from "react-native-share";
 import { useTheme } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { useDeletePost } from "./use-delete-post";
-import Share from "react-native-share";
+import { useDeletePostAlert } from "./use-delete-post-alert";
 
-function usePostActionSheet({ id, value }: { id: string; value: string }) {
+function usePostActionSheet({
+  id,
+  value,
+  deleteMutationOptions,
+}: {
+  id: string;
+  value: string;
+  deleteMutationOptions?: Parameters<typeof useDeletePost>[0];
+}) {
   const theme = useTheme();
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
-  const { mutateAsync: deletePost } = useDeletePost();
+  const { mutateAsync: deletePost } = useDeletePost(deleteMutationOptions);
+  const { openDeleteAlert } = useDeletePostAlert({
+    onDeletePress: () => deletePost({ id }),
+  });
   const { showActionSheetWithOptions } = useActionSheet();
   const { Actions, options } = useMemo(() => {
     const options = ["Delete", "Edit", "Share", "Close"];
@@ -57,21 +68,7 @@ function usePostActionSheet({ id, value }: { id: string; value: string }) {
             break;
           }
           case Actions.Delete: {
-            Alert.alert(
-              "Delete post",
-              "This action cannot be undone. Are you sure?",
-              [
-                { text: "Cancel", style: "cancel", onPress: () => {} },
-                {
-                  text: "Delete",
-                  style: "destructive",
-                  onPress: () =>
-                    deletePost({
-                      id,
-                    }),
-                },
-              ]
-            );
+            openDeleteAlert();
             break;
           }
         }
@@ -81,9 +78,9 @@ function usePostActionSheet({ id, value }: { id: string; value: string }) {
     Actions.Delete,
     Actions.Edit,
     Actions.Share,
-    deletePost,
     id,
     navigate,
+    openDeleteAlert,
     options,
     showActionSheetWithOptions,
     theme.colors.background,
