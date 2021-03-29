@@ -13,15 +13,9 @@ interface Props extends React.ComponentProps<typeof Text> {
 
 interface Props extends SpacingProps {}
 
-interface DefaultProps extends Required<Pick<Props, "variant">> {}
-
-const defaultProps: DefaultProps = {
-  variant: "body",
-};
-
 const Font: React.FunctionComponent<Props> = function Font(props) {
   const {
-    variant,
+    variant = "body",
     color,
     textAlign,
     marginTop,
@@ -32,8 +26,12 @@ const Font: React.FunctionComponent<Props> = function Font(props) {
     paddingRight,
     paddingBottom,
     paddingLeft,
+    paddingHorizontal,
+    paddingVertical,
+    marginHorizontal,
+    marginVertical,
     ...rest
-  } = { ...defaultProps, ...props };
+  } = props;
   const theme = useTheme();
   const spacing = useFrame({
     marginTop,
@@ -44,6 +42,10 @@ const Font: React.FunctionComponent<Props> = function Font(props) {
     paddingRight,
     paddingBottom,
     paddingLeft,
+    paddingHorizontal,
+    paddingVertical,
+    marginHorizontal,
+    marginVertical,
   });
   return (
     <Text
