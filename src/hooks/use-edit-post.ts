@@ -1,5 +1,7 @@
-import { useMutation, UseMutationOptions } from "react-query";
+import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
 import { extractHashtags } from "../shared/hashtag-utils";
+import { QueryKeys } from "../shared/QueryKeys";
+import { Post } from "../shared/SQLiteEntities";
 import { useInsertHashtags } from "./use-insert-hashtags";
 import { useInvalidatePosts } from "./use-invalidate-posts";
 import { useSQLiteMutation } from "./use-sqlite-mutation";
@@ -13,6 +15,7 @@ function useEditPost(
   { id }: Pick<Variables, "id">,
   options: UseMutationOptions<void, string, Variables> = {}
 ) {
+  const queryClient = useQueryClient();
   const { mutate: invalidatePosts } = useInvalidatePosts();
   const { mutateAsync: insertHashtag } = useInsertHashtags();
   const { mutateAsync: editPost } = useSQLiteMutation<Pick<Variables, "text">>({
@@ -42,6 +45,32 @@ function useEditPost(
     },
     {
       ...options,
+      onMutate: async ({ text }) => {
+        await queryClient.cancelQueries([QueryKeys.POST_DETAILS, id]);
+        const previoustPost = queryClient.getQueryData([
+          QueryKeys.POST_DETAILS,
+          id,
+        ]);
+
+        queryClient.setQueryData<Post[]>(
+          [QueryKeys.POST_DETAILS, id],
+          (previous) => {
+            const post = previous?.[0];
+            if (post) {
+              return [
+                {
+                  ...post,
+                  value: text,
+                },
+              ];
+            }
+
+            return [];
+          }
+        );
+
+        return { previoustPost };
+      },
       onSuccess: (data, variables, context) => {
         invalidatePosts();
         options.onSuccess?.(data, variables, context);
