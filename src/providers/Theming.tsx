@@ -1,7 +1,7 @@
 import {
   Inter_400Regular,
-  Inter_700Bold,
   Inter_500Medium,
+  Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext } from "react";
@@ -12,7 +12,6 @@ import {
   StatusBarStyle,
   useColorScheme,
 } from "react-native";
-import { Units } from "../foundations/Spacing";
 import { Theme } from "../foundations/Theme";
 
 const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
