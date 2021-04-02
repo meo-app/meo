@@ -1,49 +1,60 @@
-import React, { useState } from "react";
-import { useStyles } from "../hooks/use-styles";
-import { Platform, View } from "react-native";
-import { Font } from "./Font";
-import { StyleSheet } from "react-native";
 import { opacify } from "polished";
+import React, { useMemo, useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { useTheme } from "../providers/Theming";
+import { Font } from "./Font";
 
 const HEIGHT = 160;
 
 function HashtagCard({ hashtag, total }: { hashtag: string; total: string }) {
-  const styles = useStyles((theme) => ({
-    root: {
-      width: "100%",
-    },
-    content: {
-      position: "relative",
-      zIndex: 1,
-      width: "100%",
-      justifyContent: "flex-end",
-      height: HEIGHT,
-      borderRadius: theme.constants.borderRadius,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.backgroundAccent,
-      backgroundColor: theme.colors.backgroundAccent,
-      shadowColor: opacify(0.5, theme.colors.absoluteDark),
-      padding: theme.units.medium,
-      ...theme.constants.shadow,
-    },
-    decoration: {
-      ...(Platform.OS === "ios" && {
-        ...theme.constants.shadow,
+  const theme = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          width: "100%",
+        },
+        content: {
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          justifyContent: "flex-end",
+          height: HEIGHT,
+          borderRadius: theme.constants.borderRadius,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: theme.colors.backgroundAccent,
+          backgroundColor: theme.colors.backgroundAccent,
+          shadowColor: opacify(0.5, theme.colors.absoluteDark),
+          padding: theme.units.medium,
+          ...theme.constants.shadow,
+        },
+        decoration: {
+          ...(Platform.OS === "ios" && {
+            ...theme.constants.shadow,
+          }),
+          position: "absolute",
+          borderRadius: theme.constants.borderRadius,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: theme.colors.backgroundAccent,
+          backgroundColor:
+            Platform.OS === "android"
+              ? theme.colors.backgroundAccent
+              : theme.colors.background,
+          bottom: -10,
+          width: "100%",
+          height: 100,
+          zIndex: 0,
+        },
       }),
-      position: "absolute",
-      borderRadius: theme.constants.borderRadius,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.colors.backgroundAccent,
-      backgroundColor:
-        Platform.OS === "android"
-          ? theme.colors.backgroundAccent
-          : theme.colors.background,
-      bottom: -10,
-      width: "100%",
-      height: 100,
-      zIndex: 0,
-    },
-  }));
+    [
+      theme.colors.absoluteDark,
+      theme.colors.background,
+      theme.colors.backgroundAccent,
+      theme.constants.borderRadius,
+      theme.constants.shadow,
+      theme.units.medium,
+    ]
+  );
 
   return (
     <View style={styles.root}>

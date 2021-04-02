@@ -1,9 +1,8 @@
 import { rgba } from "polished";
-import React from "react";
-import { ImageBackground } from "react-native";
+import React, { useMemo } from "react";
+import { ImageBackground, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
-import { useStyles } from "../hooks/use-styles";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { OpenDrawerButton } from "./OpenDrawerButton";
@@ -21,27 +20,38 @@ const Header: React.FunctionComponent<Props> = function Header({
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
-  const styles = useStyles(() => ({
-    backgrond: {
-      display: "flex",
-      backgroundColor: theme.colors.background,
-      zIndex: 2,
-      ...theme.constants.shadow,
-    },
-    spacer: {
-      height: insets.top,
-      width: "100%",
-      backgroundColor: rgba(255, 255, 255, 0),
-    },
-    root: {
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "row",
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        backgrond: {
+          display: "flex",
+          backgroundColor: theme.colors.background,
+          zIndex: 2,
+          ...theme.constants.shadow,
+        },
+        spacer: {
+          height: insets.top,
+          width: "100%",
+          backgroundColor: rgba(255, 255, 255, 0),
+        },
+        root: {
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingHorizontal,
+          paddingBottom: theme.units.large,
+          paddingTop: theme.units.medium,
+        },
+      }),
+    [
+      insets.top,
       paddingHorizontal,
-      paddingBottom: theme.units.large,
-      paddingTop: theme.units.medium,
-    },
-  }));
+      theme.colors.background,
+      theme.constants.shadow,
+      theme.units.large,
+      theme.units.medium,
+    ]
+  );
 
   return (
     <ImageBackground

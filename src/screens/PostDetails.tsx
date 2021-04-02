@@ -10,7 +10,7 @@ import {
 } from "@react-navigation/native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedTime } from "react-intl";
-import { Alert, Keyboard, Pressable, TextInput } from "react-native";
+import { Alert, Pressable, StyleSheet, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Share from "react-native-share";
@@ -20,13 +20,9 @@ import { Icon } from "../components/Icon/Icon";
 import { PostTextContent } from "../components/PostTextContent";
 import { SubtitleHeader } from "../components/SubtitleHeader";
 import { useDebounceValue } from "../hooks/use-debounce-value";
-import { useDeletePost } from "../hooks/use-delete-post";
-import { useDeletePostAlert } from "../hooks/use-delete-post-alert";
 import { useEditPost } from "../hooks/use-edit-post";
-import { useInvalidatePosts } from "../hooks/use-invalidate-posts";
 import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { useStyles } from "../hooks/use-styles";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
@@ -100,11 +96,15 @@ const PostDetails = React.memo(function PostDetails() {
     return () => navigation.removeListener("beforeRemove", listener);
   }, [editPost, id, navigation, text]);
 
-  const styles = useStyles(() => ({
-    pressable: {
-      padding: theme.units.medium,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        pressable: {
+          padding: theme.units.medium,
+        },
+      }),
+    [theme.units.medium]
+  );
 
   useEffect(() => {
     if (editable) {

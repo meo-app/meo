@@ -1,11 +1,10 @@
 import React, { useMemo } from "react";
-import { Image, View } from "react-native";
+import { Image, View, StyleSheet } from "react-native";
 import { Scales } from "../foundations/Spacing";
-import { useStyles } from "../hooks/use-styles";
 import { useTheme } from "../providers/Theming";
+import { AVATARS_LIST } from "../shared/avatars-list";
 import { base64ToImageUrl } from "../shared/image-utils";
 import { useAvatar } from "../storage/avatar";
-import { AVATARS_LIST } from "../shared/avatars-list";
 
 interface Props {
   size?: keyof Scales;
@@ -18,14 +17,19 @@ const UserAvatar = React.memo<Props>(function UserAvatar({
   const { data } = useAvatar();
   const theme = useTheme();
   const width = theme.scales[size];
-  const styles = useStyles((theme) => ({
-    root: {
-      width,
-      height: width,
-      borderRadius: theme.constants.absoluteRadius,
-      overflow: "hidden",
-    },
-  }));
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          width,
+          height: width,
+          borderRadius: theme.constants.absoluteRadius,
+          overflow: "hidden",
+        },
+      }),
+    [theme.constants.absoluteRadius, width]
+  );
 
   const uri = useMemo(() => {
     const source = AVATARS_LIST.find(({ id }) => id === data?.avatarId)?.source;
