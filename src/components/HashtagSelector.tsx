@@ -1,6 +1,6 @@
 import { useKeyboard } from "@react-native-community/hooks";
 import React, { useCallback } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { InputAccessoryView, Pressable, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
@@ -17,16 +17,18 @@ function HashtagSelector({
   text,
   caretWord,
   onHashtagSelected,
+  nativeID,
 }: {
   text: string;
   caretWord: ReturnType<typeof useTextCaretWord>["caretWord"];
   onHashtagSelected: (text: string) => void;
+  nativeID: string;
 }) {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
-  const { coordinates, keyboardHeight } = useKeyboard();
-  const { data, remove } = useSQLiteQuery<QueryResult>({
-    queryKey: [QueryKeys.SEARCH_HASHTAGS, caretWord?.word],
+  const { keyboardHeight } = useKeyboard();
+  const { data } = useSQLiteQuery<QueryResult>({
+    queryKey: QueryKeys.SEARCH_HASHTAGS,
     query: `select distinct value from hashtags where value like "%${caretWord?.word}%" collate nocase`,
     options: {
       keepPreviousData: true,
@@ -69,7 +71,6 @@ function HashtagSelector({
             nextContext = [...nextContext, ...item.value.split(""), ...end];
 
             onHashtagSelected(nextContext.join(""));
-            remove();
           }
         }}
       >
@@ -78,46 +79,35 @@ function HashtagSelector({
         </Font>
       </Pressable>
     ),
-    [
-      caretWord,
-      onHashtagSelected,
-      paddingHorizontal,
-      remove,
-      text,
-      theme.units.small,
-    ]
+    [caretWord, onHashtagSelected, paddingHorizontal, text, theme.units.small]
   );
 
   const keyExtractor = useCallback((item: QueryResult) => item.value, []);
 
   return (
-    <Frame
+    <InputAccessoryView
+      nativeID={nativeID}
+      backgroundColor={theme.colors.background}
       style={{
-        display: data?.length && caretWord?.word ? "flex" : "none",
+        height: !caretWord?.word || !data?.length ? 0 : undefined,
       }}
     >
-      <Frame
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: keyboardHeight / 2,
-          flex: 1,
-          bottom: coordinates.end.height,
-          overflow: "hidden",
+      <FlatList
+        contentContainerStyle={{
           borderTopWidth: StyleSheet.hairlineWidth,
-          borderTopColor: theme.colors.foregroundSecondary,
+          borderTopColor: theme.colors.backgroundAccent,
         }}
-      >
-        <FlatList
-          keyboardShouldPersistTaps="handled"
-          data={data}
-          ListHeaderComponent={<Frame style={{ height: theme.units.small }} />}
-          ListFooterComponent={<Frame style={{ height: theme.units.small }} />}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-        />
-      </Frame>
-    </Frame>
+        style={{
+          height: keyboardHeight / 3.5,
+        }}
+        keyboardShouldPersistTaps="handled"
+        data={caretWord?.word ? data : []}
+        ListHeaderComponent={<Frame style={{ height: theme.units.small }} />}
+        ListFooterComponent={<Frame style={{ height: theme.units.small }} />}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
+    </InputAccessoryView>
   );
 }
 
