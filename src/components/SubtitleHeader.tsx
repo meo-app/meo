@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
-import { useStyles } from "../hooks/use-styles";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { Header } from "./Header";
@@ -94,7 +93,7 @@ function SubtitleHeader({
   return (
     <Frame style={styles.root}>
       <Frame style={styles.spacer} />
-      <Frame>
+      <Frame debugTrace>
         {back}
         {content}
       </Frame>

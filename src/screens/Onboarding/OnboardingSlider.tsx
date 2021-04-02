@@ -1,11 +1,10 @@
 import ViewPager from "@react-native-community/viewpager";
 import React, { useMemo, useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
-import { useStyles } from "../../hooks/use-styles";
 import { useTheme } from "../../providers/Theming";
 
 const Indicators: React.FunctionComponent<{
@@ -52,18 +51,23 @@ function Section({ title, subtitle }: { title: string; subtitle: string }) {
 
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
-  const styles = useStyles((theme) => ({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      height: "100%",
-    },
-    slider: {
-      justifyContent: "center",
-      alignItems: "center",
-      padding: theme.units.large,
-    },
-  }));
+  const theme = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          justifyContent: "center",
+          height: "100%",
+        },
+        slider: {
+          justifyContent: "center",
+          alignItems: "center",
+          padding: theme.units.large,
+        },
+      }),
+    [theme.units.large]
+  );
   return (
     <>
       <ViewPager

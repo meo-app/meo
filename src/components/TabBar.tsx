@@ -1,10 +1,9 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
-import React, { useCallback } from "react";
-import { Pressable, PressableProps } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import { Pressable, PressableProps, StyleSheet } from "react-native";
 import { Units } from "../foundations/Spacing";
-import { useStyles } from "../hooks/use-styles";
 import { useAppContext } from "../providers/AppProvider";
 import {
   FlipColorScheme,
@@ -20,15 +19,19 @@ const CREATE_BUTTON_DIMENSION = 1.3;
 function TabBar({ navigation, state }: BottomTabBarProps) {
   const theme = useTheme();
   const { setTabBarHeight } = useAppContext();
-  const styles = useStyles(() => ({
-    root: {
-      position: "absolute",
-      left: 0,
-      right: 0,
-      bottom: 0,
-      height: 110,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 110,
+        },
+      }),
+    []
+  );
 
   const onPress = useCallback(
     (route: typeof state.routes[0]) => {
@@ -101,7 +104,8 @@ function Dock({
   onHomePress: () => void;
   onExplorePress: () => void;
 }) {
-  const { paddingHorizontalUnit } = usePaddingHorizontal();
+  const { paddingHorizontal } = usePaddingHorizontal();
+  const theme = useTheme();
   const touch = useFrame({
     height: "larger",
     alignItems: "center",
@@ -119,16 +123,26 @@ function Dock({
     [touch]
   );
 
-  const styles = useStyles((theme) => ({
-    root: {
-      backgroundColor: theme.colors.background,
-      marginRight: theme.units[paddingHorizontalUnit] * 1.5,
-      marginLeft: theme.units[paddingHorizontalUnit] * 1.5,
-      height: theme.scales.larger,
-      borderRadius: theme.constants.absoluteRadius,
-      ...theme.constants.shadow,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          backgroundColor: theme.colors.background,
+          marginRight: paddingHorizontal * 1.5,
+          marginLeft: paddingHorizontal * 1.5,
+          height: theme.scales.larger,
+          borderRadius: theme.constants.absoluteRadius,
+          ...theme.constants.shadow,
+        },
+      }),
+    [
+      paddingHorizontal,
+      theme.colors.background,
+      theme.constants.absoluteRadius,
+      theme.constants.shadow,
+      theme.scales.larger,
+    ]
+  );
 
   return (
     <Frame
@@ -152,24 +166,28 @@ function Dock({
 
 function CreateButton({ onPress }: { onPress: () => void }) {
   const theme = useTheme();
-  const styles = useStyles((theme) => ({
-    root: {
-      top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
-      zIndex: theme.constants.absoluteRadius,
-      position: "absolute",
-      width: "100%",
-      ...theme.constants.shadow,
-    },
-    pressabe: {
-      width: theme.scales[CREATE_BUTTON_SIZE],
-      height: theme.scales[CREATE_BUTTON_SIZE],
-      borderRadius: theme.constants.absoluteRadius,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      ...theme.constants.shadow,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
+          zIndex: theme.constants.absoluteRadius,
+          position: "absolute",
+          width: "100%",
+          ...theme.constants.shadow,
+        },
+        pressabe: {
+          width: theme.scales[CREATE_BUTTON_SIZE],
+          height: theme.scales[CREATE_BUTTON_SIZE],
+          borderRadius: theme.constants.absoluteRadius,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          ...theme.constants.shadow,
+        },
+      }),
+    [theme.constants.absoluteRadius, theme.constants.shadow, theme.scales]
+  );
 
   return (
     <Frame alignItems="center" pointerEvents="box-none" style={styles.root}>

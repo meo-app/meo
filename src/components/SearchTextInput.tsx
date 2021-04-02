@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { useTheme } from "../providers/Theming";
-import { useStyles } from "../hooks/use-styles";
 
 const SearchTextInput = React.forwardRef<
   TextInput,
@@ -15,18 +15,28 @@ const SearchTextInput = React.forwardRef<
   >
 >(function SearchTextInput(props, ref) {
   const theme = useTheme();
-  const styles = useStyles((theme) => ({
-    root: {
-      ...theme.typography.body,
-      width: "100%",
-      padding: theme.units.medium,
-      backgroundColor: theme.colors.backgroundAccent,
-      borderRadius: theme.constants.borderRadius,
-      borderColor: theme.colors.backgroundAccent,
-      height:
-        Number(theme.typography.body.lineHeight || 0) + theme.units.medium * 2,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          ...theme.typography.body,
+          width: "100%",
+          padding: theme.units.medium,
+          backgroundColor: theme.colors.backgroundAccent,
+          borderRadius: theme.constants.borderRadius,
+          borderColor: theme.colors.backgroundAccent,
+          height:
+            Number(theme.typography.body.lineHeight || 0) +
+            theme.units.medium * 2,
+        },
+      }),
+    [
+      theme.colors.backgroundAccent,
+      theme.constants.borderRadius,
+      theme.typography.body,
+      theme.units.medium,
+    ]
+  );
 
   return (
     <TextInput

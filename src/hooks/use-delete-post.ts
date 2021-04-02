@@ -28,7 +28,7 @@ function useDeletePost(
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        invalidatePosts({ id: variables.id });
+        invalidatePosts();
         options.onSuccess?.(data, variables, context);
       },
     }

@@ -184,10 +184,8 @@ function useTheme(): Theme {
 
 function usePaddingHorizontal() {
   const theme = useTheme();
-  const paddingHorizontalUnit: keyof Units = "medium";
   return {
-    paddingHorizontalUnit,
-    paddingHorizontal: theme.units[paddingHorizontalUnit],
+    paddingHorizontal: theme.units.medium,
   };
 }
 

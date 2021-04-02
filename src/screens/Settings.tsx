@@ -2,7 +2,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LoremIpsum } from "lorem-ipsum";
 import { transparentize } from "polished";
 import React, { useMemo } from "react";
-import { Alert, Linking, Modal, Pressable } from "react-native";
+import { Alert, Linking, Modal, Pressable, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useMutation } from "react-query";
 import { Font } from "../components/Font";
@@ -12,7 +12,6 @@ import { Colors } from "../foundations/Colors";
 import { useCreatePost } from "../hooks/use-create-post";
 import { useFlushDatabase } from "../hooks/use-flush-database";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { useStyles } from "../hooks/use-styles";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
@@ -170,14 +169,19 @@ const Button = React.memo<{
   color?: keyof Colors;
 }>(function Button({ title, onPress, color = "primary" }) {
   const { paddingHorizontal } = usePaddingHorizontal();
-  const styles = useStyles((theme) => ({
-    root: {
-      paddingTop: theme.units.medium,
-      paddingBottom: theme.units.medium,
-      backgroundColor: theme.colors.background,
-      paddingHorizontal,
-    },
-  }));
+  const theme = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          paddingTop: theme.units.medium,
+          paddingBottom: theme.units.medium,
+          backgroundColor: theme.colors.background,
+          paddingHorizontal,
+        },
+      }),
+    [paddingHorizontal, theme.colors.background, theme.units.medium]
+  );
   return (
     <Pressable onPress={onPress} style={styles.root}>
       <Font color={color}>{title}</Font>

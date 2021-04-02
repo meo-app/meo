@@ -1,22 +1,22 @@
 import * as ImagePicker from "expo-image-picker";
 import { transparentize } from "polished";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import {
   Image,
   ImageBackground,
   ListRenderItem,
   Pressable,
+  StyleSheet,
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useQuery, useQueryClient } from "react-query";
 import { useTheme } from "../providers/Theming";
-import { useStyles } from "../hooks/use-styles";
 import { assert } from "../shared/assert";
+import { AvatarIds, AVATARS_LIST, DefaultAvatar } from "../shared/avatars-list";
 import { base64ToImageUrl } from "../shared/image-utils";
 import { QueryKeys } from "../shared/QueryKeys";
 import { useAvatar, useSelectAvatar } from "../storage/avatar";
-import { AvatarIds, AVATARS_LIST, DefaultAvatar } from "../shared/avatars-list";
 import { Frame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
@@ -127,37 +127,41 @@ function UploadButton() {
     }
   );
 
-  const styles = useStyles((theme) => ({
-    root: {
-      height: size,
-      width: size,
-      borderRadius: theme.constants.absoluteRadius,
-      backgroundColor: theme.colors.absoluteDark,
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "hidden",
-      position: "relative",
-    },
-    overlay: {
-      backgroundColor: transparentize(0.4, theme.colors.absoluteDark),
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-      left: 0,
-      top: 0,
-      zIndex: 1,
-    },
-    icon: {
-      position: "absolute",
-      zIndex: 2,
-      left: 0,
-      top: 0,
-      bottom: 0,
-      right: 0,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          height: size,
+          width: size,
+          borderRadius: theme.constants.absoluteRadius,
+          backgroundColor: theme.colors.absoluteDark,
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "hidden",
+          position: "relative",
+        },
+        overlay: {
+          backgroundColor: transparentize(0.4, theme.colors.absoluteDark),
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          left: 0,
+          top: 0,
+          zIndex: 1,
+        },
+        icon: {
+          position: "absolute",
+          zIndex: 2,
+          left: 0,
+          top: 0,
+          bottom: 0,
+          right: 0,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+      }),
+    [theme.colors.absoluteDark, theme.constants.absoluteRadius]
+  );
 
   return (
     <Pressable
@@ -197,12 +201,16 @@ const data = [...AVATARS_LIST, { id: AvatarIds.__USER_PHOTO__ }];
 function AvatarSelection() {
   const theme = useTheme();
   const { setAvatarId, avatarId } = useAvatarContext();
-  const styles = useStyles(() => ({
-    avatar: {
-      flex: 1,
-      borderRadius: theme.constants.absoluteRadius,
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        avatar: {
+          flex: 1,
+          borderRadius: theme.constants.absoluteRadius,
+        },
+      }),
+    [theme.constants.absoluteRadius]
+  );
 
   const renderItem = useCallback<ListRenderItem<DefaultAvatar>>(
     ({ item: { id, source } }) => {

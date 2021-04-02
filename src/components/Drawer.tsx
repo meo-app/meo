@@ -1,16 +1,21 @@
 import { NavigationProp } from "@react-navigation/native";
-import React from "react";
-import { Alert, ImageBackground, Linking, Pressable } from "react-native";
+import React, { useMemo } from "react";
+import {
+  Alert,
+  ImageBackground,
+  Linking,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { version } from "../../package.json";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { useStyles } from "../hooks/use-styles";
-import { usePaddingHorizontal } from "../providers/Theming";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { UserAvatar } from "./UserAvatar";
-import { version } from "../../package.json";
 
 interface Props {
   navigation: NavigationProp<NavigationParamsConfig>;
@@ -20,13 +25,17 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
   navigation,
 }) {
   const { paddingHorizontal } = usePaddingHorizontal();
-  const styles = useStyles(() => ({
-    root: {
-      paddingHorizontal,
-      flex: 1,
-      justifyContent: "space-between",
-    },
-  }));
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          paddingHorizontal,
+          flex: 1,
+          justifyContent: "space-between",
+        },
+      }),
+    [paddingHorizontal]
+  );
 
   const { data: posts } = useSQLiteQuery<{ total: number }>(
     QueryKeys.TOTAL_OF_POSTS,
@@ -125,12 +134,16 @@ const DrawerItem = React.memo(function DrawerItem({
   onPress: () => void;
   text: string;
 }) {
-  const styles = useStyles((theme) => ({
-    root: {
-      padding: theme.units.medium,
-      paddingLeft: 0,
-    },
-  }));
+  const theme = useTheme();
+  const styles = useMemo(
+    () => ({
+      root: {
+        padding: theme.units.medium,
+        paddingLeft: 0,
+      },
+    }),
+    [theme.units.medium]
+  );
 
   return (
     <Pressable
