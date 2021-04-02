@@ -98,7 +98,7 @@ function OnboardingSlider() {
             source={require("../../assets/hashtag.png")}
           />
           <Section
-            title="Easily orgnize things"
+            title="Easily organize things"
             subtitle="No more folders, just add a hashtag to your post and find them organized for you in the explore tab"
           />
         </View>

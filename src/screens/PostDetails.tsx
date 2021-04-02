@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedTime } from "react-intl";
-import { Alert, Pressable, StyleSheet, TextInput } from "react-native";
+import { Pressable, StyleSheet, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
@@ -173,21 +173,6 @@ const PostDetails = React.memo(function PostDetails() {
                 year="numeric"
               />
             </Font>
-          </Frame>
-          <Frame
-            justifyContent="flex-end"
-            flexDirection="row"
-            paddingRight="large"
-            paddingLeft="large"
-          >
-            <Pressable
-              style={styles.pressable}
-              onPress={() =>
-                Alert.alert("This feature is not ready", "Coming soon 😉")
-              }
-            >
-              <Icon type="Reply" size="smaller" color="foregroundSecondary" />
-            </Pressable>
           </Frame>
         </KeyboardAwareScrollView>
       </SafeAreaView>

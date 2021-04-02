@@ -37,11 +37,9 @@ function SubtitleHeader({
           paddingHorizontal,
           paddingBottom: theme.units.large,
           display: "flex",
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          borderBottomColor: theme.colors.backgroundAccent,
         },
       }),
-    [insets.top, paddingHorizontal, theme.colors.backgroundAccent, theme.units]
+    [insets.top, paddingHorizontal, theme.units]
   );
 
   const back = useMemo(() => {
