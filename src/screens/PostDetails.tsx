@@ -40,10 +40,10 @@ const PostDetails = React.memo(function PostDetails() {
   const [text, onChangeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
-  const { data, isLoading } = useSQLiteQuery<Post>(
-    [QueryKeys.POST_DETAILS, id],
-    `select * from posts where id = ${id}`
-  );
+  const { data, isLoading } = useSQLiteQuery<Post>({
+    queryKey: [QueryKeys.POST_DETAILS, id],
+    query: `select * from posts where id = ${id}`,
+  });
 
   const post = data?.[0];
   const date = useMemo(

@@ -9,16 +9,15 @@ import { Post } from "../shared/SQLiteEntities";
 
 const POSTS_PER_PAGE = 40;
 
-function usePaginatedPosts(
-  queryKey: QueryKey,
-  {
-    queryFn,
-    options,
-  }: {
-    queryFn: (args: { limit: number; offset: number }) => string;
-    options?: UseInfiniteQueryOptions<Post[], {}>;
-  }
-): UseInfiniteQueryResult<Post[], {}> {
+function usePaginatedPosts({
+  queryKey,
+  queryFn,
+  options,
+}: {
+  queryKey: QueryKey;
+  queryFn: (args: { limit: number; offset: number }) => string;
+  options?: UseInfiniteQueryOptions<Post[], {}>;
+}): UseInfiniteQueryResult<Post[], {}> {
   const db = useDB();
   const result = useInfiniteQuery<Post[], {}>(
     queryKey,

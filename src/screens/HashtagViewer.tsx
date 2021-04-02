@@ -21,13 +21,11 @@ function HashtagViewer() {
   const { goBack } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const route = useRoute<RouteProp<NavigationParamsConfig, "HashtagViewer">>();
   const { hashtag } = route.params;
-  const { data, isError, fetchNextPage } = usePaginatedPosts(
-    [QueryKeys.HASHTAG_VIEWER, hashtag],
-    {
-      queryFn: ({ limit, offset }) =>
-        `select * from posts where id in (select post_id from hashtags where value like "%${hashtag}%") order by timestamp desc limit ${limit}, ${offset}`,
-    }
-  );
+  const { data, isError, fetchNextPage } = usePaginatedPosts({
+    queryKey: [QueryKeys.HASHTAG_VIEWER, hashtag],
+    queryFn: ({ limit, offset }) =>
+      `select * from posts where id in (select post_id from hashtags where value like "%${hashtag}%") order by timestamp desc limit ${limit}, ${offset}`,
+  });
 
   return (
     <>

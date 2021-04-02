@@ -79,11 +79,7 @@ function Screens() {
       <RootNavigator.Screen
         name="Create"
         component={Create}
-        options={{
-          animationEnabled: true,
-          gestureEnabled: false,
-          header: () => null,
-        }}
+        options={slideRightOptions}
       />
       <RootNavigator.Screen
         name="Settings"

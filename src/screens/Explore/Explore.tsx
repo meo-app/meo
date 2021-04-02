@@ -90,10 +90,11 @@ function Explore() {
     [paddingHorizontal]
   );
 
-  const { data: hashtagsData } = useSQLiteQuery<HashtagCount>(
-    QueryKeys.TOP_HASHTAGS,
-    "select count(value) as total, value from hashtags group by value order by total desc"
-  );
+  const { data: hashtagsData } = useSQLiteQuery<HashtagCount>({
+    queryKey: QueryKeys.HASHTAGS_AND_COUNTER,
+    query:
+      "select count(value) as total, value from hashtags group by value order by total desc",
+  });
 
   const hashtags = useMemo<HashtagCount[]>(() => {
     if (hashtagsData && hashtagsData?.length % 2 === 1) {
@@ -103,17 +104,15 @@ function Explore() {
     return hashtagsData || [];
   }, [hashtagsData]);
 
-  const { data, isFetched, fetchNextPage } = usePaginatedPosts(
-    [QueryKeys.SEARCH, value],
-    {
-      queryFn: ({ limit, offset }) =>
-        `select * from posts where value like "%${value}%" collate nocase order by id desc limit ${limit}, ${offset}`,
-      options: {
-        enabled: mode === "search",
-        keepPreviousData: true,
-      },
-    }
-  );
+  const { data, isFetched, fetchNextPage } = usePaginatedPosts({
+    queryKey: [QueryKeys.SEARCH, value],
+    queryFn: ({ limit, offset }) =>
+      `select * from posts where value like "%${value}%" collate nocase order by id desc limit ${limit}, ${offset}`,
+    options: {
+      enabled: mode === "search",
+      keepPreviousData: true,
+    },
+  });
 
   const displayNoSearchResults = useMemo(() => {
     const results = data?.pages.flat(1).length;
