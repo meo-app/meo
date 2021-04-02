@@ -93,7 +93,7 @@ function SubtitleHeader({
   return (
     <Frame style={styles.root}>
       <Frame style={styles.spacer} />
-      <Frame debugTrace>
+      <Frame>
         {back}
         {content}
       </Frame>

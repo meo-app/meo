@@ -10,7 +10,7 @@ type NavigationParamsConfig = {
   Placeholder: undefined;
   Settings: undefined;
   HashtagViewer: { hashtag: string };
-  PostDetails: { id: string; editPostEnabled?: boolean };
+  PostDetails: { id: string };
   ChangeAvatar: undefined;
 };
 

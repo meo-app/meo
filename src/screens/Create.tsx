@@ -7,15 +7,12 @@ import {
 } from "@react-navigation/native";
 import { rgba } from "polished";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
-import { Header } from "../components/Header";
 import { Icon } from "../components/Icon/Icon";
 import { PostTextContent } from "../components/PostTextContent";
-import { SubtitleHeader } from "../components/SubtitleHeader";
 import { UserAvatar } from "../components/UserAvatar";
 import { useCreatePost } from "../hooks/use-create-post";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
@@ -62,29 +59,15 @@ function Create() {
     const listener: EventListenerCallback<
       EventMapCore<NavigationState<NavigationParamsConfig>>,
       "beforeRemove"
-    > = (event) => {
-      if (!text) {
-        return;
+    > = () => {
+      if (text) {
+        createPost({ text });
       }
-
-      event.preventDefault();
-      Alert.alert(
-        "Discard changes?",
-        "You have unsaved changes. Are you sure to leave?",
-        [
-          { text: "Don't leave", style: "cancel", onPress: () => {} },
-          {
-            text: "Discard",
-            style: "destructive",
-            onPress: () => navigation.dispatch(event.data.action),
-          },
-        ]
-      );
     };
 
     navigation.addListener("beforeRemove", listener);
     return () => navigation.removeListener("beforeRemove", listener);
-  }, [navigation, text]);
+  }, [createPost, navigation, text]);
 
   return (
     <>
@@ -103,14 +86,7 @@ function Create() {
               opacity: pressed ? 0.5 : 1,
             })}
           >
-            <Icon type="Back" size="medium" />
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-            onPress={() => createPost({ text })}
-            disabled={!text}
-          >
-            <Font color="primary">Create</Font>
+            <Icon type="Close" size="medium" />
           </Pressable>
         </Frame>
       </Frame>

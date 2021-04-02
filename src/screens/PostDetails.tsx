@@ -2,7 +2,6 @@ import { useKeyboard } from "@react-native-community/hooks";
 import {
   EventListenerCallback,
   EventMapCore,
-  NavigationProp,
   NavigationState,
   RouteProp,
   useNavigation,
@@ -13,7 +12,6 @@ import { FormattedTime } from "react-intl";
 import { Alert, Pressable, StyleSheet, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Share from "react-native-share";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
 import { Icon } from "../components/Icon/Icon";
@@ -31,19 +29,14 @@ import { Post } from "../shared/SQLiteEntities";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
-    params: { id, editPostEnabled },
+    params: { id },
   } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
-  const { setParams } = useNavigation<
-    NavigationProp<NavigationParamsConfig, "PostDetails">
-  >();
 
   const hasFilledState = useRef(false);
   const keyboard = useKeyboard();
   const navigation = useNavigation();
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
-  const input = useRef<TextInput>(null);
-  const [editable, setEditable] = useState(false);
   const [text, onChangeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
@@ -64,13 +57,6 @@ const PostDetails = React.memo(function PostDetails() {
       onSuccess: () => navigation.goBack(),
     },
   });
-
-  useEffect(() => {
-    if (editPostEnabled) {
-      setEditable(true);
-      setParams({ editPostEnabled: false });
-    }
-  }, [editPostEnabled, setParams]);
 
   useEffect(() => {
     if (!text && post?.value && !hasFilledState.current) {
@@ -107,12 +93,6 @@ const PostDetails = React.memo(function PostDetails() {
   );
 
   useEffect(() => {
-    if (editable) {
-      input.current?.focus();
-    }
-  }, [editable]);
-
-  useEffect(() => {
     if (changes) {
       editPost({
         id,
@@ -134,10 +114,7 @@ const PostDetails = React.memo(function PostDetails() {
           alignItems="center"
         >
           <Pressable
-            onPress={() => {
-              setEditable(false);
-              showPostActionSheet();
-            }}
+            onPress={() => showPostActionSheet()}
             hitSlop={theme.units.large}
           >
             <Icon type="More" size="medium" color="primary" />
@@ -152,6 +129,7 @@ const PostDetails = React.memo(function PostDetails() {
         }}
       >
         <KeyboardAwareScrollView
+          scrollIndicatorInsets={{ right: 1 }}
           extraHeight={keyboard.keyboardHeight}
           enableAutomaticScroll
           contentContainerStyle={{
@@ -161,13 +139,10 @@ const PostDetails = React.memo(function PostDetails() {
         >
           <Frame>
             <TextInput
-              ref={input}
-              editable={editable}
-              autoFocus
+              editable
               placeholder="Write something"
               placeholderTextColor={theme.colors.foregroundSecondary}
               onChangeText={onChangeText}
-              onBlur={() => setEditable(false)}
               multiline
               style={{
                 ...(theme.typography.highlight as Object),
@@ -200,16 +175,10 @@ const PostDetails = React.memo(function PostDetails() {
             </Font>
           </Frame>
           <Frame
-            justifyContent="space-between"
+            justifyContent="flex-end"
             flexDirection="row"
             paddingRight="large"
             paddingLeft="large"
-            style={{
-              borderBottomWidth: 0.5,
-              borderTopWidth: 0.5,
-              borderBottomColor: theme.colors.backgroundAccent,
-              borderTopColor: theme.colors.backgroundAccent,
-            }}
           >
             <Pressable
               style={styles.pressable}
@@ -218,16 +187,6 @@ const PostDetails = React.memo(function PostDetails() {
               }
             >
               <Icon type="Reply" size="smaller" color="foregroundSecondary" />
-            </Pressable>
-            <Pressable
-              style={styles.pressable}
-              onPress={() =>
-                Share.open({
-                  message: post?.value,
-                })
-              }
-            >
-              <Icon type="Share" size="smaller" color="foregroundSecondary" />
             </Pressable>
           </Frame>
         </KeyboardAwareScrollView>

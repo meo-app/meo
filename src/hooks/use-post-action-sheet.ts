@@ -1,9 +1,7 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useCallback, useMemo } from "react";
 import Share from "react-native-share";
 import { useTheme } from "../providers/Theming";
-import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { useDeletePost } from "./use-delete-post";
 import { useDeletePostAlert } from "./use-delete-post-alert";
 
@@ -17,17 +15,15 @@ function usePostActionSheet({
   deleteMutationOptions?: Parameters<typeof useDeletePost>[0];
 }) {
   const theme = useTheme();
-  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const { mutateAsync: deletePost } = useDeletePost(deleteMutationOptions);
   const { openDeleteAlert } = useDeletePostAlert({
     onDeletePress: () => deletePost({ id }),
   });
   const { showActionSheetWithOptions } = useActionSheet();
   const { Actions, options } = useMemo(() => {
-    const options = ["Delete", "Edit", "Share", "Close"];
+    const options = ["Delete", "Share", "Close"];
     enum Actions {
       Delete = options.indexOf("Delete"),
-      Edit = options.indexOf("Edit"),
       Share = options.indexOf("Share"),
     }
 
@@ -60,13 +56,6 @@ function usePostActionSheet({
             });
             break;
           }
-          case Actions.Edit: {
-            navigate("PostDetails", {
-              id,
-              editPostEnabled: true,
-            });
-            break;
-          }
           case Actions.Delete: {
             openDeleteAlert();
             break;
@@ -76,10 +65,7 @@ function usePostActionSheet({
     );
   }, [
     Actions.Delete,
-    Actions.Edit,
     Actions.Share,
-    id,
-    navigate,
     openDeleteAlert,
     options,
     showActionSheetWithOptions,
