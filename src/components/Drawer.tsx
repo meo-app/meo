@@ -1,12 +1,6 @@
 import { NavigationProp } from "@react-navigation/native";
 import React, { useMemo } from "react";
-import {
-  Alert,
-  ImageBackground,
-  Linking,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { ImageBackground, Linking, Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { version } from "../../package.json";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
@@ -37,15 +31,16 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
     [paddingHorizontal]
   );
 
-  const { data: posts } = useSQLiteQuery<{ total: number }>(
-    QueryKeys.TOTAL_OF_POSTS,
-    "select count(*) as total from posts"
-  );
+  const { data: posts } = useSQLiteQuery<{ total: number }>({
+    queryKey: QueryKeys.TOTAL_OF_POSTS,
+    query: "select count(*) as total from posts",
+  });
 
-  const { data: tags } = useSQLiteQuery<{ total: number }>(
-    QueryKeys.TOTAL_OF_HASHTAGS,
-    "select count(*) as total from (select distinct value from hashtags)"
-  );
+  const { data: tags } = useSQLiteQuery<{ total: number }>({
+    queryKey: QueryKeys.TOTAL_OF_HASHTAGS,
+    query:
+      "select count(*) as total from (select distinct value from hashtags)",
+  });
 
   return (
     <ImageBackground

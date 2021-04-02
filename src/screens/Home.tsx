@@ -16,7 +16,8 @@ import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 
 function Home() {
-  const { data, error, fetchNextPage } = usePaginatedPosts(QueryKeys.POSTS, {
+  const { data, error, fetchNextPage } = usePaginatedPosts({
+    queryKey: QueryKeys.POSTS,
     queryFn: ({ limit, offset }) =>
       `select * from posts order by id desc limit ${limit}, ${offset}`,
   });

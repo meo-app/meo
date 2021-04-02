@@ -2,16 +2,19 @@ import { useEffect, useRef } from "react";
 import { QueryKey, useQuery, UseQueryOptions } from "react-query";
 import { useDB } from "../providers/SQLiteProvider";
 
-// TODO: sync api with useSQLiteMutation
-function useSQLiteQuery<T>(
-  id: QueryKey,
-  query: string,
-  options?: UseQueryOptions<T[]>
-) {
+function useSQLiteQuery<T>({
+  query,
+  queryKey,
+  options,
+}: {
+  queryKey: QueryKey;
+  query: string;
+  options?: UseQueryOptions<T[]>;
+}) {
   const ref = useRef(query);
   const db = useDB();
   const result = useQuery(
-    id,
+    queryKey,
     () =>
       new Promise<T[]>((resolve, reject) => {
         db.transaction(
@@ -23,7 +26,7 @@ function useSQLiteQuery<T>(
             }),
           (err) => {
             console.error(
-              `Error while fetching ${id} . \nCode: ${err.code}. \nMessage ${err.message} `
+              `Error while fetching ${queryKey} . \nCode: ${err.code}. \nMessage ${err.message} `
             );
 
             reject(err);
