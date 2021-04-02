@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   CardStyleInterpolators,
@@ -108,22 +109,33 @@ function Screens() {
   );
 }
 
+type TabRoutes = Extract<keyof NavigationParamsConfig, "Home" | "Explore">;
+const ENABLE_DRAWER_SWIPE_ROUTE: TabRoutes[] = ["Explore", "Home"];
+
 /**
  * TODO: <Root /> can pre-fetch posts/hashtags/avatar etc while holding splashscreen
  */
-
 function Root() {
   const theme = useTheme();
   const { data, isLoading } = useHasSeenOnboarding();
   if (isLoading) {
     return null;
   }
+
   if (!data) {
     return <Onboarding />;
   }
 
   return (
     <DrawerNavigator.Navigator
+      screenOptions={({ route }) => {
+        const routeName = getFocusedRouteNameFromRoute(route);
+        return {
+          swipeEnabled: ENABLE_DRAWER_SWIPE_ROUTE.includes(
+            String(routeName) as TabRoutes
+          ),
+        };
+      }}
       drawerStyle={{ backgroundColor: theme.colors.background }}
       drawerContent={({ navigation }) => (
         <Drawer

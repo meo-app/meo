@@ -65,10 +65,13 @@ function Explore() {
   const { tabBarHeight } = useAppContext();
   const [term, onChangeText] = useState("");
   const searchInputRef = useRef(null);
-  const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
+  const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const value = useDebounceValue(term, { delay: 300 });
   const ref = useRef<FlatList | null>(null);
+  const { navigate } = navigation;
+
   useScrollToTop(ref);
+
   useEffect(() => {
     setMode("explore");
   }, [setMode]);

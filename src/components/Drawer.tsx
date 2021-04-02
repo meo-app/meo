@@ -99,23 +99,10 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
               }
             />
             <DrawerItem
-              onPress={() =>
-                Alert.alert("Something About Us", "Daft Punk", [
-                  {
-                    onPress: () =>
-                      Linking.openURL(
-                        "https://www.youtube.com/watch?v=sOS9aOIXPEk"
-                      ),
-                    style: "destructive",
-                    text: "Nah",
-                  },
-                  {
-                    onPress: () => {},
-                    text: "Okay",
-                  },
-                ])
-              }
               text="About"
+              onPress={() =>
+                Linking.openURL("https://www.youtube.com/watch?v=sOS9aOIXPEk")
+              }
             />
           </Frame>
         </Frame>

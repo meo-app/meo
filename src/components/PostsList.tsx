@@ -89,7 +89,7 @@ const PostLine = React.memo(function PostLine({ id, value }: Post) {
   return (
     <Pressable
       onPress={() => navigate("PostDetails", { id })}
-      android_ripple={{ color: darken(0.05, theme.colors.background) }}
+      android_ripple={{ color: darken(0.01, theme.colors.background) }}
       style={({ pressed }) => ({
         flex: 1,
         borderBottomColor: theme.colors.backgroundAccent,
@@ -97,7 +97,7 @@ const PostLine = React.memo(function PostLine({ id, value }: Post) {
         ...Platform.select({
           ios: {
             backgroundColor: pressed
-              ? darken(0.05, theme.colors.background)
+              ? darken(0.01, theme.colors.background)
               : theme.colors.background,
           },
         }),
