@@ -1,7 +1,6 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { darken } from "polished";
 import React, { useCallback, useMemo, useRef } from "react";
-import { FormattedDate } from "react-intl";
 import {
   FlatList,
   FlatListProps,
@@ -15,10 +14,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
 import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
-import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Post } from "../shared/SQLiteEntities";
-import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 import { PostTextContent } from "./PostTextContent";
@@ -84,18 +81,15 @@ const PostsList = React.forwardRef<
 });
 
 const POST_ITEM_HEIGHT = 130;
-const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
+const PostLine = React.memo(function PostLine({ id, value }: Post) {
   const { paddingHorizontal } = usePaddingHorizontal();
   const { navigate } = useNavigation<NavigationProp<NavigationParamsConfig>>();
-  const date = useMemo(() => timestampToDate(timestamp), [timestamp]);
   const theme = useTheme();
   const { showPostActionSheet } = usePostActionSheet({ id, value });
   return (
     <Pressable
       onPress={() => navigate("PostDetails", { id })}
-      android_ripple={{
-        color: darken(0.05, theme.colors.background),
-      }}
+      android_ripple={{ color: darken(0.05, theme.colors.background) }}
       style={({ pressed }) => ({
         flex: 1,
         borderBottomColor: theme.colors.backgroundAccent,
@@ -112,9 +106,10 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
       <Frame
         paddingHorizontal={paddingHorizontal}
         flexGrow={0}
-        paddingBottom="small"
+        paddingBottom="medium"
+        paddingTop="small"
       >
-        <Frame justifyContent="flex-end" flexDirection="row" paddingTop="small">
+        <Frame alignItems="flex-end">
           <Pressable
             onPress={() => showPostActionSheet()}
             hitSlop={theme.units.large}
@@ -134,23 +129,9 @@ const PostLine = React.memo(function PostLine({ id, value, timestamp }: Post) {
           >
             <UserAvatar />
           </Frame>
-          <Frame flexGrow={1} flex={1} paddingLeft="small">
+          <Frame flexGrow={1} flex={1} paddingLeft="medium">
             <PostTextContent value={value} numberOfLines={6} />
           </Frame>
-        </Frame>
-        <Frame
-          alignItems="flex-end"
-          paddingTop="small"
-          paddingLeft={paddingHorizontal}
-        >
-          <Font variant="caption" color="foregroundSecondary">
-            <FormattedDate
-              value={date}
-              dateStyle="medium"
-              month="short"
-              day="2-digit"
-            />
-          </Font>
         </Frame>
       </Frame>
     </Pressable>
