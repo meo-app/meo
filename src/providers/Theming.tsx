@@ -5,7 +5,7 @@ import {
   Inter_600SemiBold,
   useFonts,
 } from "@expo-google-fonts/inter";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ColorSchemeName,
   Platform,
@@ -14,6 +14,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { Theme } from "../foundations/Theme";
+import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 
 const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
 
@@ -127,12 +128,42 @@ const STATUS_BAR_SCHEME_MAP: { [key in "light" | "dark"]: StatusBarStyle } = {
   light: "dark-content",
 };
 
+const DEFAULT_COLOR_SCHEME = "light";
 const Context = React.createContext<Theme | null>(null);
+
 const ThemeProvider: React.FunctionComponent<{
   forceColorSchemeTo?: ColorSchemeName;
-}> = function ThemeProvider({ children, forceColorSchemeTo }) {
+  handleStatusBar?: boolean;
+}> = function ThemeProvider({
+  children,
+  forceColorSchemeTo,
+  handleStatusBar = true,
+}) {
   const systemColorScheme = useColorScheme();
-  const scheme = forceColorSchemeTo || (systemColorScheme ?? "light");
+  const { data } = usePreferredColorSchemeQuery();
+  const [scheme, setColorScheme] = useState<NonNullable<ColorSchemeName>>(
+    DEFAULT_COLOR_SCHEME
+  );
+
+  useEffect(() => {
+    if (Boolean(data) && data !== "system") {
+      setColorScheme(data as "light" | "dark");
+    } else if (systemColorScheme) {
+      setColorScheme(systemColorScheme);
+    }
+  }, [data, scheme, systemColorScheme]);
+
+  useEffect(() => {
+    if (!handleStatusBar) {
+      return;
+    }
+    StatusBar.setBarStyle(STATUS_BAR_SCHEME_MAP[scheme]);
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(STATUSBAR_BACKGROUND_COLOR);
+      StatusBar.setTranslucent(true);
+    }
+  }, [handleStatusBar, scheme]);
+
   // TODO: load it on splashscreen
   const [fontsLoaded] = useFonts({
     Inter_700Bold,
@@ -145,13 +176,13 @@ const ThemeProvider: React.FunctionComponent<{
     return null;
   }
 
-  const { foregroundPrimary } = colors[scheme];
+  const { foregroundPrimary } = colors[forceColorSchemeTo || scheme];
 
   return (
     <Context.Provider
       value={{
         ...base,
-        colors: colors[scheme],
+        colors: colors[forceColorSchemeTo || scheme],
         typography: {
           body: Object.assign({}, base.typography.body, {
             color: foregroundPrimary,
@@ -174,11 +205,6 @@ const ThemeProvider: React.FunctionComponent<{
         },
       }}
     >
-      <StatusBar
-        barStyle={STATUS_BAR_SCHEME_MAP[systemColorScheme ?? "light"]}
-        backgroundColor={STATUSBAR_BACKGROUND_COLOR}
-        translucent
-      />
       {children}
     </Context.Provider>
   );
@@ -202,11 +228,17 @@ function usePaddingHorizontal() {
 const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
   children,
 }) {
-  const scheme = useColorScheme();
+  const { data } = usePreferredColorSchemeQuery();
+  const systemColorScheme = useColorScheme();
+
   return (
     <ThemeProvider
-      {...(scheme && {
-        forceColorSchemeTo: scheme === "dark" ? "light" : "dark",
+      handleStatusBar={false}
+      {...(systemColorScheme && {
+        forceColorSchemeTo: systemColorScheme === "dark" ? "light" : "dark",
+      })}
+      {...(data !== "system" && {
+        forceColorSchemeTo: data === "dark" ? "light" : "dark",
       })}
     >
       {children}
