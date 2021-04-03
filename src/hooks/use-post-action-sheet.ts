@@ -39,7 +39,7 @@ function usePostActionSheet({
         options,
         autoFocus: true,
         destructiveButtonIndex: 0,
-        cancelButtonIndex: 3,
+        cancelButtonIndex: options.indexOf("Close"),
         tintColor: theme.colors.primary,
         useModal: true,
         destructiveColor: theme.colors.destructive,

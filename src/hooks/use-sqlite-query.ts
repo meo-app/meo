@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { QueryKey, useQuery, UseQueryOptions } from "react-query";
 import { useDB } from "../providers/SQLiteProvider";
 
@@ -11,7 +10,6 @@ function useSQLiteQuery<T>({
   query: string;
   options?: UseQueryOptions<T[]>;
 }) {
-  const ref = useRef(query);
   const db = useDB();
   const result = useQuery(
     queryKey,
@@ -37,13 +35,6 @@ function useSQLiteQuery<T>({
       ...options,
     }
   );
-
-  useEffect(() => {
-    if (query !== ref.current) {
-      ref.current = query;
-      result.refetch();
-    }
-  }, [result, query]);
 
   return result;
 }
