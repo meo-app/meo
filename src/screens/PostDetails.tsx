@@ -1,4 +1,3 @@
-import { useKeyboard } from "@react-native-community/hooks";
 import {
   EventListenerCallback,
   EventMapCore,
@@ -10,7 +9,6 @@ import {
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedTime } from "react-intl";
 import { Pressable, ScrollView, TextInput } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
@@ -37,21 +35,20 @@ const PostDetails = React.memo(function PostDetails() {
   } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
 
   const hasFilledState = useRef(false);
-  const keyboard = useKeyboard();
   const navigation = useNavigation();
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
   const [text, changeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
-  const { data, isLoading } = useSQLiteQuery<Post>({
+  const { data, isLoading } = useSQLiteQuery<Post & { date: string }>({
     queryKey: [QueryKeys.POST_DETAILS, id],
-    query: `select * from posts where id = ${id}`,
+    query: `select *, datetime(timestamp, 'localtime') as date from posts where id = ${id}`,
   });
 
   const post = data?.[0];
   const date = useMemo(
-    () => (post?.timestamp ? timestampToDate(post?.timestamp) : ""),
+    () => (post?.timestamp ? timestampToDate(post?.date) : ""),
     [post]
   );
   const { showPostActionSheet } = usePostActionSheet({
