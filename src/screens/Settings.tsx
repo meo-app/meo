@@ -122,7 +122,7 @@ function Settings() {
           />
           <Title text="About" />
           <Button
-            title="Check the source on Github"
+            title="Source"
             onPress={() => Linking.openURL("https://github.com/meo-app/meo")}
           />
           {isDeveloper && (

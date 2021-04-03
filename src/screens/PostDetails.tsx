@@ -9,11 +9,12 @@ import {
 } from "@react-navigation/native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FormattedTime } from "react-intl";
-import { Pressable, StyleSheet, TextInput } from "react-native";
+import { Pressable, ScrollView, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
+import { HashtagSelector } from "../components/HashtagSelector";
 import { Icon } from "../components/Icon/Icon";
 import { PostTextContent } from "../components/PostTextContent";
 import { SubtitleHeader } from "../components/SubtitleHeader";
@@ -21,11 +22,14 @@ import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useEditPost } from "../hooks/use-edit-post";
 import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
+import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Post } from "../shared/SQLiteEntities";
+
+const TEXT_INPUT_NATIVE_ID = "edit-post-input";
 
 const PostDetails = React.memo(function PostDetails() {
   const {
@@ -37,7 +41,7 @@ const PostDetails = React.memo(function PostDetails() {
   const navigation = useNavigation();
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
-  const [text, onChangeText] = useState("");
+  const [text, changeText] = useState("");
   const changes = useDebounceValue(text, { delay: 1200 });
   const { mutate: editPost } = useEditPost({ id }, {});
   const { data, isLoading } = useSQLiteQuery<Post>({
@@ -58,10 +62,14 @@ const PostDetails = React.memo(function PostDetails() {
     },
   });
 
+  const { caretWord, onSelectionChange } = useTextCaretWord({
+    text,
+  });
+
   useEffect(() => {
     if (!text && post?.value && !hasFilledState.current) {
       hasFilledState.current = true;
-      onChangeText(post.value);
+      changeText(post.value);
     }
   }, [post?.value, text]);
 
@@ -81,16 +89,6 @@ const PostDetails = React.memo(function PostDetails() {
     navigation.addListener("beforeRemove", listener);
     return () => navigation.removeListener("beforeRemove", listener);
   }, [editPost, id, navigation, text]);
-
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        pressable: {
-          padding: theme.units.medium,
-        },
-      }),
-    [theme.units.medium]
-  );
 
   useEffect(() => {
     if (changes) {
@@ -128,10 +126,8 @@ const PostDetails = React.memo(function PostDetails() {
           flex: 1,
         }}
       >
-        <KeyboardAwareScrollView
+        <ScrollView
           scrollIndicatorInsets={{ right: 1 }}
-          extraHeight={keyboard.keyboardHeight}
-          enableAutomaticScroll
           contentContainerStyle={{
             flexGrow: 1,
             paddingTop: theme.units.medium,
@@ -142,8 +138,10 @@ const PostDetails = React.memo(function PostDetails() {
               editable
               placeholder="Write something"
               placeholderTextColor={theme.colors.foregroundSecondary}
-              onChangeText={onChangeText}
+              onChangeText={(text) => changeText(text)}
+              onSelectionChange={onSelectionChange}
               multiline
+              inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
               style={{
                 ...(theme.typography.highlight as Object),
                 width: "100%",
@@ -174,7 +172,13 @@ const PostDetails = React.memo(function PostDetails() {
               />
             </Font>
           </Frame>
-        </KeyboardAwareScrollView>
+        </ScrollView>
+        <HashtagSelector
+          text={text}
+          caretWord={caretWord}
+          onHashtagSelected={(text) => changeText(text)}
+          nativeID={TEXT_INPUT_NATIVE_ID}
+        />
       </SafeAreaView>
     </>
   );

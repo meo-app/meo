@@ -2,6 +2,7 @@ import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_700Bold,
+  Inter_600SemiBold,
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext } from "react";
@@ -107,6 +108,12 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
       fontSize: 20,
       lineHeight: 24,
     },
+    strong: {
+      fontFamily: "Inter_600SemiBold",
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: "600",
+    },
   },
 };
 
@@ -131,6 +138,7 @@ const ThemeProvider: React.FunctionComponent<{
     Inter_700Bold,
     Inter_400Regular,
     Inter_500Medium,
+    Inter_600SemiBold,
   });
 
   if (!fontsLoaded) {
@@ -158,6 +166,9 @@ const ThemeProvider: React.FunctionComponent<{
             color: foregroundPrimary,
           }),
           subtitle: Object.assign({}, base.typography.subtitle, {
+            color: foregroundPrimary,
+          }),
+          strong: Object.assign({}, base.typography.strong, {
             color: foregroundPrimary,
           }),
         },

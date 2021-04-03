@@ -2,6 +2,7 @@ import { useKeyboard } from "@react-native-community/hooks";
 import React, { useCallback } from "react";
 import { InputAccessoryView, Pressable, StyleSheet } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
@@ -27,13 +28,16 @@ function HashtagSelector({
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
   const { keyboardHeight } = useKeyboard();
-  const { data } = useSQLiteQuery<QueryResult>({
-    queryKey: QueryKeys.SEARCH_HASHTAGS,
+  const { data: result } = useSQLiteQuery<QueryResult>({
+    queryKey: [QueryKeys.SEARCH_HASHTAGS, caretWord?.word || null],
     query: `select distinct value from hashtags where value like "%${caretWord?.word}%" collate nocase`,
     options: {
-      keepPreviousData: true,
-      enabled: Boolean(caretWord?.word && text.length),
+      enabled: Boolean(caretWord?.word && text.trim().length),
     },
+  });
+
+  const data = useDebounceValue(caretWord?.word ? result : [], {
+    delay: 400,
   });
 
   const renderItem = useCallback(
@@ -69,12 +73,11 @@ function HashtagSelector({
              * - end of text
              */
             nextContext = [...nextContext, ...item.value.split(""), ...end];
-
             onHashtagSelected(nextContext.join(""));
           }
         }}
       >
-        <Font key={item.value} color="primary">
+        <Font color="primary" variant="strong">
           {item.value}
         </Font>
       </Pressable>
@@ -87,10 +90,7 @@ function HashtagSelector({
   return (
     <InputAccessoryView
       nativeID={nativeID}
-      backgroundColor={theme.colors.background}
-      style={{
-        height: !caretWord?.word || !data?.length ? 0 : undefined,
-      }}
+      backgroundColor={theme.colors.backgroundAccent}
     >
       <FlatList
         contentContainerStyle={{
@@ -98,14 +98,16 @@ function HashtagSelector({
           borderTopColor: theme.colors.backgroundAccent,
         }}
         style={{
-          height: keyboardHeight / 3.5,
+          maxHeight: keyboardHeight / 3,
         }}
         keyboardShouldPersistTaps="handled"
-        data={caretWord?.word ? data : []}
-        ListHeaderComponent={<Frame style={{ height: theme.units.small }} />}
-        ListFooterComponent={<Frame style={{ height: theme.units.small }} />}
+        data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        {...(data?.length && {
+          ListHeaderComponent: <Frame style={{ height: theme.units.small }} />,
+          ListFooterComponent: <Frame style={{ height: theme.units.small }} />,
+        })}
       />
     </InputAccessoryView>
   );
