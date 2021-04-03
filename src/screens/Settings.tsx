@@ -1,18 +1,25 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { LoremIpsum } from "lorem-ipsum";
 import { transparentize } from "polished";
-import React, { useMemo } from "react";
-import { Alert, Linking, Modal, Pressable, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useEffect, useMemo } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import { Alert, Linking, Modal, Pressable, ScrollView } from "react-native";
 import { useMutation } from "react-query";
 import { Font } from "../components/Font";
-import { Frame } from "../components/Frame";
+import { Frame, useFrame } from "../components/Frame";
+import { Icon } from "../components/Icon/Icon";
 import { SubtitleHeader } from "../components/SubtitleHeader";
 import { Colors } from "../foundations/Colors";
+import { useAsyncStorageMutation } from "../hooks/use-async-storage";
 import { useCreatePost } from "../hooks/use-create-post";
 import { useFlushDatabase } from "../hooks/use-flush-database";
+import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import {
+  PreferredColorSchemeTypes,
+  PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
+} from "../shared/color-scheme";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { useFlushOnboarding } from "../storage/onboarding";
@@ -125,6 +132,7 @@ function Settings() {
             title="Source"
             onPress={() => Linking.openURL("https://github.com/meo-app/meo")}
           />
+          <ThemeSection />
           {isDeveloper && (
             <>
               <Title text="Developer Options" />
@@ -166,26 +174,123 @@ const Button = React.memo<{
   title: string;
   onPress: () => void;
   color?: keyof Colors;
-}>(function Button({ title, onPress, color = "primary" }) {
-  const { paddingHorizontal } = usePaddingHorizontal();
-  const theme = useTheme();
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        root: {
-          paddingTop: theme.units.medium,
-          paddingBottom: theme.units.medium,
-          backgroundColor: theme.colors.background,
-          paddingHorizontal,
-        },
-      }),
-    [paddingHorizontal, theme.colors.background, theme.units.medium]
-  );
+}>(function Button({ title, onPress, color = "primary", children }) {
+  const styles = useRowStyles();
   return (
-    <Pressable onPress={onPress} style={styles.root}>
+    <Pressable onPress={onPress} style={styles}>
       <Font color={color}>{title}</Font>
+      {children}
     </Pressable>
   );
 });
+
+interface ThemeSectionFieldValues {
+  scheme: PreferredColorSchemeTypes;
+}
+
+const ThemeSection = React.memo(function Themeing() {
+  const row = useRowStyles();
+  const { control, setValue } = useForm<ThemeSectionFieldValues>();
+
+  const values = useWatch({
+    control,
+  });
+
+  const { data } = usePreferredColorSchemeQuery();
+  const { mutate } = useAsyncStorageMutation<PreferredColorSchemeTypes>({
+    key: QueryKeys.PREFERRED_COLOR_SCHEME,
+    version: PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
+    parse: (value) => (value ? String(value) : ""),
+  });
+
+  useEffect(() => {
+    if (values.scheme) {
+      mutate(values.scheme);
+    } else {
+      mutate("system");
+    }
+  }, [mutate, values]);
+
+  useEffect(() => {
+    if (data && !values.scheme) {
+      setValue("scheme", data);
+    }
+  }, [data, setValue, values.scheme]);
+
+  const theme = useTheme();
+
+  return (
+    <>
+      <Title text="Theming" />
+      <Controller<ThemeSectionFieldValues>
+        name="scheme"
+        control={control}
+        render={({ field: { onChange } }) => (
+          <Pressable style={row} onPress={() => onChange("system")}>
+            <Font color="primary">Use System Light/Dark Mode</Font>
+            <Frame
+              style={{
+                height: theme.scales.small,
+              }}
+            >
+              {values.scheme === "system" && (
+                <Icon type="Check" size="small" color="primary" />
+              )}
+            </Frame>
+          </Pressable>
+        )}
+      />
+      <Controller<ThemeSectionFieldValues>
+        name="scheme"
+        control={control}
+        render={({ field: { onChange } }) => (
+          <Pressable style={row} onPress={() => onChange("dark")}>
+            <Font color="primary">Dark</Font>
+
+            <Frame
+              style={{
+                height: theme.scales.small,
+              }}
+            >
+              {values.scheme === "dark" && (
+                <Icon type="Check" size="small" color="primary" />
+              )}
+            </Frame>
+          </Pressable>
+        )}
+      />
+      <Controller<ThemeSectionFieldValues>
+        name="scheme"
+        control={control}
+        render={({ field: { onChange } }) => (
+          <Pressable style={row} onPress={() => onChange("light")}>
+            <Font color="primary">Light</Font>
+            <Frame
+              style={{
+                height: theme.scales.small,
+              }}
+            >
+              {values.scheme === "light" && (
+                <Icon type="Check" size="small" color="primary" />
+              )}
+            </Frame>
+          </Pressable>
+        )}
+      />
+    </>
+  );
+});
+
+function useRowStyles() {
+  const { paddingHorizontal } = usePaddingHorizontal();
+  return useFrame({
+    paddingHorizontal,
+    alignItems: "center",
+    flexDirection: "row",
+    paddingVertical: "large",
+    backgroundColor: "background",
+    justifyContent: "space-between",
+  });
+}
 
 export { Settings };

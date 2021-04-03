@@ -2,8 +2,6 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import { IntlProvider } from "react-intl";
-// TODO: depreacte react-native-appearance in favor or RN
-import { AppearanceProvider } from "react-native-appearance";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppProvider } from "./AppProvider";
 import { ReactQueryProvider } from "./ReactQueryProvider";
@@ -16,15 +14,13 @@ const Providers: React.FunctionComponent = function Providers({ children }) {
       <AppProvider>
         <SQLiteProvider>
           <ReactQueryProvider>
-            <AppearanceProvider>
-              <SafeAreaProvider>
-                <ThemeProvider>
-                  <CustomNavigationContainer>
-                    <ActionSheetProvider>{children}</ActionSheetProvider>
-                  </CustomNavigationContainer>
-                </ThemeProvider>
-              </SafeAreaProvider>
-            </AppearanceProvider>
+            <SafeAreaProvider>
+              <ThemeProvider>
+                <CustomNavigationContainer>
+                  <ActionSheetProvider>{children}</ActionSheetProvider>
+                </CustomNavigationContainer>
+              </ThemeProvider>
+            </SafeAreaProvider>
           </ReactQueryProvider>
         </SQLiteProvider>
       </AppProvider>
