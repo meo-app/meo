@@ -285,7 +285,7 @@ function Explore() {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Font variant="subtitle">Ops can't find that</Font>
             <Frame marginTop="small">
-              <Font>Try a new search.</Font>
+              <Font textAlign="center">Try a new search.</Font>
             </Frame>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

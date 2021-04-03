@@ -11,7 +11,6 @@ import { SQLiteProvider } from "./SQLiteProvider";
 import { ThemeProvider, useTheme } from "./Theming";
 
 const Providers: React.FunctionComponent = function Providers({ children }) {
-  // TODO: retrieve user locale?
   return (
     <IntlProvider locale="en">
       <AppProvider>
