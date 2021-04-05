@@ -1,0 +1,47 @@
+import React from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import { Frame } from "./Frame";
+import { HashtagSelector } from "./HashtagSelector";
+
+interface Props extends React.ComponentProps<typeof HashtagSelector> {
+  children?: React.ReactNode;
+}
+
+const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
+  text,
+  caretWord,
+  onHashtagSelected,
+  children,
+}) {
+  const theme = useTheme();
+  const { paddingHorizontal } = usePaddingHorizontal();
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{
+        flex: 1 / 5,
+        width: "100%",
+        paddingBottom: theme.units.large,
+        paddingRight: paddingHorizontal,
+      }}
+    >
+      <Frame
+        justifyContent="space-between"
+        flexDirection="row"
+        alignItems="center"
+      >
+        <Frame flex={1}>
+          <HashtagSelector
+            text={text}
+            caretWord={caretWord}
+            onHashtagSelected={onHashtagSelected}
+          />
+        </Frame>
+        <Frame justifyContent="flex-end">{children}</Frame>
+      </Frame>
+    </KeyboardAvoidingView>
+  );
+});
+
+export { PostInputAccessory };

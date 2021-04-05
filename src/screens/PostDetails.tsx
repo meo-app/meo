@@ -12,8 +12,8 @@ import { Pressable, ScrollView, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
-import { HashtagSelector } from "../components/HashtagSelector";
 import { Icon } from "../components/Icon/Icon";
+import { PostInputAccessory } from "../components/PostInputAccessory";
 import { PostTextContent } from "../components/PostTextContent";
 import { SubtitleHeader } from "../components/SubtitleHeader";
 import { useDebounceValue } from "../hooks/use-debounce-value";
@@ -34,6 +34,7 @@ const PostDetails = React.memo(function PostDetails() {
     params: { id },
   } = useRoute<RouteProp<NavigationParamsConfig, "PostDetails">>();
 
+  const [focus, setFocus] = useState(false);
   const hasFilledState = useRef(false);
   const navigation = useNavigation();
   const theme = useTheme();
@@ -130,32 +131,10 @@ const PostDetails = React.memo(function PostDetails() {
             paddingTop: theme.units.medium,
           }}
         >
-          <Frame>
-            <TextInput
-              editable
-              placeholder="Write something"
-              placeholderTextColor={theme.colors.foregroundSecondary}
-              onChangeText={(text) => changeText(text)}
-              onSelectionChange={onSelectionChange}
-              multiline
-              inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
-              style={{
-                ...(theme.typography.highlight as Object),
-                width: "100%",
-              }}
-            >
-              <PostTextContent
-                variant="highlight"
-                value={text}
-                color="foregroundPrimary"
-              />
-            </TextInput>
-          </Frame>
           <Frame
             paddingRight="medium"
             flexDirection="row"
             alignItems="center"
-            marginTop="medium"
             marginBottom="medium"
           >
             <Font variant="caption" color="foregroundSecondary">
@@ -169,14 +148,39 @@ const PostDetails = React.memo(function PostDetails() {
               />
             </Font>
           </Frame>
+          <Frame>
+            <TextInput
+              editable
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              placeholder="Write something"
+              placeholderTextColor={theme.colors.foregroundSecondary}
+              onChangeText={(text) => changeText(text)}
+              onSelectionChange={onSelectionChange}
+              multiline
+              inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
+              style={{
+                ...(theme.typography.highlight as Object),
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <PostTextContent
+                variant="highlight"
+                value={text}
+                color="foregroundPrimary"
+              />
+            </TextInput>
+          </Frame>
         </ScrollView>
-        <HashtagSelector
+      </SafeAreaView>
+      {focus && (
+        <PostInputAccessory
           text={text}
           caretWord={caretWord}
           onHashtagSelected={(text) => changeText(text)}
-          nativeID={TEXT_INPUT_NATIVE_ID}
         />
-      </SafeAreaView>
+      )}
     </>
   );
 });
