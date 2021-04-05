@@ -1,6 +1,7 @@
 import { TextInputSelectionChangeEventData } from "react-native";
 
 const HASHTAG_REGEX = /(#\w+)/g;
+const BREAKLINE_REGEX = /\r?\n|\r/g;
 
 const extractHashtags = (text: string) =>
   text.split(HASHTAG_REGEX).filter((item) => /#/.test(item));
@@ -19,7 +20,7 @@ function getTextCaretWord({
   // If there is only one word on the text return it immediately
   if (text.split(" ").length === 1) {
     return {
-      word: text,
+      word: text.replace(BREAKLINE_REGEX, ""),
       startIndex,
       endIndex,
     };
@@ -27,6 +28,8 @@ function getTextCaretWord({
 
   const isFocusedOnEnd =
     start === end && start === text.length && Boolean(text[start]);
+
+  const content = text.replace(BREAKLINE_REGEX, " ");
 
   /**
    * If the caret is at the end of the input (`start` and `end` should be the same number)
@@ -40,8 +43,8 @@ function getTextCaretWord({
    * Collect all characters of the word from the current selection index forwards
    * until we find a space
    */
-  for (let i = index; i <= text.length; i++) {
-    const character = text[i];
+  for (let i = index; i <= content.length; i++) {
+    const character = content[i];
     if (character && character !== " ") {
       word += character;
     } else {
@@ -55,7 +58,7 @@ function getTextCaretWord({
    * until we find a space
    */
   for (let i = index - 1; i > 0; i--) {
-    const character = text[i];
+    const character = content[i];
     if (character && character !== " ") {
       word = character + word;
     } else {
@@ -65,7 +68,7 @@ function getTextCaretWord({
   }
 
   return {
-    word,
+    word: word.replace(BREAKLINE_REGEX, ""),
     startIndex,
     endIndex,
   };

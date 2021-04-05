@@ -4,6 +4,7 @@ import Share from "react-native-share";
 import { useTheme } from "../providers/Theming";
 import { useDeletePost } from "./use-delete-post";
 import { useDeletePostAlert } from "./use-delete-post-alert";
+import RNHapticFeedback from "react-native-haptic-feedback";
 
 function usePostActionSheet({
   id,
@@ -34,6 +35,10 @@ function usePostActionSheet({
   }, []);
 
   const showPostActionSheet = useCallback(() => {
+    RNHapticFeedback.trigger("contextClick", {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    });
     showActionSheetWithOptions(
       {
         options,
