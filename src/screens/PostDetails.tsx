@@ -27,8 +27,6 @@ import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Post } from "../shared/SQLiteEntities";
 
-const TEXT_INPUT_NATIVE_ID = "edit-post-input";
-
 const PostDetails = React.memo(function PostDetails() {
   const {
     params: { id },
@@ -158,7 +156,6 @@ const PostDetails = React.memo(function PostDetails() {
               onChangeText={(text) => changeText(text)}
               onSelectionChange={onSelectionChange}
               multiline
-              inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
               style={{
                 ...(theme.typography.highlight as Object),
                 textAlignVertical: "top",
