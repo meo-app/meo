@@ -44,6 +44,8 @@ function HashtagSelector({
       contentContainerStyle={{
         minHeight: theme.scales.larger,
         alignItems: "center",
+        width: "100%",
+        flex: 1,
       }}
     >
       {data?.map((item) => (
