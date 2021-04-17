@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { Pressable, StatusBar } from "react-native";
+import { Image, Pressable, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AvatarSelection,
@@ -8,7 +8,6 @@ import {
 } from "../../components/AvatarSelection";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
-import { Picture } from "../../components/Picture";
 import {
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,
@@ -25,21 +24,17 @@ import {
 import { OnboardingFadeInView } from "./OnboardingFadeInView";
 import { OnboardingSlider } from "./OnboardingSlider";
 
-function OnboardingBackgroundImage() {
-  const theme = useTheme();
+function BackgroundImage() {
   return (
-    <Picture
+    <Image
       source={require("../../assets/bg-pattern.png")}
-      resizeMode="cover"
-      lazyload={false}
+      resizeMode="repeat"
       style={{
         flex: 1,
         justifyContent: "center",
-        width: "100%",
-        height: "100%",
         position: "absolute",
         zIndex: 1,
-        backgroundColor: theme.colors.background,
+        opacity: 0.1,
       }}
     />
   );
@@ -166,8 +161,10 @@ function Root() {
           translucent
         />
         <OnboardingNavigationProvider>
-          <Onboarding />
-          <OnboardingBackgroundImage />
+          <Frame flex={1} backgroundColor="background">
+            <Onboarding />
+            <BackgroundImage />
+          </Frame>
         </OnboardingNavigationProvider>
       </ThemeProvider>
     </AvatarSelectionProvider>
