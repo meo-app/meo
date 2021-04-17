@@ -21,8 +21,6 @@ import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 
-const TEXT_INPUT_NATIVE_ID = "create-post-input";
-
 function Create() {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
@@ -117,7 +115,6 @@ function Create() {
         showsVerticalScrollIndicator={false}
         style={{
           flex: 1,
-          // height: "100%",
           backgroundColor: theme.colors.background,
         }}
       >
@@ -150,16 +147,16 @@ function Create() {
               placeholderTextColor={theme.colors.foregroundSecondary}
               onChangeText={(text) => changeText(text)}
               multiline
-              inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
               onSelectionChange={onSelectionChange}
               style={{
                 ...(theme.typography.highlight as Object),
                 flex: 1,
                 width: "80%",
                 height: "100%",
+                textAlignVertical: "top",
                 marginTop: theme.units.larger,
                 paddingBottom: theme.units.medium,
-                paddingLeft: theme.units.small,
+                paddingLeft: theme.units.medium,
               }}
             >
               <PostTextContent value={text} variant="highlight" />

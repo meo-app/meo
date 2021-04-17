@@ -161,6 +161,7 @@ const PostDetails = React.memo(function PostDetails() {
               inputAccessoryViewID={TEXT_INPUT_NATIVE_ID}
               style={{
                 ...(theme.typography.highlight as Object),
+                textAlignVertical: "top",
                 width: "100%",
                 height: "100%",
               }}

@@ -18,9 +18,12 @@ const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
   const { paddingHorizontal } = usePaddingHorizontal();
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior="padding"
+      enabled
+      keyboardVerticalOffset={0}
       style={{
         flex: 1 / 5,
+        height: 100,
         width: "100%",
         paddingBottom: theme.units.large,
         paddingRight: paddingHorizontal,
