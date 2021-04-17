@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import { rgba } from "polished";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Pressable, StyleSheet } from "react-native";
+import { Alert, NativeMethods, Pressable, StyleSheet } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
@@ -24,7 +24,7 @@ import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 function Create() {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
-  const ref = useRef<TextInput | null>(null);
+  const ref = useRef<(TextInput & NativeMethods) | null>(null);
   const [text, changeText] = useState("");
   const { caretWord, onSelectionChange } = useTextCaretWord({
     text,
@@ -90,6 +90,16 @@ function Create() {
     return () => navigation.removeListener("beforeRemove", listener);
   }, [createPost, navigation, text]);
 
+  /**
+   * autoFocus on TextInput would do the job, BUT for some reason
+   * it bugs `KeyboardAvoidingView` used on PostInputAccessory component
+   *
+   * Focusing manually seems to have fixed the problem, RN4LIFE
+   */
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
   return (
     <Frame flex={1}>
       <Frame style={styles.header}>
@@ -142,7 +152,6 @@ function Create() {
             </Frame>
             <TextInput
               ref={ref}
-              autoFocus
               placeholder="Write something"
               placeholderTextColor={theme.colors.foregroundSecondary}
               onChangeText={(text) => changeText(text)}

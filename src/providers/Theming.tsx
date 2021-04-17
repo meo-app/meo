@@ -146,7 +146,7 @@ const ThemeProvider: React.FunctionComponent<{
   );
 
   useEffect(() => {
-    if (Boolean(data) && data !== "system") {
+    if (["light", "dark"].includes(String(data))) {
       setColorScheme(data as "light" | "dark");
     } else if (systemColorScheme) {
       setColorScheme(systemColorScheme);

@@ -40,7 +40,7 @@ function useAsyncStorageQuery<TQueryFnData = unknown, TError = unknown>({
   );
 }
 
-function useAsyncStorageMutation<TVariables = void>({
+function useAsyncStorageMutation<TVariables = void, TContext = unknown>({
   key,
   parse,
   version,
@@ -49,10 +49,10 @@ function useAsyncStorageMutation<TVariables = void>({
   version: number;
   key: QueryKeys;
   parse: (data: TVariables) => string;
-  options?: UseMutationOptions<void, string, TVariables>;
+  options?: UseMutationOptions<void, string, TVariables, TContext>;
 }) {
   const client = useQueryClient();
-  return useMutation<void, string, TVariables>(
+  return useMutation<void, string, TVariables, TContext>(
     (variables) =>
       AsyncStorage.multiSet([
         [key, parse(variables)],
