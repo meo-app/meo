@@ -4,7 +4,7 @@ import { transparentize } from "polished";
 import React, { useEffect, useMemo } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Alert, Linking, Modal, Pressable, ScrollView } from "react-native";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Font } from "../components/Font";
 import { Frame, useFrame } from "../components/Frame";
 import { Icon } from "../components/Icon/Icon";
@@ -191,16 +191,44 @@ interface ThemeSectionFieldValues {
 const ThemeSection = React.memo(function Themeing() {
   const row = useRowStyles();
   const { control, setValue } = useForm<ThemeSectionFieldValues>();
+  const queryClient = useQueryClient();
 
   const values = useWatch({
     control,
   });
 
   const { data } = usePreferredColorSchemeQuery();
-  const { mutate } = useAsyncStorageMutation<PreferredColorSchemeTypes>({
+  const { mutate } = useAsyncStorageMutation<
+    PreferredColorSchemeTypes,
+    {
+      previous?: string;
+    }
+  >({
     key: QueryKeys.PREFERRED_COLOR_SCHEME,
     version: PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
     parse: (value) => (value ? String(value) : ""),
+    options: {
+      onMutate: async (value) => {
+        await queryClient.cancelQueries(QueryKeys.PREFERRED_COLOR_SCHEME);
+        const previous = queryClient.getQueryData(
+          QueryKeys.PREFERRED_COLOR_SCHEME
+        ) as string | undefined;
+
+        queryClient.setQueryData(QueryKeys.PREFERRED_COLOR_SCHEME, () => value);
+        return { previous };
+      },
+      onError: (err, value, context) => {
+        if (err && context?.previous) {
+          queryClient.setQueryData(
+            QueryKeys.PREFERRED_COLOR_SCHEME,
+            context.previous
+          );
+        }
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries(QueryKeys.PREFERRED_COLOR_SCHEME);
+      },
+    },
   });
 
   useEffect(() => {
@@ -233,7 +261,7 @@ const ThemeSection = React.memo(function Themeing() {
                 height: theme.scales.small,
               }}
             >
-              {values.scheme === "system" && (
+              {(values.scheme === "system" || !values.scheme) && (
                 <Icon type="Check" size="small" color="primary" />
               )}
             </Frame>
