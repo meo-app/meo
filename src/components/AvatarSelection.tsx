@@ -246,7 +246,7 @@ function AvatarSelection() {
             {source ? (
               <Image
                 source={{ uri: source }}
-                resizeMode="contain"
+                resizeMode="cover"
                 style={{
                   width: size,
                   height: size,
