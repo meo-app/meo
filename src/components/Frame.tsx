@@ -36,6 +36,7 @@ type Props = Pick<
   | "flex"
   | "flexBasis"
   | "flexGrow"
+  | "flexShrink"
   | "flexWrap"
   | "flexDirection"
   | "alignSelf"
@@ -60,6 +61,7 @@ const Frame: React.FunctionComponent<
     flexDirection,
     flexGrow,
     flexWrap,
+    flexShrink,
     marginTop,
     marginRight,
     marginBottom,
@@ -105,6 +107,7 @@ function useFrame({
   flexDirection,
   flexGrow,
   flexWrap,
+  flexShrink,
   marginTop,
   marginRight,
   marginBottom,
@@ -189,6 +192,7 @@ function useFrame({
     flexGrow,
     flexWrap,
     flexDirection,
+    flexShrink,
     alignSelf,
     ...spacing,
     ...(width && {

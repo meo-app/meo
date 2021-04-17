@@ -1,11 +1,10 @@
 import ViewPager from "@react-native-community/viewpager";
 import React, { useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
-import { useTheme } from "../../providers/Theming";
+import { usePaddingHorizontal, useTheme } from "../../providers/Theming";
 
 const Indicators: React.FunctionComponent<{
   length: number;
@@ -32,26 +31,11 @@ const Indicators: React.FunctionComponent<{
   );
 };
 
-function Section({ title, subtitle }: { title: string; subtitle: string }) {
-  return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Font variant="display" textAlign="center" marginBottom="large">
-        {title}
-      </Font>
-      <Font variant="body">{subtitle}</Font>
-    </ScrollView>
-  );
-}
-
 function OnboardingSlider() {
   const [page, setPage] = useState(0);
   const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const { paddingHorizontal } = usePaddingHorizontal();
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -61,8 +45,8 @@ function OnboardingSlider() {
           height: "100%",
         },
         slider: {
-          justifyContent: "center",
-          alignItems: "center",
+          flex: 1,
+          justifyContent: "flex-start",
           padding: theme.units.large,
         },
       }),
@@ -76,31 +60,109 @@ function OnboardingSlider() {
         style={styles.container}
       >
         <View key="1" style={styles.slider}>
-          <Section
-            title="Welcome to Meo!"
-            subtitle="Your private feed of thoughts. Locally saved private by default."
-          />
+          <Frame
+            flexGrow={1}
+            flexShrink={1}
+            paddingBottom="medium"
+            justifyContent="center"
+            alignItems="center"
+            style={{
+              minWidth: width * 0.8,
+            }}
+          >
+            <Picture
+              resizeMode="contain"
+              source={require("../../assets/onboarding/Saly-7.png")}
+              aspectRatio="standard"
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "transparent",
+              }}
+            />
+          </Frame>
+          <Frame paddingBottom="medium">
+            <Font
+              variant="display"
+              textAlign="center"
+              marginBottom="small"
+              paddingHorizontal={paddingHorizontal}
+            >
+              Welcome to Meo! 👋
+            </Font>
+            <Font variant="body" textAlign="center">
+              Your private feed of thoughts. Locally saved private by default.
+            </Font>
+          </Frame>
         </View>
         <View key="2" style={styles.slider}>
-          <Section
-            title="A social feed-like experience"
-            subtitle="It is like a social network, but its just you, so it isn't a social network... hmm its more like a notes app, but social but just you... you'll get it."
-          />
+          <Font
+            variant="display"
+            textAlign="center"
+            marginBottom="large"
+            paddingHorizontal={paddingHorizontal}
+          >
+            A social feed-like experience
+          </Font>
+          <Frame
+            flexShrink={1}
+            paddingBottom="medium"
+            justifyContent="center"
+            alignItems="center"
+            style={{
+              width: width * 0.8,
+            }}
+          >
+            <Picture
+              resizeMode="contain"
+              source={require("../../assets/onboarding/Saly-14.png")}
+              aspectRatio="standard"
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "transparent",
+              }}
+            />
+          </Frame>
+          <Font paddingHorizontal={paddingHorizontal} textAlign="center">
+            It is like a social network, but it's just you...it's more like a
+            notes app. You'll get it.
+          </Font>
         </View>
         <View key="3" style={styles.slider}>
-          <Picture
+          <Frame
+            flexGrow={1}
+            paddingBottom="medium"
+            justifyContent="center"
+            alignItems="center"
             style={{
-              width: 500,
-              backgroundColor: "transparent",
+              width: width * 0.8,
             }}
-            resizeMode="contain"
-            lazyload={false}
-            source={require("../../assets/hashtag.png")}
-          />
-          <Section
-            title="Easily organize things"
-            subtitle="No more folders, just add a hashtag to your post and find them organized for you in the explore tab"
-          />
+          >
+            <Picture
+              resizeMode="contain"
+              source={require("../../assets/onboarding/Saly-26.png")}
+              aspectRatio="standard"
+              style={{
+                width: "100%",
+                backgroundColor: "transparent",
+              }}
+            />
+          </Frame>
+          <Frame paddingBottom="medium" flexGrow={1}>
+            <Font
+              variant="display"
+              textAlign="center"
+              marginBottom="small"
+              paddingHorizontal={paddingHorizontal}
+            >
+              Easily organize things
+            </Font>
+            <Font paddingHorizontal={paddingHorizontal} textAlign="center">
+              No more folders, just add a hashtag to your post and find them
+              organized for you in the explore tab
+            </Font>
+          </Frame>
         </View>
       </ViewPager>
       <Indicators length={3} active={page} />

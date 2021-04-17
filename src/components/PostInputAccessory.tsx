@@ -1,5 +1,5 @@
 import React from "react";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAvoidingView } from "react-native";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
 import { Frame } from "./Frame";
 import { HashtagSelector } from "./HashtagSelector";
