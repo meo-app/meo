@@ -196,11 +196,11 @@ function CreateButton({ onPress }: { onPress: () => void }) {
         style={({ pressed }) => ({
           ...styles.pressabe,
           backgroundColor: pressed
-            ? lighten(0.1, theme.colors.background)
-            : theme.colors.backgroundAccent,
+            ? lighten(0.1, theme.colors.primary)
+            : theme.colors.primary,
         })}
       >
-        <Icon type="Plus" size="small" />
+        <Icon type="Plus" size="small" color="absoluteLight" />
       </Pressable>
     </Frame>
   );
