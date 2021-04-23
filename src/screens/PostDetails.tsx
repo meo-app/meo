@@ -115,70 +115,75 @@ const PostDetails = React.memo(function PostDetails() {
           </Pressable>
         </Frame>
       </SubtitleHeader>
-      <SafeAreaView
-        edges={["right", "bottom", "left"]}
-        style={{
-          paddingHorizontal,
-          flex: 1,
-        }}
+      <Frame
+        paddingRight="medium"
+        flexDirection="row"
+        alignItems="center"
+        marginBottom="medium"
       >
-        <ScrollView
-          scrollIndicatorInsets={{ right: 1 }}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingTop: theme.units.medium,
+        <Font variant="caption" color="foregroundSecondary">
+          <FormattedTime
+            value={date}
+            hour="numeric"
+            minute="numeric"
+            month="short"
+            day="2-digit"
+            year="numeric"
+          />
+        </Font>
+      </Frame>
+      <Frame debugTrace flex={1}>
+        {/* <TextInput
+          editable
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          placeholder="Write something"
+          placeholderTextColor={theme.colors.foregroundSecondary}
+          onChangeText={(text) => changeText(text)}
+          onSelectionChange={onSelectionChange}
+          scrollEnabled
+          multiline
+          style={{
+            ...(theme.typography.highlight as Object),
+            textAlignVertical: "top",
+            flex: 1,
+            width: "100%",
           }}
         >
-          <Frame
-            paddingRight="medium"
-            flexDirection="row"
-            alignItems="center"
-            marginBottom="medium"
-          >
-            <Font variant="caption" color="foregroundSecondary">
-              <FormattedTime
-                value={date}
-                hour="numeric"
-                minute="numeric"
-                month="short"
-                day="2-digit"
-                year="numeric"
-              />
-            </Font>
-          </Frame>
-          <Frame>
-            <TextInput
-              editable
-              onFocus={() => setFocus(true)}
-              onBlur={() => setFocus(false)}
-              placeholder="Write something"
-              placeholderTextColor={theme.colors.foregroundSecondary}
-              onChangeText={(text) => changeText(text)}
-              onSelectionChange={onSelectionChange}
-              multiline
-              style={{
-                ...(theme.typography.highlight as Object),
-                textAlignVertical: "top",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <PostTextContent
-                variant="highlight"
-                value={text}
-                color="foregroundPrimary"
-              />
-            </TextInput>
-          </Frame>
-        </ScrollView>
-      </SafeAreaView>
-      {focus && (
+          <PostTextContent
+            variant="highlight"
+            value={text}
+            color="foregroundPrimary"
+          />
+        </TextInput> */}
+        <TextInput
+          // ref={ref}
+          placeholder="Write something"
+          placeholderTextColor={theme.colors.foregroundSecondary}
+          onChangeText={(text) => changeText(text)}
+          multiline
+          onSelectionChange={onSelectionChange}
+          scrollEnabled
+          style={{
+            ...(theme.typography.highlight as Object),
+            flex: 1,
+            textAlignVertical: "top",
+            marginTop: theme.units.medium,
+            paddingBottom: theme.units.medium,
+            paddingLeft: theme.units.medium,
+            // width: dimensions.width * 0.7,
+          }}
+        >
+          <PostTextContent value={text} variant="highlight" />
+        </TextInput>
+      </Frame>
+      {/* {focus && (
         <PostInputAccessory
           text={text}
           caretWord={caretWord}
           onHashtagSelected={(text) => changeText(text)}
         />
-      )}
+      )} */}
     </>
   );
 });
