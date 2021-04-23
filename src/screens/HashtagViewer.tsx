@@ -91,7 +91,7 @@ function HashtagViewer() {
             onPress={() =>
               navigate("Create", {
                 initialTextContent: `${hashtag} `,
-                onPostCreateRoute: "HashtagViewer",
+                onSuccesRoute: "HashtagViewer",
               })
             }
           />

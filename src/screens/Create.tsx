@@ -11,14 +11,12 @@ import { rgba } from "polished";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
-  Dimensions,
-  KeyboardAvoidingView,
   NativeMethods,
   Pressable,
   StyleSheet,
   useWindowDimensions,
 } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
@@ -68,9 +66,9 @@ function Create() {
   );
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
 
-  const { mutate: createPost } = useCreatePost({
+  const { mutate: createPost, status } = useCreatePost({
     onSuccess: () => {
-      navigation.navigate(params?.onPostCreateRoute || "Home", {
+      navigation.navigate(params?.onSuccesRoute || "Home", {
         resetScroll: true,
       });
     },
@@ -81,7 +79,7 @@ function Create() {
       EventMapCore<NavigationState<NavigationParamsConfig>>,
       "beforeRemove"
     > = (event) => {
-      if (!text) {
+      if (!text || status !== "idle") {
         return;
       }
 
@@ -102,7 +100,7 @@ function Create() {
 
     navigation.addListener("beforeRemove", listener);
     return () => navigation.removeListener("beforeRemove", listener);
-  }, [createPost, navigation, text]);
+  }, [createPost, navigation, status, text]);
 
   /**
    * autoFocus on TextInput would do the job, BUT for some reason
