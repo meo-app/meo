@@ -16,13 +16,13 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
-import { Icon } from "../components/Icon/Icon";
 import { PostInputAccessory } from "../components/PostInputAccessory";
 import { PostTextContent } from "../components/PostTextContent";
+import { SubtitleHeader } from "../components/SubtitleHeader";
 import { UserAvatar } from "../components/UserAvatar";
 import { useCreatePost } from "../hooks/use-create-post";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
@@ -114,62 +114,47 @@ function Create() {
 
   return (
     <Frame flex={1}>
-      <Frame style={styles.header}>
-        <Frame style={styles.spacer} />
+      <SubtitleHeader icon="Back" />
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
         <Frame
+          flex={1}
+          paddingHorizontal={paddingHorizontal}
           flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
+          alignItems="flex-start"
+          justifyContent="space-around"
         >
-          <Pressable
-            onPress={() => navigation.goBack()}
-            style={({ pressed }) => ({
-              zIndex: 1,
-              marginRight: theme.units.medium,
-              opacity: pressed ? 0.5 : 1,
-            })}
+          <Frame
+            alignItems="flex-end"
+            marginTop="small"
+            alignSelf="flex-start"
+            width="larger"
           >
-            <Icon type="Back" size="medium" />
-          </Pressable>
+            <UserAvatar size="larger" />
+          </Frame>
+          <Frame paddingLeft="medium">
+            <TextInput
+              ref={ref}
+              placeholder="Write something"
+              placeholderTextColor={theme.colors.foregroundSecondary}
+              onChangeText={(text) => changeText(text)}
+              multiline
+              onSelectionChange={onSelectionChange}
+              scrollEnabled
+              style={{
+                ...(theme.typography.highlight as Object),
+                flex: 1,
+                textAlignVertical: "top",
+                marginTop: theme.units.medium,
+                paddingBottom: theme.units.medium,
+                paddingLeft: theme.units.medium,
+                width: dimensions.width * 0.7,
+              }}
+            >
+              <PostTextContent value={text} variant="highlight" />
+            </TextInput>
+          </Frame>
         </Frame>
-      </Frame>
-      <Frame
-        flex={1}
-        paddingHorizontal={paddingHorizontal}
-        flexDirection="row"
-        alignItems="flex-start"
-        justifyContent="space-around"
-      >
-        <Frame
-          alignItems="flex-end"
-          marginTop="small"
-          alignSelf="flex-start"
-          width="larger"
-        >
-          <UserAvatar size="larger" />
-        </Frame>
-        <Frame paddingLeft="medium">
-          <TextInput
-            ref={ref}
-            placeholder="Write something"
-            placeholderTextColor={theme.colors.foregroundSecondary}
-            onChangeText={(text) => changeText(text)}
-            multiline
-            onSelectionChange={onSelectionChange}
-            scrollEnabled
-            style={{
-              ...(theme.typography.highlight as Object),
-              flex: 1,
-              textAlignVertical: "top",
-              paddingBottom: theme.units.medium,
-              paddingLeft: theme.units.medium,
-              width: dimensions.width * 0.7,
-            }}
-          >
-            <PostTextContent value={text} variant="highlight" />
-          </TextInput>
-        </Frame>
-      </Frame>
+      </ScrollView>
       <PostInputAccessory
         text={text}
         caretWord={caretWord}
