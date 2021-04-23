@@ -93,7 +93,7 @@ function Create() {
 
     navigation.addListener("beforeRemove", listener);
     return () => navigation.removeListener("beforeRemove", listener);
-  }, [createPost, navigation, status, text]);
+  }, [createPost, navigation, text]);
 
   /**
    * autoFocus on TextInput would do the job, BUT for some reason
