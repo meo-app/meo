@@ -70,28 +70,26 @@ function Create() {
   }, []);
 
   return (
-    <Frame flex={1}>
-      <PostLayout
-        ref={ref}
-        text={text}
-        changeText={changeText}
-        onCreatePostPress={() => {
-          if (text) {
-            createPost({ text });
-          }
-        }}
+    <PostLayout
+      ref={ref}
+      text={text}
+      changeText={changeText}
+      onCreatePostPress={() => {
+        if (text) {
+          createPost({ text });
+        }
+      }}
+    >
+      <Frame
+        alignItems="center"
+        alignSelf="flex-start"
+        justifyContent="center"
+        width="larger"
+        marginRight="medium"
       >
-        <Frame
-          alignItems="center"
-          alignSelf="flex-start"
-          justifyContent="center"
-          width="larger"
-          marginRight="medium"
-        >
-          <UserAvatar size="larger" />
-        </Frame>
-      </PostLayout>
-    </Frame>
+        <UserAvatar size="larger" />
+      </Frame>
+    </PostLayout>
   );
 }
 
