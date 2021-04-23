@@ -99,7 +99,7 @@ const PostDetails = React.memo(function PostDetails() {
           paddingRight="medium"
           flexDirection="row"
           alignItems="center"
-          marginTop="medium"
+          marginTop="small"
           paddingHorizontal={paddingHorizontal}
         >
           <Font variant="caption" color="foregroundSecondary">
