@@ -22,6 +22,13 @@ function TabBar({ navigation, state }: BottomTabBarProps) {
   const styles = useMemo(
     () =>
       StyleSheet.create({
+        createButton: {
+          top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
+          zIndex: theme.constants.absoluteRadius,
+          position: "absolute",
+          width: "100%",
+          ...theme.constants.shadow,
+        },
         root: {
           position: "absolute",
           left: 0,
@@ -30,7 +37,7 @@ function TabBar({ navigation, state }: BottomTabBarProps) {
           height: 110,
         },
       }),
-    []
+    [theme.constants.absoluteRadius, theme.constants.shadow, theme.scales]
   );
 
   const onPress = useCallback(
@@ -61,7 +68,13 @@ function TabBar({ navigation, state }: BottomTabBarProps) {
       style={styles.root}
     >
       <FlipColorScheme>
-        <CreateButton onPress={() => navigation.navigate("Create")} />
+        <Frame
+          alignItems="center"
+          pointerEvents="box-none"
+          style={styles.createButton}
+        >
+          <CreateButton onPress={() => navigation.navigate("Create")} />
+        </Frame>
       </FlipColorScheme>
       <Gradient>
         <Dock
@@ -169,13 +182,6 @@ function CreateButton({ onPress }: { onPress: () => void }) {
   const styles = useMemo(
     () =>
       StyleSheet.create({
-        root: {
-          top: -theme.scales[CREATE_BUTTON_SIZE] / CREATE_BUTTON_DIMENSION,
-          zIndex: theme.constants.absoluteRadius,
-          position: "absolute",
-          width: "100%",
-          ...theme.constants.shadow,
-        },
         pressabe: {
           width: theme.scales[CREATE_BUTTON_SIZE],
           height: theme.scales[CREATE_BUTTON_SIZE],
@@ -190,20 +196,18 @@ function CreateButton({ onPress }: { onPress: () => void }) {
   );
 
   return (
-    <Frame alignItems="center" pointerEvents="box-none" style={styles.root}>
-      <Pressable
-        onPress={onPress}
-        style={({ pressed }) => ({
-          ...styles.pressabe,
-          backgroundColor: pressed
-            ? lighten(0.1, theme.colors.primary)
-            : theme.colors.primary,
-        })}
-      >
-        <Icon type="Plus" size="small" color="absoluteLight" />
-      </Pressable>
-    </Frame>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        ...styles.pressabe,
+        backgroundColor: pressed
+          ? lighten(0.1, theme.colors.primary)
+          : theme.colors.primary,
+      })}
+    >
+      <Icon type="Plus" size="small" color="absoluteLight" />
+    </Pressable>
   );
 }
 
-export { TabBar };
+export { TabBar, CreateButton };

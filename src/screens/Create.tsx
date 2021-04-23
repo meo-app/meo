@@ -3,7 +3,9 @@ import {
   EventMapCore,
   NavigationProp,
   NavigationState,
+  RouteProp,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 import { rgba } from "polished";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -24,8 +26,9 @@ import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 function Create() {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
+  const params = useRoute<RouteProp<NavigationParamsConfig, "Create">>().params;
   const ref = useRef<(TextInput & NativeMethods) | null>(null);
-  const [text, changeText] = useState("");
+  const [text, changeText] = useState(params?.initialTextContent || "");
   const { caretWord, onSelectionChange } = useTextCaretWord({
     text,
   });
@@ -55,11 +58,13 @@ function Create() {
     ]
   );
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
+
   const { mutate: createPost } = useCreatePost({
-    onSuccess: () =>
-      navigation.navigate("Home", {
+    onSuccess: () => {
+      navigation.navigate(params?.onPostCreateRoute || "Home", {
         resetScroll: true,
-      }),
+      });
+    },
   });
 
   useEffect(() => {
@@ -88,7 +93,7 @@ function Create() {
 
     navigation.addListener("beforeRemove", listener);
     return () => navigation.removeListener("beforeRemove", listener);
-  }, [createPost, navigation, text]);
+  }, [createPost, navigation, status, text]);
 
   /**
    * autoFocus on TextInput would do the job, BUT for some reason

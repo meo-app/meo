@@ -6,11 +6,20 @@ type NavigationParamsConfig = {
   Explore?: {
     resetScroll?: boolean;
   };
-  Create: undefined;
+  HashtagViewer: {
+    hashtag: string;
+    resetScroll?: boolean;
+  };
+  Create: {
+    initialTextContent?: string;
+    onSuccesRoute?: Extract<
+      keyof NavigationParamsConfig,
+      "HashtagViewer" | "Home"
+    >;
+  };
+  PostDetails: { id: string };
   Placeholder: undefined;
   Settings: undefined;
-  HashtagViewer: { hashtag: string };
-  PostDetails: { id: string };
   ChangeAvatar: undefined;
 };
 
