@@ -6,6 +6,7 @@ import { HashtagSelector } from "./HashtagSelector";
 
 interface Props extends React.ComponentProps<typeof HashtagSelector> {
   children?: React.ReactNode;
+  hideHashtags?: boolean;
 }
 
 const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
@@ -13,6 +14,7 @@ const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
   caretWord,
   onHashtagSelected,
   children,
+  hideHashtags,
 }) {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
@@ -35,11 +37,13 @@ const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
         alignItems="center"
       >
         <Frame flex={1}>
-          <HashtagSelector
-            text={text}
-            caretWord={caretWord}
-            onHashtagSelected={onHashtagSelected}
-          />
+          {!hideHashtags && (
+            <HashtagSelector
+              text={text}
+              caretWord={caretWord}
+              onHashtagSelected={onHashtagSelected}
+            />
+          )}
         </Frame>
         <Frame justifyContent="flex-end">{children}</Frame>
       </Frame>
