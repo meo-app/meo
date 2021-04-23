@@ -23,7 +23,6 @@ const PostLayout = React.forwardRef<TextInput & NativeMethods, Props>(
     { changeText, text, children, onCreatePostPress, beforeTextContent },
     ref: React.Ref<TextInput & NativeMethods>
   ) {
-    const [isFocused, setFocus] = useState(false);
     const theme = useTheme();
     const { paddingHorizontal } = usePaddingHorizontal();
     const { caretWord, onSelectionChange } = useTextCaretWord({
@@ -33,45 +32,42 @@ const PostLayout = React.forwardRef<TextInput & NativeMethods, Props>(
     return (
       <>
         <NavigationHeader icon="Back" />
-        <ScrollView contentContainerStyle={{ flex: 1 }}>
-          {beforeTextContent}
-          <Frame
-            flex={1}
-            flexDirection="row"
-            alignItems="flex-start"
-            justifyContent="space-around"
-          >
-            {children}
-            <Frame flexGrow={1}>
-              <TextInput
-                ref={ref}
-                placeholder="Write something"
-                placeholderTextColor={theme.colors.foregroundSecondary}
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-                onChangeText={(text) => changeText(text)}
-                multiline
-                onSelectionChange={onSelectionChange}
-                scrollEnabled
-                style={{
-                  ...(theme.typography.highlight as Object),
-                  flex: 1,
-                  textAlignVertical: "top",
-                  marginTop: theme.units.medium,
-                  paddingBottom: theme.units.medium,
-                  paddingLeft: theme.units.medium,
-                }}
-              >
-                <PostTextContent value={text} variant="highlight" />
-              </TextInput>
-            </Frame>
+        {beforeTextContent}
+        <Frame
+          flex={1}
+          flexDirection="row"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          marginTop="medium"
+          paddingHorizontal={paddingHorizontal}
+        >
+          {children}
+          <Frame flexGrow={1} flexShrink={1}>
+            <TextInput
+              ref={ref}
+              placeholder="Write something"
+              placeholderTextColor={theme.colors.foregroundSecondary}
+              onChangeText={(text) => changeText(text)}
+              multiline
+              onSelectionChange={onSelectionChange}
+              scrollEnabled
+              style={{
+                ...(theme.typography.highlight as Object),
+                flex: 1,
+                textAlignVertical: "top",
+                textAlign: "left",
+                marginTop: theme.units.small,
+                paddingBottom: theme.units.medium,
+              }}
+            >
+              <PostTextContent value={text} variant="highlight" />
+            </TextInput>
           </Frame>
-        </ScrollView>
+        </Frame>
         <PostInputAccessory
           text={text}
           caretWord={caretWord}
           onHashtagSelected={(text) => changeText(text)}
-          hideHashtags={!isFocused}
         >
           {onCreatePostPress && (
             <Pressable

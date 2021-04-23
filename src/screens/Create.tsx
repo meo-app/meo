@@ -86,7 +86,7 @@ function Create() {
           alignSelf="flex-start"
           justifyContent="center"
           width="larger"
-          style={{ width: theme.scales.large + theme.units.medium * 2 }}
+          marginRight="medium"
         >
           <UserAvatar size="larger" />
         </Frame>
