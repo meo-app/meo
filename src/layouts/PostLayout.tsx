@@ -77,6 +77,7 @@ const PostLayout = React.forwardRef<TextInput & NativeMethods, Props>(
                 borderRadius: theme.constants.absoluteRadius,
                 paddingVertical: theme.units.small,
                 paddingHorizontal,
+                marginRight: paddingHorizontal,
               }}
             >
               <Font variant="strong" color="absoluteLight">
