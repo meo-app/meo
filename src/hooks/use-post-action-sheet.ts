@@ -5,6 +5,7 @@ import { useTheme } from "../providers/Theming";
 import { useDeletePost } from "./use-delete-post";
 import { useDeletePostAlert } from "./use-delete-post-alert";
 import RNHapticFeedback from "react-native-haptic-feedback";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 function usePostActionSheet({
   id,
@@ -22,10 +23,11 @@ function usePostActionSheet({
   });
   const { showActionSheetWithOptions } = useActionSheet();
   const { Actions, options } = useMemo(() => {
-    const options = ["Delete", "Share", "Close"];
+    const options = ["Delete", "Copy", "Share", "Close"];
     enum Actions {
       Delete = options.indexOf("Delete"),
       Share = options.indexOf("Share"),
+      Copy = options.indexOf("Copy"),
     }
 
     return {
@@ -55,6 +57,10 @@ function usePostActionSheet({
       },
       (index) => {
         switch (index) {
+          case Actions.Copy: {
+            Clipboard.setString(value);
+            return;
+          }
           case Actions.Share: {
             Share.open({
               message: value,
@@ -69,6 +75,7 @@ function usePostActionSheet({
       }
     );
   }, [
+    Actions.Copy,
     Actions.Delete,
     Actions.Share,
     openDeleteAlert,
