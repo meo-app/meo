@@ -15,8 +15,7 @@ interface Props extends React.ComponentProps<typeof Header> {
   backContent?: React.ReactNode;
 }
 
-// Rename to header?
-function SubtitleHeader({
+function NavigationHeader({
   title,
   backContent,
   icon = "Back",
@@ -100,4 +99,4 @@ function SubtitleHeader({
   );
 }
 
-export { SubtitleHeader };
+export { NavigationHeader };

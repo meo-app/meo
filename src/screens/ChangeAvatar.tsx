@@ -8,14 +8,14 @@ import {
 } from "../components/AvatarSelection";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
-import { SubtitleHeader } from "../components/SubtitleHeader";
+import { NavigationHeader } from "../components/NavigationHeader";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 
 const ChangeAvatar = React.memo(function ChangeAvatar() {
   const { saveAvatar } = useAvatarContext();
   return (
     <>
-      <SubtitleHeader icon="Close">
+      <NavigationHeader icon="Close">
         <Frame alignItems="flex-end">
           <Pressable>
             <Font
@@ -29,7 +29,7 @@ const ChangeAvatar = React.memo(function ChangeAvatar() {
             </Font>
           </Pressable>
         </Frame>
-      </SubtitleHeader>
+      </NavigationHeader>
       <AvatarSelection />
     </>
   );

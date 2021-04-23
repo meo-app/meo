@@ -1,47 +1,54 @@
-import React from "react";
-import { NativeMethods, Pressable, useWindowDimensions } from "react-native";
+import React, { useState } from "react";
+import { NativeMethods, Pressable } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal, useTheme } from "../providers/Theming";
-import { Font } from "./Font";
-import { Frame } from "./Frame";
-import { PostInputAccessory } from "./PostInputAccessory";
-import { PostTextContent } from "./PostTextContent";
+import { Font } from "../components/Font";
+import { Frame } from "../components/Frame";
+import { NavigationHeader } from "../components/NavigationHeader";
+import { PostInputAccessory } from "../components/PostInputAccessory";
+import { PostTextContent } from "../components/PostTextContent";
 
 interface Props {
   text: string;
   changeText: (text: string) => void;
-  onPostButtonPress?: () => void;
-  textInputWidth?: number | string;
+  onCreatePostPress?: () => void;
+  children?: React.ReactNode;
+  navigationHeaderChildren?: React.ReactNode;
+  beforeTextContent?: React.ReactNode;
 }
 
-const PostInputLayout = React.forwardRef<TextInput & NativeMethods, Props>(
-  React.memo<Props>(function PostInputLayout(
-    { changeText, text, children, onPostButtonPress, textInputWidth },
-    ref: React.MutableRefObject<TextInput & NativeMethods>
+const PostLayout = React.forwardRef<TextInput & NativeMethods, Props>(
+  function PostLayout(
+    { changeText, text, children, onCreatePostPress, beforeTextContent },
+    ref: React.Ref<TextInput & NativeMethods>
   ) {
+    const [isFocused, setFocus] = useState(false);
     const theme = useTheme();
-    const dimensions = useWindowDimensions();
     const { paddingHorizontal } = usePaddingHorizontal();
     const { caretWord, onSelectionChange } = useTextCaretWord({
       text,
     });
+
     return (
       <>
+        <NavigationHeader icon="Back" />
         <ScrollView contentContainerStyle={{ flex: 1 }}>
+          {beforeTextContent}
           <Frame
             flex={1}
-            paddingHorizontal={paddingHorizontal}
             flexDirection="row"
             alignItems="flex-start"
             justifyContent="space-around"
           >
-            <Frame paddingLeft="medium">
-              {children}
+            {children}
+            <Frame flexGrow={1}>
               <TextInput
                 ref={ref}
                 placeholder="Write something"
                 placeholderTextColor={theme.colors.foregroundSecondary}
+                onFocus={() => setFocus(true)}
+                onBlur={() => setFocus(false)}
                 onChangeText={(text) => changeText(text)}
                 multiline
                 onSelectionChange={onSelectionChange}
@@ -53,7 +60,6 @@ const PostInputLayout = React.forwardRef<TextInput & NativeMethods, Props>(
                   marginTop: theme.units.medium,
                   paddingBottom: theme.units.medium,
                   paddingLeft: theme.units.medium,
-                  width: textInputWidth || dimensions.width * 0.7,
                 }}
               >
                 <PostTextContent value={text} variant="highlight" />
@@ -65,14 +71,11 @@ const PostInputLayout = React.forwardRef<TextInput & NativeMethods, Props>(
           text={text}
           caretWord={caretWord}
           onHashtagSelected={(text) => changeText(text)}
+          hideHashtags={!isFocused}
         >
-          {onPostButtonPress && (
+          {onCreatePostPress && (
             <Pressable
-              onPress={() => {
-                // if (text) {
-                //   createPost({ text });
-                // }
-              }}
+              onPress={onCreatePostPress}
               style={{
                 backgroundColor: theme.colors.primary,
                 borderRadius: theme.constants.absoluteRadius,
@@ -88,7 +91,7 @@ const PostInputLayout = React.forwardRef<TextInput & NativeMethods, Props>(
         </PostInputAccessory>
       </>
     );
-  })
+  }
 );
 
-export { PostInputLayout };
+export { PostLayout };

@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { Font } from "../components/Font";
 import { Frame, useFrame } from "../components/Frame";
 import { Icon } from "../components/Icon/Icon";
-import { SubtitleHeader } from "../components/SubtitleHeader";
+import { NavigationHeader } from "../components/NavigationHeader";
 import { Colors } from "../foundations/Colors";
 import { useAsyncStorageMutation } from "../hooks/use-async-storage";
 import { useCreatePost } from "../hooks/use-create-post";
@@ -101,7 +101,7 @@ function Settings() {
           <Font>Loading...</Font>
         </Frame>
       </Modal>
-      <SubtitleHeader title="Settings" />
+      <NavigationHeader title="Settings" />
       <Frame flex={1} backgroundColor="backgroundAccent">
         <ScrollView>
           <Title text="Options" />
