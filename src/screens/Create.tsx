@@ -9,7 +9,15 @@ import {
 } from "@react-navigation/native";
 import { rgba } from "polished";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Alert, NativeMethods, Pressable, StyleSheet } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  NativeMethods,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Font } from "../components/Font";
@@ -29,11 +37,12 @@ function Create() {
   const params = useRoute<RouteProp<NavigationParamsConfig, "Create">>().params;
   const ref = useRef<(TextInput & NativeMethods) | null>(null);
   const [text, changeText] = useState(params?.initialTextContent || "");
+  const dimensions = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { caretWord, onSelectionChange } = useTextCaretWord({
     text,
   });
 
-  const insets = useSafeAreaInsets();
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -126,58 +135,43 @@ function Create() {
           </Pressable>
         </Frame>
       </Frame>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          flex: 1,
-          backgroundColor: theme.colors.background,
-        }}
+      <Frame
+        flex={1}
+        paddingHorizontal={paddingHorizontal}
+        flexDirection="row"
+        alignItems="flex-start"
+        justifyContent="space-around"
       >
         <Frame
-          paddingHorizontal={paddingHorizontal}
-          justifyContent="flex-end"
-          alignItems="flex-start"
-          style={{
-            backgroundColor: theme.colors.background,
-          }}
+          alignItems="flex-end"
+          marginTop="small"
+          alignSelf="flex-start"
+          width="larger"
         >
-          <Frame
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-around"
-            flex={1}
-            style={{ width: "100%" }}
-          >
-            <Frame
-              alignItems="flex-end"
-              marginTop="small"
-              alignSelf="flex-start"
-            >
-              <UserAvatar size="larger" />
-            </Frame>
-            <TextInput
-              ref={ref}
-              placeholder="Write something"
-              placeholderTextColor={theme.colors.foregroundSecondary}
-              onChangeText={(text) => changeText(text)}
-              multiline
-              onSelectionChange={onSelectionChange}
-              style={{
-                ...(theme.typography.highlight as Object),
-                flex: 1,
-                width: "80%",
-                height: "100%",
-                textAlignVertical: "top",
-                marginTop: theme.units.larger,
-                paddingBottom: theme.units.medium,
-                paddingLeft: theme.units.medium,
-              }}
-            >
-              <PostTextContent value={text} variant="highlight" />
-            </TextInput>
-          </Frame>
+          <UserAvatar size="larger" />
         </Frame>
-      </ScrollView>
+        <Frame paddingLeft="medium">
+          <TextInput
+            ref={ref}
+            placeholder="Write something"
+            placeholderTextColor={theme.colors.foregroundSecondary}
+            onChangeText={(text) => changeText(text)}
+            multiline
+            onSelectionChange={onSelectionChange}
+            scrollEnabled
+            style={{
+              ...(theme.typography.highlight as Object),
+              flex: 1,
+              textAlignVertical: "top",
+              paddingBottom: theme.units.medium,
+              paddingLeft: theme.units.medium,
+              width: dimensions.width * 0.7,
+            }}
+          >
+            <PostTextContent value={text} variant="highlight" />
+          </TextInput>
+        </Frame>
+      </Frame>
       <PostInputAccessory
         text={text}
         caretWord={caretWord}
