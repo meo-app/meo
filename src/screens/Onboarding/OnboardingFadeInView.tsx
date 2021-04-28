@@ -36,7 +36,6 @@ const OnboardingFadeInView: React.FunctionComponent<{
         flex: 1,
         opacity,
         paddingTop: theme.units.large,
-        paddingBottom: theme.units.large,
       }}
     >
       {children}

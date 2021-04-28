@@ -165,7 +165,9 @@ function OnboardingSlider() {
           </Frame>
         </View>
       </ViewPager>
-      <Indicators length={3} active={page} />
+      <Frame paddingBottom="large">
+        <Indicators length={3} active={page} />
+      </Frame>
     </>
   );
 }

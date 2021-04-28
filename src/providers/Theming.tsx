@@ -12,9 +12,18 @@ import {
   StatusBar,
   StatusBarStyle,
   useColorScheme,
+  useWindowDimensions,
 } from "react-native";
+import { Scales } from "../foundations/Spacing";
 import { Theme } from "../foundations/Theme";
 import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
+
+/**
+ * TODO:
+ * - [ ] Responsive font size
+ * - [ ] File seems too cluttered, break it down (Theme definition should leave outside of theming provider)
+ * - [ ] Finally load fonts on App.tsx
+ */
 
 const STATUSBAR_BACKGROUND_COLOR = "rgba(0,0,0,0)";
 
@@ -49,7 +58,39 @@ const dark: Theme["colors"] = {
   foregroundSecondary: "#9A99A2",
 };
 
-const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
+const DEFAULT_SCALES: Scales = {
+  smallest: 8,
+  smaller: 16,
+  small: 24,
+  medium: 32,
+  large: 48,
+  larger: 64,
+  largest: 128,
+};
+
+const HEIGHT_THRESHOLD = 667;
+
+const REDUCE_SCALES_BY = 0.9;
+function useResponsiveScales(): Scales {
+  const { height } = useWindowDimensions();
+  const breakpoint = height < HEIGHT_THRESHOLD;
+
+  if (breakpoint) {
+    return {
+      smallest: DEFAULT_SCALES.smallest * REDUCE_SCALES_BY,
+      smaller: DEFAULT_SCALES.smaller * REDUCE_SCALES_BY,
+      small: DEFAULT_SCALES.small * REDUCE_SCALES_BY,
+      medium: DEFAULT_SCALES.medium * REDUCE_SCALES_BY,
+      large: DEFAULT_SCALES.large * REDUCE_SCALES_BY,
+      larger: DEFAULT_SCALES.larger * REDUCE_SCALES_BY,
+      largest: DEFAULT_SCALES.largest * REDUCE_SCALES_BY,
+    };
+  }
+
+  return DEFAULT_SCALES;
+}
+
+const base: Pick<Theme, "typography" | "units" | "constants"> = {
   constants: {
     borderRadius: 12,
     absoluteRadius: 999,
@@ -73,15 +114,6 @@ const base: Pick<Theme, "scales" | "typography" | "units" | "constants"> = {
     large: 24,
     larger: 36,
     largest: 48,
-  },
-  scales: {
-    smallest: 8,
-    smaller: 16,
-    small: 24,
-    medium: 32,
-    large: 48,
-    larger: 64,
-    largest: 128,
   },
   typography: {
     body: {
@@ -140,6 +172,7 @@ const ThemeProvider: React.FunctionComponent<{
   handleStatusBar = true,
 }) {
   const systemColorScheme = useColorScheme();
+  const scales = useResponsiveScales();
   const { data } = usePreferredColorSchemeQuery();
   const [scheme, setColorScheme] = useState<NonNullable<ColorSchemeName>>(
     DEFAULT_COLOR_SCHEME
@@ -182,6 +215,7 @@ const ThemeProvider: React.FunctionComponent<{
     <Context.Provider
       value={{
         ...base,
+        scales,
         colors: colors[forceColorSchemeTo || scheme],
         typography: {
           body: Object.assign({}, base.typography.body, {
