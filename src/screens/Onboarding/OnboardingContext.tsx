@@ -8,7 +8,7 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { QueryKeys } from "../../shared/QueryKeys";
-import { useAvatarContext } from "../../components/AvatarSelection";
+import { useAvatarContext } from "../../components/AvatarSelection/AvatarSelection";
 
 type OnboardingParamsConfig = {
   OnboardingSlider: undefined;

@@ -5,7 +5,7 @@ import {
   AvatarSelection,
   AvatarSelectionProvider,
   useAvatarContext,
-} from "../components/AvatarSelection";
+} from "../components/AvatarSelection/AvatarSelection";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
 import { NavigationHeader } from "../components/NavigationHeader";

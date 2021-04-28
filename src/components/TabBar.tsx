@@ -3,7 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { lighten, transparentize } from "polished";
 import React, { useCallback, useMemo } from "react";
 import { Pressable, PressableProps, StyleSheet } from "react-native";
-import { Units } from "../foundations/Spacing";
+import { Scales } from "../foundations/Spacing";
 import { useAppContext } from "../providers/AppProvider";
 import {
   FlipColorScheme,
@@ -13,7 +13,7 @@ import {
 import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 
-const CREATE_BUTTON_SIZE: keyof Units = "larger";
+const CREATE_BUTTON_SIZE: keyof Scales = "larger";
 const CREATE_BUTTON_DIMENSION = 1.3;
 
 function TabBar({ navigation, state }: BottomTabBarProps) {

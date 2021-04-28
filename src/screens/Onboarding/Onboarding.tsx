@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AvatarSelection,
   AvatarSelectionProvider,
-} from "../../components/AvatarSelection";
+} from "../../components/AvatarSelection/AvatarSelection";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import {
@@ -100,10 +100,10 @@ function Onboarding() {
       <Frame
         justifyContent="space-between"
         flexDirection="row"
+        alignItems="center"
         paddingHorizontal={paddingHorizontal}
         style={{
-          paddingTop: theme.units.large,
-          paddingBottom: safeArea.bottom + theme.units.medium,
+          paddingBottom: safeArea.bottom + theme.units.larger,
         }}
       >
         <Frame>
