@@ -1,18 +1,16 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Pressable } from "react-native";
-import {
-  AvatarSelection,
-  AvatarSelectionProvider,
-  useAvatarContext,
-} from "../components/AvatarSelection/AvatarSelection";
+import { AvatarSelection } from "../components/AvatarSelection/AvatarSelection";
+import { AvatarSelectionProvider } from "../components/AvatarSelection/components/AvatarSelectionProvider";
+import { useAvatarSelectionContext } from "../components/AvatarSelection/hooks/use-avatar-selection-context";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
 import { NavigationHeader } from "../components/NavigationHeader";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 
 const ChangeAvatar = React.memo(function ChangeAvatar() {
-  const { saveAvatar } = useAvatarContext();
+  const { saveAvatar } = useAvatarSelectionContext();
   return (
     <>
       <NavigationHeader icon="Close">

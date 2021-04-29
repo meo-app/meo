@@ -1,6 +1,6 @@
 import { NavigationProp } from "@react-navigation/native";
 import React, { useMemo } from "react";
-import { ImageBackground, Linking, Pressable, StyleSheet } from "react-native";
+import { ImageBackground, Linking, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { version } from "../../package.json";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
@@ -19,18 +19,7 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
   navigation,
 }) {
   const { paddingHorizontal } = usePaddingHorizontal();
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        root: {
-          paddingHorizontal,
-          flex: 1,
-          justifyContent: "space-between",
-        },
-      }),
-    [paddingHorizontal]
-  );
-
+  const theme = useTheme();
   const { data: posts } = useSQLiteQuery<{ total: number }>({
     queryKey: QueryKeys.TOTAL_OF_POSTS,
     query: "select count(*) as total from posts",
@@ -51,12 +40,18 @@ const Drawer: React.VoidFunctionComponent<Props> = function Drawer({
         flex: 1,
       }}
     >
-      <SafeAreaView style={styles.root}>
+      <SafeAreaView
+        style={{
+          paddingHorizontal,
+          flex: 1,
+          justifyContent: "space-between",
+        }}
+      >
         <Frame>
           <Frame alignItems="center" justifyContent="center" paddingTop="large">
             <Pressable onPress={() => navigation.navigate("ChangeAvatar")}>
               <Frame marginRight="medium" alignItems="center">
-                <UserAvatar size="largest" />
+                <UserAvatar size={theme.scales.largest * 1.8} />
               </Frame>
             </Pressable>
             <Frame marginTop="large" flexDirection="row">

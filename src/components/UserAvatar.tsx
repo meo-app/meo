@@ -7,7 +7,7 @@ import { base64ToImageUrl } from "../shared/image-utils";
 import { useAvatar } from "../storage/avatar";
 
 interface Props {
-  size?: keyof Scales;
+  size?: keyof Scales | number;
 }
 
 const UserAvatar = React.memo<Props>(function UserAvatar({
@@ -16,8 +16,7 @@ const UserAvatar = React.memo<Props>(function UserAvatar({
 }) {
   const { data } = useAvatar();
   const theme = useTheme();
-  const width = theme.scales[size];
-
+  const width = typeof size === "string" ? theme.scales[size] : size;
   const styles = useMemo(
     () =>
       StyleSheet.create({

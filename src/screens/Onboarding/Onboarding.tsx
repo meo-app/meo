@@ -2,10 +2,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import { Image, Pressable, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  AvatarSelection,
-  AvatarSelectionProvider,
-} from "../../components/AvatarSelection/AvatarSelection";
+import { AvatarSelection } from "../../components/AvatarSelection/AvatarSelection";
+import { AvatarSelectionProvider } from "../../components/AvatarSelection/components/AvatarSelectionProvider";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import {

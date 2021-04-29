@@ -9,14 +9,14 @@ import { QueryKeys } from "../../../shared/QueryKeys";
 import { Frame } from "../../Frame";
 import { Icon } from "../../Icon/Icon";
 import { useAvatarSelectionContext } from "../hooks/use-avatar-selection-context";
-import { useAvatarSize } from "../hooks/use-avatar-size";
+import { useAvatarSelectionSize } from "../hooks/use-avatar-selection-size";
 import { pickImageQuery } from "../queries/pick-image-query";
 
 function AvatarUploadButton() {
   const theme = useTheme();
   const { photo, setAvatarId, setSelectedPhoto } = useAvatarSelectionContext();
   const [isImagePickerOpened, setImagePickerOpen] = useState(false);
-  const size = useAvatarSize();
+  const size = useAvatarSelectionSize();
 
   // TODO: simplify it without a query
   useQuery<{

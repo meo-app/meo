@@ -10,12 +10,12 @@ import {
 import { Frame } from "../Frame";
 import { AvatarUploadButton } from "./components/AvatarUploadButton";
 import { useAvatarSelectionContext } from "./hooks/use-avatar-selection-context";
-import { useAvatarSize } from "./hooks/use-avatar-size";
+import { useAvatarSelectionSize } from "./hooks/use-avatar-selection-size";
 
 const data = [...AVATARS_LIST, { id: AvatarIds.__USER_PHOTO__ }];
 const AvatarSelection = React.memo(function AvatarSelection() {
   const theme = useTheme();
-  const size = useAvatarSize();
+  const size = useAvatarSelectionSize();
   const { setAvatarId, avatarId } = useAvatarSelectionContext();
 
   const renderItem = useCallback<ListRenderItem<DefaultAvatar>>(
