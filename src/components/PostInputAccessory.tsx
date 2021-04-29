@@ -1,7 +1,7 @@
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { Frame } from "./Frame";
 import { HashtagSelector } from "./HashtagSelector";
 import { transparentize } from "polished";

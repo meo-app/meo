@@ -6,7 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppProvider } from "./AppProvider";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import { SQLiteProvider } from "./SQLiteProvider";
-import { ThemeProvider, useTheme } from "./Theming";
+import { ThemeProvider, useTheme } from "./Theming/Theming";
 
 const Providers: React.FunctionComponent = function Providers({ children }) {
   return (
@@ -27,6 +27,11 @@ const Providers: React.FunctionComponent = function Providers({ children }) {
     </IntlProvider>
   );
 };
+
+/**
+ * Defines a custom navigatio container so we will set the default background color
+ * to be the same as set on the runtime theme
+ * */
 const CustomNavigationContainer: React.FunctionComponent = function CustomNavigationContainer({
   children,
 }) {

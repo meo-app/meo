@@ -1,8 +1,8 @@
 import {
   Inter_400Regular,
   Inter_500Medium,
-  Inter_700Bold,
   Inter_600SemiBold,
+  Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
 import React, { useContext, useEffect, useState } from "react";
@@ -12,16 +12,16 @@ import {
   StatusBar,
   StatusBarStyle,
   useColorScheme,
-  useWindowDimensions,
 } from "react-native";
-import { Scales } from "../foundations/Spacing";
-import { Theme } from "../foundations/Theme";
-import { Typography } from "../foundations/Typography";
-import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
+import { Theme } from "../../foundations/Theme";
+import { usePreferredColorSchemeQuery } from "../../hooks/use-preferred-color-scheme-query";
+import { assert } from "../../shared/assert";
+import { useResponsiveScales } from "./hooks/use-responsive-scales";
+import { useResponsiveTypography } from "./hooks/use-responsive-typography";
 
 /**
  * TODO:
- * - [ ] Responsive font size
+ * - [x] Responsive font size
  * - [ ] File seems too cluttered, break it down (Theme definition should leave outside of theming provider)
  * - [ ] Finally load fonts on App.tsx
  */
@@ -58,94 +58,6 @@ const dark: Theme["colors"] = {
   foregroundPrimary: "#F2F2F2",
   foregroundSecondary: "#9A99A2",
 };
-
-const HEIGHT_THRESHOLD = 667;
-const REDUCE_SCALES_BY = 0.9;
-const DEFAULT_SCALES: Scales = {
-  smallest: 8,
-  smaller: 16,
-  small: 24,
-  medium: 32,
-  large: 48,
-  larger: 64,
-  largest: 72,
-};
-
-function useBreakpoint() {
-  const { height } = useWindowDimensions();
-  return height < HEIGHT_THRESHOLD;
-}
-
-function useResponsiveScales(): Scales {
-  const breakpoint = useBreakpoint();
-  if (breakpoint) {
-    return {
-      smallest: DEFAULT_SCALES.smallest * REDUCE_SCALES_BY,
-      smaller: DEFAULT_SCALES.smaller * REDUCE_SCALES_BY,
-      small: DEFAULT_SCALES.small * REDUCE_SCALES_BY,
-      medium: DEFAULT_SCALES.medium * REDUCE_SCALES_BY,
-      large: DEFAULT_SCALES.large * REDUCE_SCALES_BY,
-      larger: DEFAULT_SCALES.larger * REDUCE_SCALES_BY,
-      largest: DEFAULT_SCALES.largest * REDUCE_SCALES_BY,
-    };
-  }
-
-  return DEFAULT_SCALES;
-}
-
-const REDUCE_TYPOGRAPHY_BY = 0.87;
-const DEFAULT_TYPOGRAPHY: Typography = {
-  body: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  display: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 24,
-    lineHeight: 28,
-  },
-  subtitle: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 20,
-    lineHeight: 22,
-  },
-  caption: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    lineHeight: 16,
-  },
-  highlight: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 20,
-    lineHeight: 24,
-  },
-  strong: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: "600",
-  },
-};
-
-function useResponsiveTypography(): Typography {
-  const breakpoint = useBreakpoint();
-  if (breakpoint) {
-    return Object.keys(DEFAULT_TYPOGRAPHY).reduce((acc, key) => {
-      const current = key as keyof Typography;
-      return {
-        ...acc,
-        [current]: {
-          ...DEFAULT_TYPOGRAPHY[current],
-          fontSize:
-            (DEFAULT_TYPOGRAPHY[current]?.fontSize || 0) * REDUCE_TYPOGRAPHY_BY,
-        },
-      };
-    }, {} as Typography);
-  }
-
-  return DEFAULT_TYPOGRAPHY;
-}
 
 const base: Pick<Theme, "units" | "constants"> = {
   constants: {
@@ -271,17 +183,8 @@ const ThemeProvider: React.FunctionComponent<{
 
 function useTheme(): Theme {
   const theme = useContext(Context);
-  if (!theme) {
-    throw new Error("Theme not found. Missing <ThemeProvider />?");
-  }
+  assert(theme, "Theme not found. Missing <ThemeProvider />?");
   return theme;
-}
-
-function usePaddingHorizontal() {
-  const theme = useTheme();
-  return {
-    paddingHorizontal: theme.units.medium,
-  };
 }
 
 const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
@@ -308,7 +211,6 @@ const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
 export {
   ThemeProvider,
   useTheme,
-  usePaddingHorizontal,
   FlipColorScheme,
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,

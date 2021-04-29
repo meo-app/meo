@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Image, View, StyleSheet } from "react-native";
 import { Scales } from "../foundations/Spacing";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { AVATARS_LIST } from "../shared/avatars-list";
 import { base64ToImageUrl } from "../shared/image-utils";
 import { useAvatar } from "../storage/avatar";

@@ -4,7 +4,8 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
-import { usePaddingHorizontal, useTheme } from "../../providers/Theming";
+import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
+import { useTheme } from "../../providers/Theming/Theming";
 
 const Indicators: React.FunctionComponent<{
   length: number;

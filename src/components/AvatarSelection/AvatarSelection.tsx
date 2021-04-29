@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Image, ListRenderItem, Pressable, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useTheme } from "../../providers/Theming";
+import { useTheme } from "../../providers/Theming/Theming";
 import {
   AvatarIds,
   AVATARS_LIST,

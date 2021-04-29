@@ -6,13 +6,13 @@ import { AvatarSelection } from "../../components/AvatarSelection/AvatarSelectio
 import { AvatarSelectionProvider } from "../../components/AvatarSelection/components/AvatarSelectionProvider";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
+import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
 import {
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,
   ThemeProvider,
-  usePaddingHorizontal,
   useTheme,
-} from "../../providers/Theming";
+} from "../../providers/Theming/Theming";
 import { useCompleteOnboarding } from "../../storage/onboarding";
 import {
   OnboardingNavigationProvider,

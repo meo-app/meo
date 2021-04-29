@@ -1,7 +1,7 @@
 import { opacify } from "polished";
 import React, { useMemo, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { Font } from "./Font";
 
 const HEIGHT = 160;

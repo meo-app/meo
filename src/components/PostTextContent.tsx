@@ -1,7 +1,7 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import Autolink from "react-native-autolink";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { HASHTAG_REGEX } from "../shared/hashtag-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Font } from "./Font";

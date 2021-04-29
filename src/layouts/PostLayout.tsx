@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { NativeMethods, Pressable } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { useTextCaretWord } from "../hooks/use-text-caret-word";
-import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import { TextInput } from "react-native-gesture-handler";
 import { Font } from "../components/Font";
 import { Frame } from "../components/Frame";
 import { NavigationHeader } from "../components/NavigationHeader";
 import { PostInputAccessory } from "../components/PostInputAccessory";
 import { PostTextContent } from "../components/PostTextContent";
+import { useTextCaretWord } from "../hooks/use-text-caret-word";
+import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
+import { useTheme } from "../providers/Theming/Theming";
 
 interface Props {
   text: string;
