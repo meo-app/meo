@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { Scales } from "../foundations/Spacing";
 import { Theme } from "../foundations/Theme";
+import { Typography } from "../foundations/Typography";
 import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 
 /**
@@ -58,6 +59,8 @@ const dark: Theme["colors"] = {
   foregroundSecondary: "#9A99A2",
 };
 
+const HEIGHT_THRESHOLD = 667;
+const REDUCE_SCALES_BY = 0.9;
 const DEFAULT_SCALES: Scales = {
   smallest: 8,
   smaller: 16,
@@ -65,16 +68,16 @@ const DEFAULT_SCALES: Scales = {
   medium: 32,
   large: 48,
   larger: 64,
-  largest: 128,
+  largest: 72,
 };
 
-const HEIGHT_THRESHOLD = 667;
-
-const REDUCE_SCALES_BY = 0.9;
-function useResponsiveScales(): Scales {
+function useBreakpoint() {
   const { height } = useWindowDimensions();
-  const breakpoint = height < HEIGHT_THRESHOLD;
+  return height < HEIGHT_THRESHOLD;
+}
 
+function useResponsiveScales(): Scales {
+  const breakpoint = useBreakpoint();
   if (breakpoint) {
     return {
       smallest: DEFAULT_SCALES.smallest * REDUCE_SCALES_BY,
@@ -90,7 +93,61 @@ function useResponsiveScales(): Scales {
   return DEFAULT_SCALES;
 }
 
-const base: Pick<Theme, "typography" | "units" | "constants"> = {
+const REDUCE_TYPOGRAPHY_BY = 0.87;
+const DEFAULT_TYPOGRAPHY: Typography = {
+  body: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  display: {
+    fontFamily: "Inter_700Bold",
+    fontSize: 24,
+    lineHeight: 28,
+  },
+  subtitle: {
+    fontFamily: "Inter_700Bold",
+    fontSize: 20,
+    lineHeight: 22,
+  },
+  caption: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  highlight: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 20,
+    lineHeight: 24,
+  },
+  strong: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "600",
+  },
+};
+
+function useResponsiveTypography(): Typography {
+  const breakpoint = useBreakpoint();
+  if (breakpoint) {
+    return Object.keys(DEFAULT_TYPOGRAPHY).reduce((acc, key) => {
+      const current = key as keyof Typography;
+      return {
+        ...acc,
+        [current]: {
+          ...DEFAULT_TYPOGRAPHY[current],
+          fontSize:
+            (DEFAULT_TYPOGRAPHY[current]?.fontSize || 0) * REDUCE_TYPOGRAPHY_BY,
+        },
+      };
+    }, {} as Typography);
+  }
+
+  return DEFAULT_TYPOGRAPHY;
+}
+
+const base: Pick<Theme, "units" | "constants"> = {
   constants: {
     borderRadius: 12,
     absoluteRadius: 999,
@@ -114,39 +171,6 @@ const base: Pick<Theme, "typography" | "units" | "constants"> = {
     large: 24,
     larger: 36,
     largest: 48,
-  },
-  typography: {
-    body: {
-      fontFamily: "Inter_400Regular",
-      fontSize: 16,
-      lineHeight: 22,
-    },
-    display: {
-      fontFamily: "Inter_700Bold",
-      fontSize: 24,
-      lineHeight: 28,
-    },
-    subtitle: {
-      fontFamily: "Inter_700Bold",
-      fontSize: 20,
-      lineHeight: 22,
-    },
-    caption: {
-      fontFamily: "Inter_400Regular",
-      fontSize: 12,
-      lineHeight: 16,
-    },
-    highlight: {
-      fontFamily: "Inter_400Regular",
-      fontSize: 20,
-      lineHeight: 24,
-    },
-    strong: {
-      fontFamily: "Inter_600SemiBold",
-      fontSize: 16,
-      lineHeight: 22,
-      fontWeight: "600",
-    },
   },
 };
 
@@ -173,6 +197,7 @@ const ThemeProvider: React.FunctionComponent<{
 }) {
   const systemColorScheme = useColorScheme();
   const scales = useResponsiveScales();
+  const typography = useResponsiveTypography();
   const { data } = usePreferredColorSchemeQuery();
   const [scheme, setColorScheme] = useState<NonNullable<ColorSchemeName>>(
     DEFAULT_COLOR_SCHEME
@@ -218,22 +243,22 @@ const ThemeProvider: React.FunctionComponent<{
         scales,
         colors: colors[forceColorSchemeTo || scheme],
         typography: {
-          body: Object.assign({}, base.typography.body, {
+          body: Object.assign({}, typography.body, {
             color: foregroundPrimary,
           }),
-          highlight: Object.assign({}, base.typography.highlight, {
+          highlight: Object.assign({}, typography.highlight, {
             color: foregroundPrimary,
           }),
-          display: Object.assign({}, base.typography.display, {
+          display: Object.assign({}, typography.display, {
             color: foregroundPrimary,
           }),
-          caption: Object.assign({}, base.typography.caption, {
+          caption: Object.assign({}, typography.caption, {
             color: foregroundPrimary,
           }),
-          subtitle: Object.assign({}, base.typography.subtitle, {
+          subtitle: Object.assign({}, typography.subtitle, {
             color: foregroundPrimary,
           }),
-          strong: Object.assign({}, base.typography.strong, {
+          strong: Object.assign({}, typography.strong, {
             color: foregroundPrimary,
           }),
         },

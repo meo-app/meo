@@ -7,8 +7,8 @@ import {
 } from "@react-navigation/native";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
+import { useAvatarSelectionContext } from "../../components/AvatarSelection/hooks/use-avatar-selection-context";
 import { QueryKeys } from "../../shared/QueryKeys";
-import { useAvatarContext } from "../../components/AvatarSelection/AvatarSelection";
 
 type OnboardingParamsConfig = {
   OnboardingSlider: undefined;
@@ -44,7 +44,7 @@ const routes: (keyof OnboardingParamsConfig)[] = [
 const OnboardingNavigationProvider: React.FunctionComponent = function OnboardingNavigationProvider({
   children,
 }) {
-  const { disabled, saveAvatar } = useAvatarContext();
+  const { disabled, saveAvatar } = useAvatarSelectionContext();
   const navigationRef = useRef<NavigationContainerRef>(null);
   const [index, setIndex] = useState(0);
   const client = useQueryClient();
