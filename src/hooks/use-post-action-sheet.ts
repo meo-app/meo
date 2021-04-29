@@ -1,7 +1,7 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useCallback, useMemo } from "react";
 import Share from "react-native-share";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { useDeletePost } from "./use-delete-post";
 import { useDeletePostAlert } from "./use-delete-post-alert";
 import RNHapticFeedback from "react-native-haptic-feedback";

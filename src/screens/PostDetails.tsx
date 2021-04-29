@@ -17,11 +17,12 @@ import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useEditPost } from "../hooks/use-edit-post";
 import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { timestampToDate } from "../shared/date-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Post } from "../shared/SQLiteEntities";
+import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
 
 const PostDetails = React.memo(function PostDetails() {
   const {

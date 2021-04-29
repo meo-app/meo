@@ -13,7 +13,7 @@ import SplashScreen from "react-native-bootsplash";
 import { Drawer } from "./components/Drawer";
 import { TabBar } from "./components/TabBar";
 import { Providers } from "./providers/Providers";
-import { useTheme } from "./providers/Theming";
+import { useTheme } from "./providers/Theming/Theming";
 import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
 import { ChangeAvatar } from "./screens/ChangeAvatar";
 import { Create } from "./screens/Create";

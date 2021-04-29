@@ -15,7 +15,8 @@ import { useCreatePost } from "../hooks/use-create-post";
 import { useFlushDatabase } from "../hooks/use-flush-database";
 import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
-import { usePaddingHorizontal, useTheme } from "../providers/Theming";
+import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
+import { useTheme } from "../providers/Theming/Theming";
 import {
   PreferredColorSchemeTypes,
   PREFERRED_COLOR_SCHEME_STORAGE_VERSION,

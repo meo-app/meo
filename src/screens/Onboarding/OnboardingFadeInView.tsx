@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
 import { useDebounceValue } from "../../hooks/use-debounce-value";
-import { useTheme } from "../../providers/Theming";
+import { useTheme } from "../../providers/Theming/Theming";
 import { useOnboardingContext } from "./OnboardingContext";
 
 const duration = {

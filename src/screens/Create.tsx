@@ -14,7 +14,7 @@ import { Frame } from "../components/Frame";
 import { PostLayout } from "../layouts/PostLayout";
 import { UserAvatar } from "../components/UserAvatar";
 import { useCreatePost } from "../hooks/use-create-post";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 
 function Create() {

@@ -1,4 +1,4 @@
-import { useTheme } from "../../../providers/Theming";
+import { useTheme } from "../../../providers/Theming/Theming";
 
 function useAvatarSelectionSize() {
   const theme = useTheme();

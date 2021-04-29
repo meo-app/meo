@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TextStyle } from "react-native";
 import { Typography } from "../foundations/Typography";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 import { Colors } from "../foundations/Colors";
 import { SpacingProps, useFrame } from "./Frame";
 

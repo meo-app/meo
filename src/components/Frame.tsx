@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from "react";
 import { FlexStyle, StyleProp, View, ViewStyle } from "react-native";
 import { Colors } from "../foundations/Colors";
 import { Scales, Units } from "../foundations/Spacing";
-import { useTheme } from "../providers/Theming";
+import { useTheme } from "../providers/Theming/Theming";
 
 type Value = keyof Units | "none";
 type Spacing =

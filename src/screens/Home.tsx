@@ -46,7 +46,7 @@ function Home() {
         <Frame flex={1 / 2} justifyContent="center" alignItems="center">
           <Font variant="subtitle">Thought of something?</Font>
           <Frame marginTop="small">
-            <Pressable onPress={() => navigate("Create")}>
+            <Pressable onPress={() => navigate("Create", {})}>
               <Font color="primary">Add it here</Font>
             </Pressable>
           </Frame>
