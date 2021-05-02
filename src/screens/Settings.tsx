@@ -1,4 +1,5 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import Share from "react-native-share";
 import { LoremIpsum } from "lorem-ipsum";
 import { transparentize } from "polished";
 import React, { useEffect, useMemo } from "react";
@@ -15,8 +16,11 @@ import { useCreatePost } from "../hooks/use-create-post";
 import { useFlushDatabase } from "../hooks/use-flush-database";
 import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
+import { useUploadBackup } from "../hooks/use-upload-posts";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
 import { useTheme } from "../providers/Theming/hooks/use-theme";
+import * as FileSystem from "expo-file-system";
+import DocumentPicker from "react-native-document-picker";
 import {
   PreferredColorSchemeTypes,
   PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
@@ -79,6 +83,8 @@ function Settings() {
     isLoading: isCreatingDummyPosts,
   } = useCreatDummyPosts();
 
+  const { mutate: uploadBackup } = useUploadBackup();
+
   return (
     <Frame flex={1} backgroundColor="background">
       <Modal
@@ -132,6 +138,63 @@ function Settings() {
           <Button
             title="Source"
             onPress={() => Linking.openURL("https://github.com/meo-app/meo")}
+          />
+          <Title text="My Data" />
+          <Button
+            title="Upload backup"
+            onPress={async () => {
+              // Create if not exist
+              // await FileSystem.readAsStringAsync(
+              //   `${FileSystem.documentDirectory}/meo.backup`,
+              //   {
+              //     encoding: FileSystem.EncodingType.UTF8,
+              //   }
+              // );
+
+              const document = await DocumentPicker.pick({
+                type: DocumentPicker.types.allFiles,
+                mode: "open",
+              });
+
+              const result = await FileSystem.readAsStringAsync(
+                document.fileCopyUri,
+                {
+                  encoding: FileSystem.EncodingType.UTF8,
+                }
+              );
+
+              // console.log(JSON.parse(result));
+
+              await uploadBackup(JSON.parse(result));
+              Alert.alert("Done");
+            }}
+          />
+          <Button
+            title="download backup"
+            onPress={async () => {
+              const fileUri = `${FileSystem.documentDirectory}/meo.backup`;
+              await FileSystem.writeAsStringAsync(
+                fileUri,
+                JSON.stringify([
+                  {
+                    timestamp: "2021-05-02 18:44:02",
+                    value: "I am a post from the backup file #backup 🗄",
+                  },
+                ]),
+                {
+                  encoding: FileSystem.EncodingType.UTF8,
+                }
+              );
+
+              Share.open({
+                url: `${FileSystem.documentDirectory}/meo.backup`,
+              });
+              // await FileSystem.readAsStringAsync(
+
+              // )
+
+              console.log({ result });
+            }}
           />
           <ThemeSection />
           {isDeveloper && (
