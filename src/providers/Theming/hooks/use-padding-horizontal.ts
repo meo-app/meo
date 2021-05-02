@@ -1,4 +1,4 @@
-import { useTheme } from "../Theming";
+import { useTheme } from "./use-theme";
 
 /**
  * Defines the horizontal padding used across

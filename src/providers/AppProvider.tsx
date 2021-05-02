@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { assert } from "../shared/assert";
+import assert from "assert";
 
 const Context = React.createContext<{
   tabBarHeight: number;

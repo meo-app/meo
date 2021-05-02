@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { Font } from "./Font";
 import { Frame } from "./Frame";
 import { Header } from "./Header";

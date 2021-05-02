@@ -2,7 +2,7 @@ import { transparentize } from "polished";
 import React, { useState, useMemo } from "react";
 import { ImageBackground, Pressable, StyleSheet } from "react-native";
 import { useQuery } from "react-query";
-import { useTheme } from "../../../providers/Theming/Theming";
+import { useTheme } from "../../../providers/Theming/hooks/use-theme";
 import { AvatarIds } from "../../../shared/avatars-list";
 import { base64ToImageUrl } from "../../../shared/image-utils";
 import { QueryKeys } from "../../../shared/QueryKeys";

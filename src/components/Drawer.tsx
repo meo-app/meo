@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { version } from "../../package.json";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";

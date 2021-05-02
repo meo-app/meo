@@ -7,11 +7,11 @@ import { AvatarSelectionProvider } from "../../components/AvatarSelection/compon
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
+import { useTheme } from "../../providers/Theming/hooks/use-theme";
 import {
   STATUSBAR_BACKGROUND_COLOR,
   STATUS_BAR_SCHEME_MAP,
   ThemeProvider,
-  useTheme,
 } from "../../providers/Theming/Theming";
 import { useCompleteOnboarding } from "../../storage/onboarding";
 import {

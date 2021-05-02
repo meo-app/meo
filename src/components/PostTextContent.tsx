@@ -1,10 +1,12 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
 import Autolink from "react-native-autolink";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { HASHTAG_REGEX } from "../shared/hashtag-utils";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Font } from "./Font";
+
+// TODO: Remove patch-package and update react-native-autolink
 
 const PostTextContent = React.memo(function PostTextContent({
   value,

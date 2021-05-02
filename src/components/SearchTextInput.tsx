@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 const SearchTextInput = React.forwardRef<
   TextInput,

@@ -1,8 +1,8 @@
 import React from "react";
 import { ICONS } from "./SVGIconProps";
-import { useTheme } from "../../providers/Theming/Theming";
 import { Scales } from "../../foundations/Spacing";
 import { Colors } from "../../foundations/Colors";
+import { useTheme } from "../../providers/Theming/hooks/use-theme";
 
 export interface Props {
   type: keyof typeof ICONS;

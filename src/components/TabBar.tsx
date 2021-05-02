@@ -5,8 +5,9 @@ import React, { useCallback, useMemo } from "react";
 import { Pressable, PressableProps, StyleSheet } from "react-native";
 import { Scales } from "../foundations/Spacing";
 import { useAppContext } from "../providers/AppProvider";
+import { FlipColorScheme } from "../providers/Theming/components/FlipColorScheme";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { FlipColorScheme, useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { Frame, useFrame } from "./Frame";
 import { Icon } from "./Icon/Icon";
 

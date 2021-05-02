@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { InfiniteData } from "react-query";
 import { usePostActionSheet } from "../hooks/use-post-action-sheet";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { Post } from "../shared/SQLiteEntities";
 import { Frame } from "./Frame";

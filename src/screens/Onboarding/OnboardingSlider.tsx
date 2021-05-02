@@ -5,7 +5,7 @@ import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { Picture } from "../../components/Picture";
 import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../../providers/Theming/Theming";
+import { useTheme } from "../../providers/Theming/hooks/use-theme";
 
 const Indicators: React.FunctionComponent<{
   length: number;

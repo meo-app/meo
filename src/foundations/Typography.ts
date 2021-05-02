@@ -1,10 +1,14 @@
-import { TextStyle } from "react-native";
+import { TextStyle as RNTextStyle } from "react-native";
 
-export interface Typography {
-  display: TextStyle;
-  body: TextStyle;
-  caption: TextStyle;
-  subtitle: TextStyle;
-  highlight: TextStyle;
-  strong: TextStyle;
+type TextStyle<TFonts extends string> = RNTextStyle & {
+  fontFamily: TFonts;
+};
+
+export interface Typography<TFonts extends string> {
+  display: TextStyle<TFonts>;
+  body: TextStyle<TFonts>;
+  caption: TextStyle<TFonts>;
+  subtitle: TextStyle<TFonts>;
+  highlight: TextStyle<TFonts>;
+  strong: TextStyle<TFonts>;
 }

@@ -1,12 +1,13 @@
 import React from "react";
 import { Text, TextStyle } from "react-native";
-import { Typography } from "../foundations/Typography";
-import { useTheme } from "../providers/Theming/Theming";
 import { Colors } from "../foundations/Colors";
+import { Typography } from "../foundations/Typography";
+import { APP_FONTS } from "../providers/Theming/app-theme-definition";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { SpacingProps, useFrame } from "./Frame";
 
 interface Props extends React.ComponentProps<typeof Text> {
-  variant?: keyof Typography;
+  variant?: keyof Typography<keyof typeof APP_FONTS>;
   color?: keyof Colors;
   textAlign?: TextStyle["textAlign"];
 }
