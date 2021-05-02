@@ -1,10 +1,8 @@
 import React from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { Frame } from "./Frame";
 import { HashtagSelector } from "./HashtagSelector";
-import { transparentize } from "polished";
-import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 interface Props extends React.ComponentProps<typeof HashtagSelector> {
   children?: React.ReactNode;
@@ -19,28 +17,18 @@ const PostInputAccessory = React.memo<Props>(function PostInputAccessory({
   const theme = useTheme();
   return (
     <>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.8 }}
-        colors={[
-          transparentize(1, theme.colors.background),
-          theme.colors.background,
-        ]}
-        style={{
-          height: theme.scales.smaller,
-          width: "100%",
-          top: -theme.scales.smaller,
-        }}
-      />
       <KeyboardAvoidingView
         behavior="padding"
         enabled
         keyboardVerticalOffset={0}
         style={{
           flex: 1 / 5,
-          height: 100,
+          minHeight: theme.units.largest,
           width: "100%",
           paddingBottom: theme.units.large,
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Frame

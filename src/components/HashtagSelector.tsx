@@ -5,7 +5,6 @@ import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";
 
@@ -22,7 +21,6 @@ function HashtagSelector({
   caretWord: ReturnType<typeof useTextCaretWord>["caretWord"];
   onHashtagSelected: (text: string) => void;
 }) {
-  const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
   const { data: result } = useSQLiteQuery<QueryResult>({
     queryKey: [QueryKeys.SEARCH_HASHTAGS, caretWord?.word || null],
@@ -41,21 +39,20 @@ function HashtagSelector({
       horizontal
       directionalLockEnabled
       keyboardShouldPersistTaps="handled"
+      disableIntervalMomentum
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        minHeight: theme.scales.larger,
-        alignItems: "center",
-        width: "100%",
-        flex: 1,
-      }}
+      showsHorizontalScrollIndicator={false}
     >
       {data?.map((item) => (
         <Pressable
           key={item.value}
           style={({ pressed }) => ({
             opacity: pressed ? 0.5 : 1,
-            paddingVertical: theme.units.medium,
             paddingHorizontal: paddingHorizontal,
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
           })}
           onPress={() => {
             let nextContext = text.split("");
@@ -79,9 +76,15 @@ function HashtagSelector({
                *
                * - start of text
                * - * ~ new hashtag ~ *
+               * - space -
                * - end of text
                */
-              nextContext = [...nextContext, ...item.value.split(""), ...end];
+              nextContext = [
+                ...nextContext,
+                ...item.value.split(""),
+                ...(end[0] === " " ? "" : " "),
+                ...end,
+              ];
               onHashtagSelected(nextContext.join(""));
             }
           }}
