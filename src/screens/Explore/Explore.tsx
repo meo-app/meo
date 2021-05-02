@@ -34,7 +34,7 @@ import { usePaginatedPosts } from "../../hooks/use-paginated-posts";
 import { useSQLiteQuery } from "../../hooks/use-sqlite-query";
 import { useAppContext } from "../../providers/AppProvider";
 import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../../providers/Theming/Theming";
+import { useTheme } from "../../providers/Theming/hooks/use-theme";
 import { NavigationParamsConfig } from "../../shared/NavigationParamsConfig";
 import { QueryKeys } from "../../shared/QueryKeys";
 import { useSearchInputAnimation } from "./hooks/use-search-input-animation";
@@ -239,7 +239,7 @@ function Explore() {
         </Header>
       </Animated.View>
       {Boolean(!hashtags?.length) && mode === "explore" && (
-        <Frame flex={1 / 2} justifyContent="center" alignItems="center">
+        <Frame flex={1} justifyContent="center" alignItems="center">
           <Font variant="subtitle">Hashtags shows up here</Font>
           <Font variant="body" marginTop="small">
             Tag any post to start

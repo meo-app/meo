@@ -11,17 +11,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert, NativeMethods } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Frame } from "../components/Frame";
-import { PostLayout } from "../layouts/PostLayout";
 import { UserAvatar } from "../components/UserAvatar";
 import { useCreatePost } from "../hooks/use-create-post";
-import { useTheme } from "../providers/Theming/Theming";
+import { PostLayout } from "../layouts/PostLayout";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 
 function Create() {
   const params = useRoute<RouteProp<NavigationParamsConfig, "Create">>().params;
   const ref = useRef<(TextInput & NativeMethods) | null>(null);
   const [text, changeText] = useState(params?.initialTextContent || "");
-  const theme = useTheme();
   const navigation = useNavigation<NavigationProp<NavigationParamsConfig>>();
   const { mutate: createPost, status } = useCreatePost({
     onSuccess: () => {

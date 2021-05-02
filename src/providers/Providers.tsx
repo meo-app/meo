@@ -6,7 +6,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppProvider } from "./AppProvider";
 import { ReactQueryProvider } from "./ReactQueryProvider";
 import { SQLiteProvider } from "./SQLiteProvider";
-import { ThemeProvider, useTheme } from "./Theming/Theming";
+import { useTheme } from "./Theming/hooks/use-theme";
+import { ThemeProvider } from "./Theming/Theming";
 
 const Providers: React.FunctionComponent = function Providers({ children }) {
   return (

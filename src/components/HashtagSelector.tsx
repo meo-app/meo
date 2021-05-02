@@ -5,7 +5,7 @@ import { useDebounceValue } from "../hooks/use-debounce-value";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { QueryKeys } from "../shared/QueryKeys";
 import { Font } from "./Font";
 

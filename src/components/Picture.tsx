@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { View, ViewStyle } from "react-native";
 import FastImage, { Source } from "react-native-fast-image";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 type ResizeMode = "cover" | "contain" | "stretch" | "center";
 type MediaOrientation = "portrait" | "landscape";

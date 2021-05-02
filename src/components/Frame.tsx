@@ -1,9 +1,8 @@
-import { ThemeProvider } from "@react-navigation/native";
 import React, { useCallback, useMemo } from "react";
 import { FlexStyle, StyleProp, View, ViewStyle } from "react-native";
 import { Colors } from "../foundations/Colors";
 import { Scales, Units } from "../foundations/Spacing";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 type Value = keyof Units | "none";
 type Spacing =
@@ -93,11 +92,9 @@ const Frame: React.FunctionComponent<
   );
 });
 
-const DEBUG_TRACE_STYLES: ViewStyle = {
-  borderStyle: "dashed",
-  borderWidth: 1,
-  borderColor: "red",
-};
+const DEBUG_TRACE_STYLES: ViewStyle = __DEV__
+  ? { borderStyle: "dashed", borderWidth: 1, borderColor: "red" }
+  : {};
 
 function useFrame({
   justifyContent,

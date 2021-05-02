@@ -1,20 +1,24 @@
+import { useFonts } from "@expo-google-fonts/inter";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  getFocusedRouteNameFromRoute,
+  NavigationProp,
+} from "@react-navigation/native";
 import {
   CardStyleInterpolators,
   createStackNavigator,
 } from "@react-navigation/stack";
 import "intl";
 import "intl/locale-data/jsonp/en";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Platform } from "react-native";
 import SplashScreen from "react-native-bootsplash";
 import { Drawer } from "./components/Drawer";
 import { TabBar } from "./components/TabBar";
 import { Providers } from "./providers/Providers";
-import { useTheme } from "./providers/Theming/Theming";
-import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
+import { APP_FONTS } from "./providers/Theming/app-theme-definition";
+import { useTheme } from "./providers/Theming/hooks/use-theme";
 import { ChangeAvatar } from "./screens/ChangeAvatar";
 import { Create } from "./screens/Create";
 import { Explore } from "./screens/Explore/Explore";
@@ -23,8 +27,8 @@ import { Home } from "./screens/Home";
 import { Onboarding } from "./screens/Onboarding/Onboarding";
 import { PostDetails } from "./screens/PostDetails";
 import { Settings } from "./screens/Settings";
+import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
 import { useHasSeenOnboarding } from "./storage/onboarding";
-import { NavigationProp } from "@react-navigation/native";
 
 const TabsNavigator = createBottomTabNavigator();
 const DrawerNavigator = createDrawerNavigator<NavigationParamsConfig>();
@@ -114,6 +118,13 @@ const ENABLE_DRAWER_SWIPE_ROUTE: TabRoutes[] = ["Explore", "Home"];
 function Root() {
   const theme = useTheme();
   const { data, isLoading } = useHasSeenOnboarding();
+
+  useEffect(() => {
+    if (!isLoading) {
+      SplashScreen.hide({ fade: true });
+    }
+  }, [isLoading]);
+
   if (isLoading) {
     return null;
   }
@@ -124,6 +135,7 @@ function Root() {
 
   return (
     <DrawerNavigator.Navigator
+      drawerStyle={{ backgroundColor: theme.colors.background }}
       screenOptions={({ route }) => {
         const routeName = getFocusedRouteNameFromRoute(route);
         return {
@@ -132,7 +144,6 @@ function Root() {
           ),
         };
       }}
-      drawerStyle={{ backgroundColor: theme.colors.background }}
       drawerContent={({ navigation }) => (
         <Drawer
           navigation={
@@ -147,9 +158,13 @@ function Root() {
 }
 
 const App: React.FunctionComponent = function App() {
-  SplashScreen.hide({
-    fade: true,
-  });
+  /**
+   * Fonts needs to be loaded before anything renders
+   */
+  const [areFontsLoaded] = useFonts(APP_FONTS);
+  if (!areFontsLoaded) {
+    return null;
+  }
   return (
     <Providers>
       <Root />

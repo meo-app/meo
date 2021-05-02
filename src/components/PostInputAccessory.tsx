@@ -1,10 +1,10 @@
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
-import { useTheme } from "../providers/Theming/Theming";
 import { Frame } from "./Frame";
 import { HashtagSelector } from "./HashtagSelector";
 import { transparentize } from "polished";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 interface Props extends React.ComponentProps<typeof HashtagSelector> {
   children?: React.ReactNode;

@@ -16,7 +16,7 @@ import { CreateButton } from "../components/TabBar";
 import { usePaginatedPosts } from "../hooks/use-paginated-posts";
 import { useResetScroll } from "../hooks/use-reset-scroll";
 import { useAppContext } from "../providers/AppProvider";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import { NavigationParamsConfig } from "../shared/NavigationParamsConfig";
 import { QueryKeys } from "../shared/QueryKeys";
 

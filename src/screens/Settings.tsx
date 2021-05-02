@@ -16,7 +16,7 @@ import { useFlushDatabase } from "../hooks/use-flush-database";
 import { usePreferredColorSchemeQuery } from "../hooks/use-preferred-color-scheme-query";
 import { useSQLiteQuery } from "../hooks/use-sqlite-query";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 import {
   PreferredColorSchemeTypes,
   PREFERRED_COLOR_SCHEME_STORAGE_VERSION,

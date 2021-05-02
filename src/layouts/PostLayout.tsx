@@ -8,7 +8,7 @@ import { PostInputAccessory } from "../components/PostInputAccessory";
 import { PostTextContent } from "../components/PostTextContent";
 import { useTextCaretWord } from "../hooks/use-text-caret-word";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
-import { useTheme } from "../providers/Theming/Theming";
+import { useTheme } from "../providers/Theming/hooks/use-theme";
 
 interface Props {
   text: string;

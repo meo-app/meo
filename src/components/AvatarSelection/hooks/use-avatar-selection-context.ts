@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { assert } from "../../../shared/assert";
+import assert from "assert";
 import { AvatarSelectionContext } from "../components/AvatarSelectionProvider";
 
 function useAvatarSelectionContext() {
