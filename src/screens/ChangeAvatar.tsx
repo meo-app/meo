@@ -14,7 +14,7 @@ const ChangeAvatar = React.memo(function ChangeAvatar() {
   return (
     <>
       <NavigationHeader icon="Close">
-        <Frame alignItems="flex-end">
+        <Frame alignItems="flex-end" style={{ width: "100%" }}>
           <Pressable>
             <Font
               variant="body"

@@ -36,7 +36,8 @@ function NavigationHeader({
         },
         root: {
           paddingHorizontal,
-          paddingBottom: theme.units.large,
+          paddingBottom: theme.units.medium,
+          paddingTop: theme.units.medium,
           display: "flex",
         },
       }),
@@ -92,7 +93,7 @@ function NavigationHeader({
   return (
     <Frame style={styles.root}>
       <Frame style={styles.spacer} />
-      <Frame>
+      <Frame alignItems="center" flexDirection="row">
         {back}
         {content}
       </Frame>

@@ -147,6 +147,7 @@ function Settings() {
               />
             </>
           )}
+          <Frame height="largest" />
         </ScrollView>
       </Frame>
     </Frame>
@@ -158,7 +159,7 @@ const Title = React.memo<{ text: string }>(function Title({ text }) {
   return (
     <Font
       variant="caption"
-      marginTop="large"
+      marginTop="larger"
       marginBottom="medium"
       color="foregroundSecondary"
       paddingHorizontal={paddingHorizontal}
@@ -316,7 +317,7 @@ function useRowStyles() {
     paddingHorizontal,
     alignItems: "center",
     flexDirection: "row",
-    paddingVertical: "large",
+    paddingVertical: "medium",
     backgroundColor: "background",
     justifyContent: "space-between",
   });
