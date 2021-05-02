@@ -6,7 +6,7 @@ PODS:
     - UMCore
   - EXErrorRecovery (1.1.0):
     - UMCore
-  - EXFileSystem (8.1.0):
+  - EXFileSystem (11.0.2):
     - UMCore
     - UMFileSystemInterface
   - EXFont (8.4.0):
@@ -234,6 +234,8 @@ PODS:
   - React-jsinspector (0.63.4)
   - react-native-cameraroll (4.0.1):
     - React
+  - react-native-document-picker (5.0.3):
+    - React-Core
   - react-native-safe-area-context (3.1.9):
     - React-Core
   - react-native-viewpager (4.2.2):
@@ -381,6 +383,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -486,6 +489,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-community/cameraroll"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-viewpager:
@@ -568,7 +573,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXConstants: 5304709b1bea70a4828f48ba4c7fc3ec3b2d9b17
   EXErrorRecovery: 8f4c21ab2f51bf75defe4536f841a37de59b0661
-  EXFileSystem: cf4232ba7c62dc49b78c2d36005f97b6fddf0b01
+  EXFileSystem: dcf2273f49431e5037347c733a2dc5d08e0d0a9e
   EXFont: 30c64ed8735a180e3f20046e4fdac4ea074d71d3
   EXImageLoader: 5ad6896fa1ef2ee814b551873cbf7a7baccc694a
   EXImagePicker: 4126814cba56cc3dc5e7fc47abce0b263da84609
@@ -595,6 +600,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-cameraroll: 60ba0068826eab1c8d43146191bafd4363ea58a7
+  react-native-document-picker: 2e6ecd112c48215e36431734d902f35201ffab0a
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-viewpager: ea945e2881ce9a4a8bcdc84de4ec65ff23c90f6e
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
