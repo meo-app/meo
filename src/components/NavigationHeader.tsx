@@ -36,7 +36,7 @@ function NavigationHeader({
         },
         root: {
           paddingHorizontal,
-          paddingBottom: theme.units.medium,
+          paddingBottom: theme.units.large,
           paddingTop: theme.units.medium,
           display: "flex",
         },
