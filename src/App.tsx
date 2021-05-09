@@ -26,7 +26,7 @@ import { HashtagViewer } from "./screens/HashtagViewer";
 import { Home } from "./screens/Home";
 import { Onboarding } from "./screens/Onboarding/Onboarding";
 import { PostDetails } from "./screens/PostDetails";
-import { Settings } from "./screens/Settings";
+import { Settings } from "./screens/Settings/Settings";
 import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
 import { useHasSeenOnboarding } from "./storage/onboarding";
 
