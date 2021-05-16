@@ -20,6 +20,7 @@ function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
     mutation: "insert into posts (value) values (?)",
     variables: ({ text }) => [text],
   });
+
   const { mutateAsync: insertPostFromBackup } = useSQLiteMutation<Variables>({
     mutation: "insert into posts (value, timestamp) values (?, ?)",
     variables: ({ text, timestamp }) => [text, timestamp],
@@ -28,9 +29,15 @@ function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
   return useMutation<Data, string, Variables>(
     async ({ text, timestamp }) => {
       const hashtags = extractHashtags(text);
-      const { insertId: postId } = await (timestamp
-        ? insertPostFromBackup({ text, timestamp })
-        : insertPost({ text }));
+
+      let postId: number;
+      if (timestamp) {
+        const { insertId } = await insertPostFromBackup({ text, timestamp });
+        postId = insertId;
+      } else {
+        const { insertId } = await insertPost({ text });
+        postId = insertId;
+      }
 
       await Promise.all(
         hashtags.map((hashtag) =>
@@ -40,6 +47,7 @@ function useCreatePost(options?: UseMutationOptions<Data, string, Variables>) {
           })
         )
       );
+
       return {
         postId,
       };
