@@ -1,12 +1,12 @@
 import * as FileSystem from "expo-file-system";
 import DocumentPicker from "react-native-document-picker";
-import { useMutation } from "react-query";
+import { useMutation, UseMutationOptions } from "react-query";
+import { useCreatePost } from "../../../hooks/use-create-post";
 import { useDB } from "../../../providers/SQLiteProvider";
 import { Post } from "../../../shared/SQLiteEntities";
-import { useCreatePost } from "../../../hooks/use-create-post";
 
 interface Result {
-  skipped: string[];
+  skipped: number;
   inserted: number;
 }
 
@@ -27,51 +27,54 @@ function usePickDocumentMutation() {
   });
 }
 
-function useUploadBackupHandler() {
+function useUploadBackupHandler(options?: UseMutationOptions<Result, string>) {
   const db = useDB();
   const { mutateAsync: createPost } = useCreatePost();
   const { mutateAsync: pickDocument } = usePickDocumentMutation();
 
   return useMutation<Result, string>(async () => {
-    const posts = await pickDocument();
+    const backup = await pickDocument();
     const result: Result = {
-      skipped: [],
+      skipped: 0,
       inserted: 0,
     };
-    for (const post of posts) {
-      /**
-       * If the post has been inserted in the past / or if there is a post with the
-       * exact same content we are going to skip it
-       */
-      const hasBeenInserted = await new Promise((resolve, reject) =>
-        db.transaction(
-          (tx) =>
-            tx.executeSql(
-              `select id from posts where value = "${post.value}" collate nocase`,
-              [],
-              (_, { rows }) => resolve(Boolean(rows.length))
-            ),
-          (err) => {
-            console.log("Error!", { err });
-            reject(err);
-          }
-        )
+
+    const posts = await new Promise<Post[]>((resolve, reject) => {
+      db.transaction(
+        (tx) => {
+          tx.executeSql("select * from posts", [], (_, { rows }) => {
+            resolve(
+              [...Array(rows.length).keys()].map((index) => rows.item(index))
+            );
+          });
+        },
+        (err) => {
+          console.error(
+            "useUploadBackupHandler: error while fetching all posts"
+          );
+          reject(err);
+        }
       );
+    });
 
-      if (hasBeenInserted) {
-        result.skipped.push(post.value);
-        continue;
-      }
+    const hash: Record<string, boolean> = posts.reduce(
+      (acc, next) => ({
+        ...acc,
+        [next.value]: true,
+      }),
+      {}
+    );
 
-      /**
-       * createPost handles hashtags
-       * */
-      await createPost({ text: post.value, timestamp: post.timestamp });
-      result.inserted++;
-    }
+    await Promise.all([
+      backup.map((post) => {
+        if (!hash[post.value]) {
+          return createPost({ text: post.value, timestamp: post.timestamp });
+        }
+      }),
+    ]);
 
     return result;
-  });
+  }, options);
 }
 
 export { useUploadBackupHandler };

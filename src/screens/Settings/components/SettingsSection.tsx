@@ -2,16 +2,23 @@ import React from "react";
 import { Pressable } from "react-native";
 import { Font } from "../../../components/Font";
 import { Frame, useFrame } from "../../../components/Frame";
+import { Icon } from "../../../components/Icon/Icon";
 import { Colors } from "../../../foundations/Colors";
 import { usePaddingHorizontal } from "../../../providers/Theming/hooks/use-padding-horizontal";
 import { useTheme } from "../../../providers/Theming/hooks/use-theme";
+
+/**
+ * TODO:
+ *  - [ ] Support icon
+ *  - [ ] Support iconColor
+ */
 
 const Title = React.memo<{ text: string }>(function Title({ text }) {
   return (
     <Font
       variant="caption"
       marginTop="larger"
-      marginBottom="medium"
+      marginBottom="small"
       color="foregroundSecondary"
       style={{
         textTransform: "uppercase",
@@ -24,9 +31,12 @@ const Title = React.memo<{ text: string }>(function Title({ text }) {
 
 interface Props {
   title: string;
-  actions: ({ text?: string; color?: keyof Colors } & React.ComponentProps<
-    typeof Pressable
-  >)[];
+  actions: ({
+    text?: string;
+    color?: keyof Colors;
+    iconType?: React.ComponentProps<typeof Icon>["type"];
+    iconColor?: React.ComponentProps<typeof Icon>["color"];
+  } & React.ComponentProps<typeof Pressable>)[];
 }
 
 function SettingsSection({ title, actions }: Props) {
@@ -49,12 +59,22 @@ function SettingsSection({ title, actions }: Props) {
           borderRadius: theme.constants.borderRadius,
         }}
       >
-        {actions.map(({ text, color, children, ...props }, index) => (
-          <Pressable {...props} style={[rowStyles]} key={`${text}-${index}`}>
-            <Font color={color || "primary"}>{text}</Font>
-            {children}
-          </Pressable>
-        ))}
+        {actions.map(
+          ({ text, color, iconColor, iconType, ...props }, index) => (
+            <Pressable {...props} style={[rowStyles]} key={`${text}-${index}`}>
+              <Font color={color || "primary"}>{text}</Font>
+              <Frame
+                style={{
+                  height: theme.scales.small,
+                }}
+              >
+                {iconType && (
+                  <Icon type={iconType} size="small" color={iconColor} />
+                )}
+              </Frame>
+            </Pressable>
+          )
+        )}
       </Frame>
     </Frame>
   );
