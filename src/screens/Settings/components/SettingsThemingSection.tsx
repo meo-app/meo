@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useQueryClient } from "react-query";
-import { Frame } from "../../../components/Frame";
-import { Icon } from "../../../components/Icon/Icon";
 import { useAsyncStorageMutation } from "../../../hooks/use-async-storage";
 import { usePreferredColorSchemeQuery } from "../../../hooks/use-preferred-color-scheme-query";
-import { useTheme } from "../../../providers/Theming/hooks/use-theme";
 import {
   PreferredColorSchemeTypes,
   PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
@@ -15,19 +12,6 @@ import { SettingsSection } from "./SettingsSection";
 
 interface FieldValues {
   scheme: PreferredColorSchemeTypes;
-}
-
-function Checkmark({ active }: { active?: boolean }) {
-  const theme = useTheme();
-  return (
-    <Frame
-      style={{
-        height: theme.scales.small,
-      }}
-    >
-      {active && <Icon type="Check" size="small" color="primary" />}
-    </Frame>
-  );
 }
 
 function SettingsThemingSection() {
@@ -89,19 +73,26 @@ function SettingsThemingSection() {
         {
           text: "Use system light or dark mode",
           onPress: () => setValue("scheme", "system"),
-          children: (
-            <Checkmark active={values.scheme === "system" || !values.scheme} />
-          ),
+          ...((values.scheme === "system" || !values.scheme) && {
+            iconType: "Check",
+            iconColor: "primary",
+          }),
         },
         {
           text: "Dark",
           onPress: () => setValue("scheme", "dark"),
-          children: <Checkmark active={values.scheme === "dark"} />,
+          ...(values.scheme === "dark" && {
+            iconType: "Check",
+            iconColor: "primary",
+          }),
         },
         {
           text: "Light",
           onPress: () => setValue("scheme", "light"),
-          children: <Checkmark active={values.scheme === "light"} />,
+          ...(values.scheme === "light" && {
+            iconType: "Check",
+            iconColor: "primary",
+          }),
         },
       ]}
     />
