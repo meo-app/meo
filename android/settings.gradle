@@ -1,4 +1,5 @@
 rootProject.name = 'meoapp'
+apply from: '../node_modules/react-native-unimodules/gradle.groovy'; includeUnimodulesProjects()
 include ':react-native-haptic-feedback'
 project(':react-native-haptic-feedback').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-haptic-feedback/android')
 include ':react-native-safe-area-context'

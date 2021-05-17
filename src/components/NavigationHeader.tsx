@@ -39,9 +39,17 @@ function NavigationHeader({
           paddingBottom: theme.units.large,
           paddingTop: theme.units.medium,
           display: "flex",
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.backgroundAccent,
         },
       }),
-    [insets.top, paddingHorizontal, theme.units]
+    [
+      insets.top,
+      paddingHorizontal,
+      theme.colors.backgroundAccent,
+      theme.units.large,
+      theme.units.medium,
+    ]
   );
 
   const back = useMemo(() => {
