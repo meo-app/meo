@@ -55,7 +55,13 @@ function Settings() {
           <Font>Loading...</Font>
         </Frame>
       </Modal>
-      <NavigationHeader title="Settings" />
+      <NavigationHeader
+        title="Settings"
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.backgroundAccent,
+        }}
+      />
       <Frame flex={1} backgroundColor="backgroundAccent">
         <ScrollView>
           <SettingsSection
