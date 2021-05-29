@@ -34,6 +34,7 @@
     "expo-font": "^8.4.0",
     "expo-image-picker": "~8.1.0",
     "expo-linear-gradient": "^8.4.0",
+    "expo-media-library": "^12.0.2",
     "expo-sqlite": "^8.1.0",
     "expo-updates": "~0.2.0",
     "intl": "^1.2.5",
