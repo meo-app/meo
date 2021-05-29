@@ -10,14 +10,16 @@ import { useTheme } from "../../../providers/Theming/hooks/use-theme";
 
 function SettingsDataSection() {
   const { mutate: handleUploadBackup, isLoading } = useUploadBackupHandler({
-    onSuccess: (data) => {
-      Alert.alert(
-        `Backup uploaded. Inserted: ${data.inserted}, Skipped: ${data.skipped}`
-      );
+    onSuccess: () => {
+      Alert.alert("Backup uploaded");
     },
   });
   const theme = useTheme();
-  const { mutate: handleDownloadBackup } = useDownloadBackupHandler();
+  const { mutate: handleDownloadBackup } = useDownloadBackupHandler({
+    onSuccess: () => {
+      Alert.alert("Backup downloaded");
+    },
+  });
   return (
     <>
       <SettingsSection

@@ -1,15 +1,15 @@
 import * as FileSystem from "expo-file-system";
 import Share from "react-native-share";
-import { useMutation } from "react-query";
+import { useMutation, UseMutationOptions } from "react-query";
 import { useDB } from "../../../providers/SQLiteProvider";
 import * as MediaLibrary from "expo-media-library";
 import { Alert, Platform } from "react-native";
 
 const FILE_URI = `${FileSystem.documentDirectory}/meo.txt`;
 
-function useDownloadBackupHandler() {
+function useDownloadBackupHandler(options?: UseMutationOptions<void, string>) {
   const db = useDB();
-  return useMutation(async () => {
+  return useMutation<void, string>(async () => {
     const posts = await new Promise((resolve, reject) => {
       db.transaction(
         (tx) =>
@@ -54,7 +54,7 @@ function useDownloadBackupHandler() {
         console.error(e);
       }
     }
-  });
+  }, options);
 }
 
 export { useDownloadBackupHandler };
