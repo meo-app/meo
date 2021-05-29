@@ -4795,6 +4795,14 @@ expo-location@~8.1.0:
   dependencies:
     invariant "^2.2.4"
 
+expo-media-library@^12.0.2:
+  version "12.0.2"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-12.0.2.tgz#6dd047c57fb3187b25a31086c32690e1c63cb1be"
+  integrity sha512-0gi4ny4IldYg3uWHjwP+P04VRe5Ea9BYflRILpQWBzcivppzEzTSYFQKUTQEXuZsWB9PA5uTQd2UaB+4q/dcJQ==
+  dependencies:
+    "@expo/config-plugins" "^1.0.18"
+    unimodules-permissions-interface "~6.1.0"
+
 expo-permissions@~8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
@@ -9886,6 +9894,11 @@ unimodules-permissions-interface@~5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/unimodules-permissions-interface/-/unimodules-permissions-interface-5.1.0.tgz#146062ee5cde1f00f34ba2692efab5f0c6f55d02"
   integrity sha512-3Mz9A4a+iYF57ZeE99nidRPNM7dX3dzTZRvRQyCP5+CvsEmGNlLTIbTQ7fxKECoe3I6cjw94gNSirxIbwb3lDg==
+
+unimodules-permissions-interface@~6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/unimodules-permissions-interface/-/unimodules-permissions-interface-6.1.0.tgz#fd5589945e3b8fc9d2c80c52521853caea85a9ca"
+  integrity sha512-jeJx/y+Vn/Cp1/4su5XJ06UBul83MpXkYEqIOAb2jwaikhmj6tNwko7HpKy9OhfGfrhddCzwtedlro8xxZUk9A==
 
 unimodules-sensors-interface@~5.1.0:
   version "5.1.0"

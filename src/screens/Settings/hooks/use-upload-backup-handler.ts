@@ -5,10 +5,9 @@ import { useCreatePost } from "../../../hooks/use-create-post";
 import { useDB } from "../../../providers/SQLiteProvider";
 import { Post } from "../../../shared/SQLiteEntities";
 
-interface Result {
-  skipped: number;
-  inserted: number;
-}
+/**
+ * TODO: versioning of backups
+ */
 
 function usePickDocumentMutation() {
   return useMutation(async () => {
@@ -27,18 +26,13 @@ function usePickDocumentMutation() {
   });
 }
 
-function useUploadBackupHandler(options?: UseMutationOptions<Result, string>) {
+function useUploadBackupHandler(options?: UseMutationOptions<void, string>) {
   const db = useDB();
   const { mutateAsync: createPost } = useCreatePost();
   const { mutateAsync: pickDocument } = usePickDocumentMutation();
 
-  return useMutation<Result, string>(async () => {
+  return useMutation<void, string>(async () => {
     const backup = await pickDocument();
-    const result: Result = {
-      skipped: 0,
-      inserted: 0,
-    };
-
     const posts = await new Promise<Post[]>((resolve, reject) => {
       db.transaction(
         (tx) => {
@@ -72,8 +66,6 @@ function useUploadBackupHandler(options?: UseMutationOptions<Result, string>) {
         }
       }),
     ]);
-
-    return result;
   }, options);
 }
 
