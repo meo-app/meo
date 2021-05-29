@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { rgba } from "polished";
 import React, { useMemo } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePaddingHorizontal } from "../providers/Theming/hooks/use-padding-horizontal";
 import { useTheme } from "../providers/Theming/hooks/use-theme";
@@ -14,6 +14,7 @@ interface Props extends React.ComponentProps<typeof Header> {
   title?: string | React.ReactNode;
   icon?: React.ComponentProps<typeof Icon>["type"];
   backContent?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 function NavigationHeader({
@@ -21,6 +22,7 @@ function NavigationHeader({
   backContent,
   icon = "Back",
   children,
+  style,
 }: Props) {
   const navigation = useNavigation();
   const theme = useTheme();
@@ -39,17 +41,9 @@ function NavigationHeader({
           paddingBottom: theme.units.large,
           paddingTop: theme.units.medium,
           display: "flex",
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.backgroundAccent,
         },
       }),
-    [
-      insets.top,
-      paddingHorizontal,
-      theme.colors.backgroundAccent,
-      theme.units.large,
-      theme.units.medium,
-    ]
+    [insets.top, paddingHorizontal, theme.units.large, theme.units.medium]
   );
 
   const back = useMemo(() => {
@@ -99,7 +93,7 @@ function NavigationHeader({
   }, [children, title]);
 
   return (
-    <Frame style={styles.root}>
+    <Frame style={[styles.root, style]}>
       <Frame style={styles.spacer} />
       <Frame alignItems="center" flexDirection="row">
         {back}
