@@ -1,4 +1,5 @@
 import * as FileSystem from "expo-file-system";
+import { Platform } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 import { useMutation, UseMutationOptions } from "react-query";
 import { useCreatePost } from "../../../hooks/use-create-post";
@@ -17,10 +18,24 @@ function usePickDocumentMutation() {
       mode: "open",
     });
 
-    const result = await FileSystem.readAsStringAsync(
-      documentPickerResponse.fileCopyUri,
-      { encoding: FileSystem.EncodingType.UTF8 }
-    );
+    let result = "";
+    if (Platform.OS === "ios") {
+      result = await FileSystem.readAsStringAsync(
+        documentPickerResponse.fileCopyUri,
+        {
+          encoding: FileSystem.EncodingType.UTF8,
+        }
+      );
+    } else if (Platform.OS === "android") {
+      const uri = `${FileSystem.documentDirectory}/meo.temp.text`;
+      await FileSystem.copyAsync({
+        from: documentPickerResponse.fileCopyUri,
+        to: uri,
+      });
+      result = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+    }
 
     return JSON.parse(result) as Pick<Post, "timestamp" | "value">[];
   });
