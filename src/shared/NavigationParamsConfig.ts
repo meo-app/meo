@@ -20,6 +20,7 @@ type NavigationParamsConfig = {
   PostDetails: { id: string };
   Placeholder: undefined;
   Settings: undefined;
+  SettingsAccentColorPicker: undefined;
   ChangeAvatar: undefined;
 };
 

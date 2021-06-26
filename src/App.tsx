@@ -26,6 +26,7 @@ import { HashtagViewer } from "./screens/HashtagViewer";
 import { Home } from "./screens/Home";
 import { Onboarding } from "./screens/Onboarding/Onboarding";
 import { PostDetails } from "./screens/PostDetails";
+import { SettingsAccentColorPicker } from "./screens/Settings/screens/SettingsAccentColorPicker";
 import { Settings } from "./screens/Settings/Settings";
 import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
 import { useHasSeenOnboarding } from "./storage/onboarding";
@@ -93,6 +94,10 @@ function Screens() {
           gestureEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
+      />
+      <RootNavigator.Screen
+        name="SettingsAccentColorPicker"
+        component={SettingsAccentColorPicker}
       />
       <RootNavigator.Screen
         component={HashtagViewer}
