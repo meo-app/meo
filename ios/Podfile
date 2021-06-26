@@ -1,4 +1,4 @@
-platform :ios, '10.0'
+platform :ios, '11.2'
 
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/react-native-unimodules/cocoapods'
@@ -39,6 +39,7 @@ target 'meo' do
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
   pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+  pod 'EXMediaLibrary', :path => "../node_modules/expo-media-library/ios"
   # pod 'RNShare', :path => '../node_modules/react-native-share/RNShare.podspec'
   # Other native modules
 

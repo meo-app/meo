@@ -102,6 +102,15 @@ function Settings() {
           />
           <SettingsDataSection />
           <SettingsThemingSection />
+          <SettingsSection
+            title="Accent color"
+            actions={[
+              {
+                text: "Pick a accent color",
+                onPress: () => navigate("SettingsAccentColorPicker"),
+              },
+            ]}
+          />
           {isDeveloper && (
             <SettingsSection
               title="Developer Options"

@@ -17,6 +17,8 @@ const absoluteLight = "#FFF";
 const primary = "#2D9CDB";
 const destructive = "#FC5B10";
 
+const DEFAULT_ACCENT_COLOR = primary;
+
 const APP_COLORS: Record<"light" | "dark", Theme["colors"]> = {
   light: {
     absoluteDark,
@@ -127,4 +129,5 @@ export {
   APP_TYPOGRAPHY,
   APP_UNITS,
   APP_FONTS,
+  DEFAULT_ACCENT_COLOR,
 };

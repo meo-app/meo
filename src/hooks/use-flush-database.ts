@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
 import { useSQLiteMutation } from "./use-sqlite-mutation";
@@ -14,14 +15,17 @@ function useFlushDatabase(options?: UseMutationOptions) {
     variables: () => [],
   });
 
-  return useMutation(() => Promise.all([deleteHashtags(), deletePosts()]), {
-    ...options,
-    onSuccess: (data, variables, context) => {
-      client.clear();
-      Alert.alert("Data erased. Restart the app to continue");
-      options?.onSuccess?.(data, variables, context);
-    },
-  });
+  return useMutation(
+    () => Promise.all([deleteHashtags(), deletePosts(), AsyncStorage.clear()]),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        client.clear();
+        Alert.alert("Data erased. Restart the app to continue");
+        options?.onSuccess?.(data, variables, context);
+      },
+    }
+  );
 }
 
 export { useFlushDatabase };

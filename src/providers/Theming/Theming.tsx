@@ -7,6 +7,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { Theme } from "../../foundations/Theme";
+import { usePreferredAccentColorQuery } from "../../hooks/use-preferred-accent-color";
 import { usePreferredColorSchemeQuery } from "../../hooks/use-preferred-color-scheme-query";
 import { APP_COLORS, APP_CONSTANTS } from "./app-theme-definition";
 import { useResponsiveScales } from "./hooks/use-responsive-scales";
@@ -80,14 +81,18 @@ const ThemeProvider: React.FunctionComponent<Props> = function ThemeProvider({
   }, [handleStatusBar, scheme]);
 
   const { foregroundPrimary } = colors[forceColorSchemeTo || scheme];
-
+  const { data: accentColor } = usePreferredAccentColorQuery();
+  const colorScheme = colors[forceColorSchemeTo || scheme];
   return (
     <Context.Provider
       value={{
         constants,
         units,
         scales,
-        colors: colors[forceColorSchemeTo || scheme],
+        colors: {
+          ...colorScheme,
+          primary: accentColor ? accentColor : colorScheme.primary,
+        },
         typography: {
           body: Object.assign({}, typography.body, {
             color: foregroundPrimary,
