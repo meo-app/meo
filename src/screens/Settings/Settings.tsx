@@ -107,7 +107,7 @@ function Settings() {
             title="Accent color"
             actions={[
               {
-                text: "Pick a accent color",
+                text: "Pick an accent color",
                 onPress: () => navigate("SettingsAccentColorPicker"),
               },
             ]}

@@ -15,9 +15,11 @@ const FlipColorScheme: React.FunctionComponent = function FlipColorScheme({
       {...(systemColorScheme && {
         forceColorSchemeTo: systemColorScheme === "dark" ? "light" : "dark",
       })}
-      {...(preferredColorScheme !== "system" && {
-        forceColorSchemeTo: preferredColorScheme === "dark" ? "light" : "dark",
-      })}
+      {...(preferredColorScheme &&
+        preferredColorScheme !== "system" && {
+          forceColorSchemeTo:
+            preferredColorScheme === "dark" ? "light" : "dark",
+        })}
     >
       {children}
     </ThemeProvider>

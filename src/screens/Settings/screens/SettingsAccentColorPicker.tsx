@@ -60,19 +60,12 @@ function Color({
 }
 
 function SettingsAccentColorPicker() {
-  const theme = useTheme();
   const { data } = usePreferredAccentColorQuery();
   const { mutate } = usePreferredAccentColorMutation();
   return (
     <>
-      <NavigationHeader
-        title="Select an accent color"
-        style={{
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.backgroundAccent,
-        }}
-      />
-      <Frame flex={1} backgroundColor="backgroundAccent" paddingTop="small">
+      <NavigationHeader title="Pick your favorite color" />
+      <Frame flex={1} backgroundColor="background" paddingTop="small">
         <ScrollView style={{ flex: 1 }}>
           <Frame
             flex={1}

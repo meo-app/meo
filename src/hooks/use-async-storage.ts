@@ -57,9 +57,6 @@ function useAsyncStorageQuery<TQueryFnData = unknown, TError = unknown>({
   parse: (value: string | null) => TQueryFnData;
   options?: UseQueryOptions<TQueryFnData | undefined, TError>;
 }) {
-  AsyncStorage.getAllKeys().then((keys) => {
-    console.log({ keys });
-  });
   return useQuery<TQueryFnData | undefined, TError>(
     queryKey,
     async () => {
