@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useQueryClient } from "react-query";
 import { useAsyncStorageMutation } from "../../../hooks/use-async-storage";
 import { usePreferredColorSchemeQuery } from "../../../hooks/use-preferred-color-scheme-query";
 import {
@@ -15,50 +14,26 @@ interface FieldValues {
 }
 
 function SettingsThemingSection() {
-  const { control, setValue } = useForm<FieldValues>();
-  const queryClient = useQueryClient();
+  const { data, isFetched } = usePreferredColorSchemeQuery();
+  const { control, setValue } = useForm<FieldValues>({
+    defaultValues: {
+      ...(data && {
+        scheme: data,
+      }),
+    },
+  });
   const values = useWatch({ control });
-  const { data } = usePreferredColorSchemeQuery();
-  const { mutate } = useAsyncStorageMutation<
-    PreferredColorSchemeTypes,
-    {
-      previous?: string;
-    }
-  >({
+  const { mutate } = useAsyncStorageMutation<PreferredColorSchemeTypes>({
     key: QueryKeys.PREFERRED_COLOR_SCHEME,
     version: PREFERRED_COLOR_SCHEME_STORAGE_VERSION,
     parse: (value) => (value ? String(value) : ""),
-    options: {
-      onMutate: async (value) => {
-        await queryClient.cancelQueries(QueryKeys.PREFERRED_COLOR_SCHEME);
-        const previous = queryClient.getQueryData(
-          QueryKeys.PREFERRED_COLOR_SCHEME
-        ) as string | undefined;
-
-        queryClient.setQueryData(QueryKeys.PREFERRED_COLOR_SCHEME, () => value);
-        return { previous };
-      },
-      onError: (err, value, context) => {
-        if (err && context?.previous) {
-          queryClient.setQueryData(
-            QueryKeys.PREFERRED_COLOR_SCHEME,
-            context.previous
-          );
-        }
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries(QueryKeys.PREFERRED_COLOR_SCHEME);
-      },
-    },
   });
 
   useEffect(() => {
-    if (values.scheme) {
+    if (values.scheme && values.scheme !== data) {
       mutate(values.scheme);
-    } else {
-      mutate("system");
     }
-  }, [mutate, values]);
+  }, [data, mutate, values]);
 
   useEffect(() => {
     if (data && !values.scheme) {
@@ -73,7 +48,8 @@ function SettingsThemingSection() {
         {
           text: "Use system light or dark mode",
           onPress: () => setValue("scheme", "system"),
-          ...((values.scheme === "system" || !values.scheme) && {
+          ...((values.scheme === "system" ||
+            (isFetched && !data && !values.scheme)) && {
             iconType: "Check",
             iconColor: "primary",
           }),

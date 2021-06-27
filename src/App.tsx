@@ -16,6 +16,7 @@ import { Platform } from "react-native";
 import SplashScreen from "react-native-bootsplash";
 import { Drawer } from "./components/Drawer";
 import { TabBar } from "./components/TabBar";
+import { useAsyncStorageQuery } from "./hooks/use-async-storage";
 import { Providers } from "./providers/Providers";
 import { APP_FONTS } from "./providers/Theming/app-theme-definition";
 import { useTheme } from "./providers/Theming/hooks/use-theme";
@@ -29,7 +30,7 @@ import { PostDetails } from "./screens/PostDetails";
 import { SettingsAccentColorPicker } from "./screens/Settings/screens/SettingsAccentColorPicker";
 import { Settings } from "./screens/Settings/Settings";
 import { NavigationParamsConfig } from "./shared/NavigationParamsConfig";
-import { useHasSeenOnboarding } from "./storage/onboarding";
+import { QueryKeys } from "./shared/QueryKeys";
 
 const TabsNavigator = createBottomTabNavigator();
 const DrawerNavigator = createDrawerNavigator<NavigationParamsConfig>();
@@ -122,7 +123,11 @@ const ENABLE_DRAWER_SWIPE_ROUTE: TabRoutes[] = ["Explore", "Home"];
  */
 function Root() {
   const theme = useTheme();
-  const { data, isLoading } = useHasSeenOnboarding();
+  const { data, isLoading } = useAsyncStorageQuery<boolean>({
+    queryKey: QueryKeys.HAS_SEEN_ONBOARDING,
+    version: 1,
+    parse: (value) => Boolean(value),
+  });
 
   useEffect(() => {
     if (!isLoading) {

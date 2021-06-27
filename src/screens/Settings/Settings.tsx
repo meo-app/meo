@@ -5,10 +5,11 @@ import { Alert, Linking, Modal, ScrollView } from "react-native";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
 import { NavigationHeader } from "../../components/NavigationHeader";
+import { useFlushAsyncStorageKey } from "../../hooks/use-async-storage";
 import { useFlushDatabase } from "../../hooks/use-flush-database";
 import { useTheme } from "../../providers/Theming/hooks/use-theme";
 import { NavigationParamsConfig } from "../../shared/NavigationParamsConfig";
-import { useFlushOnboarding } from "../../storage/onboarding";
+import { QueryKeys } from "../../shared/QueryKeys";
 import { SettingsDataSection } from "./components/SettingsDataSection";
 import { SettingsSection } from "./components/SettingsSection";
 import { SettingsThemingSection } from "./components/SettingsThemingSection";
@@ -22,7 +23,7 @@ function Settings() {
   const {
     mutate: flushOnboarding,
     isLoading: isFlusingOboarding,
-  } = useFlushOnboarding();
+  } = useFlushAsyncStorageKey({ queryKey: QueryKeys.HAS_SEEN_ONBOARDING });
   const {
     mutate: flushDatabase,
     isLoading: isFlusingDatabase,
