@@ -82,6 +82,7 @@ function SettingsAccentColorPicker() {
           >
             {ACCENT_COLORS.map((color) => (
               <Color
+                key={color}
                 backgroundColor={color}
                 onPress={() => mutate(color)}
                 selected={

@@ -6,6 +6,7 @@ import { AvatarSelection } from "../../components/AvatarSelection/AvatarSelectio
 import { AvatarSelectionProvider } from "../../components/AvatarSelection/components/AvatarSelectionProvider";
 import { Font } from "../../components/Font";
 import { Frame } from "../../components/Frame";
+import { useAsyncStorageMutation } from "../../hooks/use-async-storage";
 import { usePaddingHorizontal } from "../../providers/Theming/hooks/use-padding-horizontal";
 import { useTheme } from "../../providers/Theming/hooks/use-theme";
 import {
@@ -13,7 +14,7 @@ import {
   STATUS_BAR_SCHEME_MAP,
   ThemeProvider,
 } from "../../providers/Theming/Theming";
-import { useCompleteOnboarding } from "../../storage/onboarding";
+import { QueryKeys } from "../../shared/QueryKeys";
 import {
   OnboardingNavigationProvider,
   OnboardingParamsConfig,
@@ -60,8 +61,16 @@ function Onboarding() {
   const theme = useTheme();
   const { paddingHorizontal } = usePaddingHorizontal();
   const { back, next, finalize, disabled } = useOnboardingContext();
-  const { mutate: completeOnboarding, status } = useCompleteOnboarding({
-    onSuccess: finalize,
+  const {
+    mutate: completeOnboarding,
+    status,
+  } = useAsyncStorageMutation<boolean>({
+    key: QueryKeys.HAS_SEEN_ONBOARDING,
+    parse: (value) => String(value),
+    version: 1,
+    options: {
+      onSuccess: finalize,
+    },
   });
 
   return (
@@ -135,7 +144,7 @@ function Onboarding() {
           {!next && (
             <Pressable
               disabled={status !== "idle" || disabled}
-              onPress={() => completeOnboarding()}
+              onPress={() => completeOnboarding(true)}
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}
