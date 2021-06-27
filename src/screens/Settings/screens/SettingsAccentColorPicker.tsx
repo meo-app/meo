@@ -13,11 +13,11 @@ import { useTheme } from "../../../providers/Theming/hooks/use-theme";
 const PREFERRED_ACCENT_COLOR_STORAGE_VERSION = 1;
 const ACCENT_COLORS = [
   "#2D9CDB",
-  "rgb(121, 75, 196)",
-  "rgb(224, 36, 94)",
-  "rgb(23, 191, 99)",
-  "rgb(244, 93, 34)",
-  "rgb(255, 173, 31)",
+  "#22CD13",
+  "#9261F9",
+  "#ED8728",
+  "#FC69D6",
+  "#8E8E8E",
 ];
 
 function Color({
