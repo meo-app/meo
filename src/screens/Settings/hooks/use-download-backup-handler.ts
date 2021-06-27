@@ -39,19 +39,19 @@ function useDownloadBackupHandler(options?: UseMutationOptions<void, string>) {
         if (req.status !== "granted") {
           return;
         }
-      }
 
-      try {
-        const asset = await MediaLibrary.createAssetAsync(FILE_URI);
-        const album = await MediaLibrary.getAlbumAsync("Download");
-        if (album === null) {
-          await MediaLibrary.createAlbumAsync("Download", asset, false);
-        } else {
-          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+        try {
+          const asset = await MediaLibrary.createAssetAsync(FILE_URI);
+          const album = await MediaLibrary.getAlbumAsync("Download");
+          if (album === null) {
+            await MediaLibrary.createAlbumAsync("Download", asset, false);
+          } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+          }
+          Alert.alert("Backup downloaded");
+        } catch (e) {
+          console.error(e);
         }
-        Alert.alert("Backup downloaded");
-      } catch (e) {
-        console.error(e);
       }
     }
   }, options);
